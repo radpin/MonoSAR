@@ -16,10 +16,10 @@ namespace MonoSAR
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            var x = Configuration["sqlconnectionstring"];
         }
 
         public IConfiguration Configuration { get; }
@@ -28,7 +28,8 @@ namespace MonoSAR
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration["sqlconnectionstring"]));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()

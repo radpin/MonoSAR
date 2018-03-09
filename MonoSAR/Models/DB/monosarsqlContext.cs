@@ -21,6 +21,13 @@ namespace MonoSAR.Models.DB
             this.m_sqlConnectioNString = config["sqlconnectionstring"];
         }
 
+        public monosarsqlContext()
+        {
+            //only here for scaffolding, do not use
+            throw new NotImplementedException("DBContext only used for scaffolding, make use of DI method.");
+            
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

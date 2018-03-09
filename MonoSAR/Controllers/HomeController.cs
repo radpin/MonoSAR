@@ -18,7 +18,13 @@ namespace MonoSAR.Controllers
 
         public IActionResult Index()
         {
-           
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                //throw new Exception("Not authenticated.");
+            }
+
+
             return View();
         }
 
