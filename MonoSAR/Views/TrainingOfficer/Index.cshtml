@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "TrainingOfficer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>TrainingOfficer</h2>
+<div class="autocomplete">
+    <div>Training Title 
+        <input list="traininglist" name="trainingoccurence" />
+        <datalist id="traininglist"></datalist>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    
+    window.onload = function () {
+        makeJSONCall();
+    };
+    
+    function makeJSONCall() {
+
+        //make the json call
+        //results sent to output parameter, goes to the buildDataList method
+
+        let url = '/api/trainings/';
+
+        fetch(url)
+            .then(res => res.json())
+            .then((out) => {
+                buildDataList(out);
+            })
+            .catch(err => { throw err });
+
+    }
+
+    function buildDataList(jsonarray) {
+
+        var dlop = " ";
+
+
+        //build the option list, append
+        for (var i = 0; i < jsonarray.length; i++) {
+            var obj = jsonarray[i];
+
+            dlop = dlop + '<option value="' + obj.trainingTitle + '" key="' + obj.trainingId + '"></option>';
+
+        }
+
+        //stick the <option>... sbag onto the empty datalist
+        document.getElementById('traininglist').innerHTML = dlop;
+
+    }
+
+
+</script>
+

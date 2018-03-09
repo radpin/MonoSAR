@@ -5,20 +5,30 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MonoSAR.Models.DB;
 
 namespace MonoSAR.Controllers
 {
+    
     [Produces("application/json")]
     [Route("api/Trainings")]
     public class TrainingsController : Controller
     {
         private readonly monosarsqlContext _context;
+        
+        
 
-        public TrainingsController(monosarsqlContext context)
+
+        public TrainingsController(IConfiguration config)
         {
-            _context = context;
+
+            //if (!User.Identity.IsAuthenticated)
+            //{ Response.Redirect("/"); }
+
+            this._context = new monosarsqlContext(config);
         }
+
 
         // GET: api/Trainings
         [HttpGet]
