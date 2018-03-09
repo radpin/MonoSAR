@@ -19,7 +19,25 @@ namespace MonoSAR
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(ConfigConfiguration)
                 .UseStartup<Startup>()
                 .Build();
+
+        static void ConfigConfiguration(WebHostBuilderContext webHostBuilderContext, IConfigurationBuilder configurationBuilder)
+        {
+            configurationBuilder.SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("azurekeyvault.json", false, true)
+                .AddEnvironmentVariables();
+
+            var config = configurationBuilder.Build();
+
+            configurationBuilder.AddAzureKeyVault(
+                $"https://{config["azureKeyVault:vault"]}.vault.azure.net/",
+                config["azureKeyVault:clientId"],
+                config["azureKeyVault:clientSecret"]
+            );
+        }
     }
+
+
 }

@@ -19,6 +19,7 @@ namespace MonoSAR
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            var x = Configuration["sqlconnectionstring"];
         }
 
         public IConfiguration Configuration { get; }

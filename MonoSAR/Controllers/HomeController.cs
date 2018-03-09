@@ -10,8 +10,15 @@ namespace MonoSAR.Controllers
 {
     public class HomeController : Controller
     {
+
+        public HomeController(Microsoft.Extensions.Configuration.IConfiguration config)
+        {
+            var context = new Models.DB.monosarsqlContext(config);
+        }
+
         public IActionResult Index()
         {
+           
             return View();
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace MonoSAR.Models.DB
 {
@@ -13,12 +14,18 @@ namespace MonoSAR.Models.DB
         public virtual DbSet<Training> Training { get; set; }
         public virtual DbSet<TrainingMember> TrainingMember { get; set; }
 
+        private String m_sqlConnectioNString;
+
+        public monosarsqlContext(IConfiguration config)
+        {
+            this.m_sqlConnectioNString = config["sqlconnectionstring"];
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer(@"Server=monosardbserver.database.windows.net;Database=monosarsql;Persist Security Info=False;User ID=monodblogin;Password=lguM4SB5hm!08aJTR1Uo");
+                optionsBuilder.UseSqlServer(this.m_sqlConnectioNString);
             }
         }
 
