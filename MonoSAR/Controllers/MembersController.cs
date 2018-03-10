@@ -27,7 +27,12 @@ namespace MonoSAR.Controllers
         [HttpGet]
         public IEnumerable<Member> GetMember()
         {
-            return _context.Member;
+
+            var query = from m in _context.Member
+                        orderby m.LastName ascending
+                        select m;
+
+            return query.ToList();
         }
 
         // GET: api/Members/5
