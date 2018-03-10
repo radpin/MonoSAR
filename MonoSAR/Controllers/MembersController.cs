@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MonoSAR.Models.DB;
 
 namespace MonoSAR.Controllers
@@ -15,10 +16,12 @@ namespace MonoSAR.Controllers
     {
         private readonly monosarsqlContext _context;
 
-        public MembersController(monosarsqlContext context)
+        public MembersController(IConfiguration config)
         {
-            _context = context;
+
+            this._context = new monosarsqlContext(config);
         }
+
 
         // GET: api/Members
         [HttpGet]

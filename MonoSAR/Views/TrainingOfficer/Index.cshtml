@@ -4,37 +4,89 @@
 }
 
 <h2>TrainingOfficer</h2>
-<div class="autocomplete">
-    <div>Training Title 
-        <input list="traininglist" name="trainingoccurence" />
-        <datalist id="traininglist"></datalist>
+
+
+<form class="">
+    <div class="form-group">
+        <label for="formGroupExampleInput">Training Description</label>
+        <input list="traininglist" id="trainingoccurence" type="text" class="form-control" placeholder="How to dress really well" />
     </div>
-</div>
+
+
+
+
+    <div class="form-group">
+        <label for="formGroupExampleInput">Member(s):</label>
+            <input list="memberlist" name="member" id="member" type="text" class="form-control" placeholder="John McRescue" style="width:50%;" /> <input placeholder="4" style="width:10%;" />
+         <div id="container"><br/></div>
+        <a href="#" id="filldetails" onclick="addFields()">[add another]</a>
+    </div>
+
+    <datalist id="traininglist"></datalist>
+    <datalist id="memberlist"></datalist>
+</form>
+
+
 
 
 <script type="text/javascript">
     
     window.onload = function () {
-        makeJSONCall();
+
+        //make the json calls
+        //results sent to output parameter, goes to the buildDataList methods
+
+        trainingJSONCall();
+
+        memberJSONCall();
+
     };
     
-    function makeJSONCall() {
+    function trainingJSONCall() { 
 
-        //make the json call
-        //results sent to output parameter, goes to the buildDataList method
+        let urlTraining = '/api/trainings/';
 
-        let url = '/api/trainings/';
-
-        fetch(url)
+        fetch(urlTraining)
             .then(res => res.json())
             .then((out) => {
-                buildDataList(out);
+                buildTripDataList(out);
+            })
+            .catch(err => { ; throw err });
+
+    }
+
+    function memberJSONCall() { 
+
+        let urlMember = '/api/members/';
+
+        fetch(urlMember)
+            .then(res => res.json())
+            .then((out) => {
+                buildMemberDataList(out);
             })
             .catch(err => { throw err });
 
     }
+    
+    function buildMemberDataList(jsonarray) {
 
-    function buildDataList(jsonarray) {
+        var dlop = " ";
+
+
+        //build the option list, append
+        for (var i = 0; i < jsonarray.length; i++) {
+            var obj = jsonarray[i];
+
+            dlop = dlop + '<option value="' + obj.lastName + ', ' + obj.firstName  + '" key="' + obj.memberID + '"></option>';
+
+        }
+
+        //stick the <option>... sbag onto the empty datalist
+        document.getElementById('memberlist').innerHTML = dlop;
+
+    }
+    
+    function buildTripDataList(jsonarray) {
 
         var dlop = " ";
 
@@ -52,6 +104,41 @@
 
     }
 
+    function addFields() {
+        console.log('addFieldsClicked');
+        // Number of inputs to create
+        //var number = "1"; // document.getElementById("member").value;
+        // Container <div> where dynamic content will be placed
+        var container = document.getElementById("container");
+        // Clear previous contents of the container
+
+        var input = document.createElement("input");
+        input.type = "text";
+        input.id = "member" + document.getElementsByName('member').length;
+        input.name = "member";
+        input.className = "form-control";
+        container.appendChild(input);
+        // Append a line break 
+        container.appendChild(document.createElement("br"));
+        
+
+
+
+        //while (container.hasChildNodes()) {
+        //    container.removeChild(container.lastChild);
+        //}
+        //for (i = 0; i < number; i++) {
+        //    // Append a node with a random text
+        //    container.appendChild(document.createTextNode("Member " + (i + 1)));
+        //    // Create an <input> element, set its type and name attributes
+        //    var input = document.createElement("input");
+        //    input.type = "text";
+        //    input.name = "member" + i;
+        //    container.appendChild(input);
+        //    // Append a line break 
+        //    container.appendChild(document.createElement("br"));
+        //}
+    }
 
 </script>
 
