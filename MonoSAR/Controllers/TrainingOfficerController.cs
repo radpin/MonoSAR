@@ -4,11 +4,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using MonoSAR.Models.DB;
 
 namespace MonoSAR.Controllers
 {
     public class TrainingOfficerController : Controller
     {
+        private Models.DB.monosarsqlContext _context; 
+
+        public TrainingOfficerController(IConfiguration config)
+        {
+            this._context = new monosarsqlContext(config);
+        }
+
+
         // GET: TrainingOfficer
         public ActionResult Index()
 
@@ -17,7 +27,7 @@ namespace MonoSAR.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateOccurrence(Models.Training.TrainingOccurrenceInsert toi)
+        public ViewResult CreateOccurrence(Models.Training.TrainingOccurrenceInsert toi)
         {
             List<Models.Training.TrainingOccurrenceParticipationInsert> topiList = new List<Models.Training.TrainingOccurrenceParticipationInsert>();
 
@@ -49,12 +59,25 @@ namespace MonoSAR.Controllers
 
                 }
             }
-            
 
 
+            //build ef objects to store
+            foreach (var item in topiList)
+            {
+                Models.DB.TrainingMember trainingMember = new TrainingMember();
+                trainingMember.Created = DateTime.Now;
+                trainingMember.MemberId = item.MemberID;
+                trainingMember.TrainingDate = toi.TrainingDate;
+                trainingMember.TrainingHours = item.Hours;
+                trainingMember.TrainingId = toi.TrainingID;
 
-            Index();
-            return null;
+                _context.TrainingMember.Add(trainingMember);
+            }
+
+            _context.SaveChanges();
+
+
+            return View("Thanks", new Models.Training.TrainingOccurrenceInsert());
         }
 
         // GET: TrainingOfficer/Details/5
