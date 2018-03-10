@@ -12,13 +12,19 @@
         <input list="traininglist" id="trainingoccurence" type="text" class="form-control" placeholder="How to dress really well" />
     </div>
 
-
-
-
     <div class="form-group">
-        <label for="formGroupExampleInput">Member(s):</label>
-            <input list="memberlist" name="member" id="member" type="text" class="form-control" placeholder="John McRescue" style="width:50%;" /> <input placeholder="4" style="width:10%;" />
-         <div id="container"><br/></div>
+        <label for="formGroupExampleInput">Training Date (mm/dd/yyyy)</label>
+        <input id="trainingdate" name="when" type="date" min="2018-01-01" max="2019-01-01">
+    </div>
+
+
+    <div class="form-inline">
+        <label for="formGroupExampleInput">Members / Hours:</label>
+        <div style="display:inline-block; float:left; width:100%;">
+            <input list="memberlist" name="member" id="member" type="text" class="form-control" placeholder="John McRescue" style="width:200px;" />
+            <input name="hours" id="hours" placeholder="4" style="width:50px;" class="form-control" />
+        </div>
+        <div id="container"><br /></div>
         <a href="#" id="filldetails" onclick="addFields()">[add another]</a>
     </div>
 
@@ -112,32 +118,27 @@
         var container = document.getElementById("container");
         // Clear previous contents of the container
 
-        var input = document.createElement("input");
-        input.type = "text";
-        input.id = "member" + document.getElementsByName('member').length;
-        input.name = "member";
-        input.className = "form-control";
-        container.appendChild(input);
-        // Append a line break 
+        var inputMember = document.createElement("input");
+        inputMember.type = "text";
+        inputMember.style = "width:200px;";
+        inputMember.id = "member" + document.getElementsByName('member').length;
+        inputMember.name = "member";
+        //inputMember.list = "memberlist";
+        inputMember.setAttribute("list", "memberlist");
+        inputMember.className = "form-control";
+        container.appendChild(inputMember);
+
+
+        var inputHours = document.createElement("input");
+        inputHours.type = "text";
+        inputHours.style = "width:50px;";
+        inputHours.id = "hours" + document.getElementsByName('hours').length;
+        inputHours.name = "hours";
+        inputHours.className = "form-control";
+        container.appendChild(inputHours);
+
         container.appendChild(document.createElement("br"));
-        
 
-
-
-        //while (container.hasChildNodes()) {
-        //    container.removeChild(container.lastChild);
-        //}
-        //for (i = 0; i < number; i++) {
-        //    // Append a node with a random text
-        //    container.appendChild(document.createTextNode("Member " + (i + 1)));
-        //    // Create an <input> element, set its type and name attributes
-        //    var input = document.createElement("input");
-        //    input.type = "text";
-        //    input.name = "member" + i;
-        //    container.appendChild(input);
-        //    // Append a line break 
-        //    container.appendChild(document.createElement("br"));
-        //}
     }
 
 </script>
