@@ -1,0 +1,18 @@
+﻿@model MonoSAR.Models.Training.TrainingOccurrenceInsertConfirmation
+
+@{
+    ViewData["Title"] = "Training Added";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Training Added!</h2>
+
+<div>
+    <hr />
+
+            @Html.DisplayFor(model => model.Message)
+</div>
+<div>
+    <br/>
+    <a href="/TrainingOfficer">Add More Training</a>, or just close this window.
+</div>

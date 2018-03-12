@@ -27,16 +27,21 @@ namespace MonoSAR
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //get sql connection string
             services.AddDbContext<ApplicationDbContext>(options =>
-                //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
                 options.UseSqlServer(Configuration["sqlconnectionstring"]));
 
+            //built-in individual user accounts
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+
+            //load up appsettings.json into ApplicationSettings
+            services.Configure<Models.ApplicationSettings>(Configuration.GetSection("AppSettings"));
+
 
             services.AddMvc();
         }

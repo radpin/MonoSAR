@@ -25,7 +25,7 @@ namespace MonoSAR.Models.DB
         {
             //only here for scaffolding, do not use
             throw new NotImplementedException("DBContext only used for scaffolding, make use of DI method.");
-            
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,10 +16,17 @@ namespace MonoSAR.Controllers
 
         public TrainingOfficerController(IConfiguration config)
         {
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                throw new Exception("Not authenticated.");
+            }
+
+
             this._context = new monosarsqlContext(config);
         }
 
-
+        [Authorize]
         // GET: TrainingOfficer
         public ActionResult Index()
 
@@ -26,12 +34,14 @@ namespace MonoSAR.Controllers
             return View();
         }
 
+
         [HttpPost]
         public ViewResult CreateOccurrence(Models.Training.TrainingOccurrenceInsert toi)
         {
             List<Models.Training.TrainingOccurrenceParticipationInsert> topiList = new List<Models.Training.TrainingOccurrenceParticipationInsert>();
-
             var x = HttpContext.Request.Form;
+            var thanks = new Models.Training.TrainingOccurrenceInsertConfirmation();
+
 
             Int32 i = 0;
 
@@ -77,7 +87,14 @@ namespace MonoSAR.Controllers
             _context.SaveChanges();
 
 
-            return View("Thanks", new Models.Training.TrainingOccurrenceInsert());
+            var hours = topiList.Sum(item => item.Hours).ToString();
+            var people = topiList.Count.ToString() ;
+
+
+            thanks.Message = "Great work, your team has added " + hours + " hours of training across " + people + " members."   ;
+
+
+            return View("TrainingOccurrenceInsertConfirmation", thanks);
         }
 
         // GET: TrainingOfficer/Details/5

@@ -27,6 +27,7 @@ namespace MonoSAR
         {
             configurationBuilder.SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("azurekeyvault.json", false, true)
+                .AddJsonFile("appsettings.json",false,true)
                 .AddEnvironmentVariables();
 
             var config = configurationBuilder.Build();
