@@ -17,3 +17,5 @@ All files are included *except* for AzureKeyVault.json (marked with .gitignore).
     "clientSecret": "ftX5vrAJ7vyB0MvFOMDA82b9K5uqVHCeWdeGqgu8Cb3bhwVtkMDaLnbCT6g4k6Ln5N3s3qjwta2N1jY7fpV8NY0HvCBasTH1ukH"
   }
 }
+
+Feel free to contact me if you have any questions radpin [-at-] gmail [dotcom]. 
