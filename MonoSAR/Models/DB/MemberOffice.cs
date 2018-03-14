@@ -10,6 +10,6 @@ namespace MonoSAR.Models.DB
         public int OfficeId { get; set; }
         public DateTime Created { get; set; }
 
-        public Office Office { get; set; }
+        public virtual Office Office { get; set; }
     }
 }

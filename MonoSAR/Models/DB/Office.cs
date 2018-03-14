@@ -13,6 +13,6 @@ namespace MonoSAR.Models.DB
         public int OfficeId { get; set; }
         public string OfficeName { get; set; }
 
-        public ICollection<MemberOffice> MemberOffice { get; set; }
+        public virtual ICollection<MemberOffice> MemberOffice { get; set; }
     }
 }

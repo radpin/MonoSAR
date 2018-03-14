@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using MonoSAR.Models.DB;
+using Microsoft.EntityFrameworkCore;
 
 namespace MonoSAR.Controllers
 {
@@ -17,19 +18,45 @@ namespace MonoSAR.Controllers
         public TrainingOfficerController(IConfiguration config)
         {
 
-            if (!User.Identity.IsAuthenticated)
-            {
-                throw new Exception("Not authenticated.");
-            }
-
-
             this._context = new monosarsqlContext(config);
         }
 
-        [Authorize]
         // GET: TrainingOfficer
+        [Authorize(Roles ="Admin,Training")]
         public ActionResult Index()
+        {
 
+            Models.Training.TrainingSummary model = new Models.Training.TrainingSummary();
+
+            var query = (from tm in _context.TrainingMember
+                         orderby tm.Created descending, tm.TrainingDate descending
+                         select tm).Take(100);
+
+            //Explicit loading because EF Core isn't lazy
+            _context.TrainingMember.Include(x => x.Member).Load();
+            _context.TrainingMember.Include(x => x.Training).Load();
+
+
+
+            foreach (var item in query)
+            {
+                Models.Training.TrainingSummaryItem tsi = new Models.Training.TrainingSummaryItem();
+                tsi.Created = item.Created;
+                tsi.Hours = item.TrainingHours;
+                tsi.MemberName = item.Member.LastName + ", " + item.Member.FirstName;
+                tsi.TrainingTitle = item.Training.TrainingTitle;
+                tsi.When = item.TrainingDate;
+                tsi.TrainingMemberID = item.TrainingMemberId;
+
+                model.Add(tsi);
+            }
+
+            return View(model); 
+        }
+
+        // GET: TrainingOfficer
+        [Authorize(Roles = "Admin,Training")]
+        public ActionResult RecordTrainingOccurrence()
         {
 
             return View();

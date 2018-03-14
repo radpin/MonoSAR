@@ -22,7 +22,7 @@ namespace MonoSAR.Controllers
             _userManager = usermanager;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
 
             Models.HomeScreen homeScreen = new HomeScreen();
@@ -30,7 +30,9 @@ namespace MonoSAR.Controllers
 
             //var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            
+
+            var x = User;
+
 
             //if (!User.Identity.IsAuthenticated)
             //{

@@ -12,7 +12,7 @@ namespace MonoSAR.Models.DB
         public DateTime TrainingDate { get; set; }
         public DateTime Created { get; set; }
 
-        public Member Member { get; set; }
-        public Training Training { get; set; }
+        public virtual Member Member { get; set; }
+        public virtual Training Training { get; set; }
     }
 }

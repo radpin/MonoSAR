@@ -13,6 +13,6 @@ namespace MonoSAR.Models.DB
         public int TrainingId { get; set; }
         public string TrainingTitle { get; set; }
 
-        public ICollection<TrainingMember> TrainingMember { get; set; }
+        public virtual ICollection<TrainingMember> TrainingMember { get; set; }
     }
 }

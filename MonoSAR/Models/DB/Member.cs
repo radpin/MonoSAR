@@ -25,6 +25,6 @@ namespace MonoSAR.Models.DB
         public string PhoneCell { get; set; }
         public string Status { get; set; }
 
-        public ICollection<TrainingMember> TrainingMember { get; set; }
+        public virtual ICollection<TrainingMember> TrainingMember { get; set; }
     }
 }
