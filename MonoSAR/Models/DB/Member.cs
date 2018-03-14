@@ -26,5 +26,7 @@ namespace MonoSAR.Models.DB
         public string Status { get; set; }
 
         public virtual ICollection<TrainingMember> TrainingMember { get; set; }
+
+
     }
 }
