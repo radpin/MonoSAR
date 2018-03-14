@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 
-namespace MonoSAR.Models.DB
+namespace MonoSAR.Modelx
 {
     public partial class monosarsqlContext : DbContext
     {
@@ -18,7 +18,6 @@ namespace MonoSAR.Models.DB
         public virtual DbSet<Office> Office { get; set; }
         public virtual DbSet<Training> Training { get; set; }
         public virtual DbSet<TrainingMember> TrainingMember { get; set; }
-
         private String m_sqlConnectioNString;
 
         public monosarsqlContext(IConfiguration config)
@@ -43,17 +42,6 @@ namespace MonoSAR.Models.DB
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            modelBuilder.Entity<Capacity>(entity =>
-            {
-                entity.Property(e => e.CapacityId).HasColumnName("CapacityID");
-
-                entity.Property(e => e.CapacityName)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<Certification>(entity =>
             {
                 entity.Property(e => e.CertificationId).HasColumnName("CertificationID");

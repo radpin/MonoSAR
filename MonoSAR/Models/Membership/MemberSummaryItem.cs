@@ -8,8 +8,15 @@ namespace MonoSAR.Models.Membership
     public class MemberSummaryItem
     {
 
-        public MemberSummaryItem(Models.DB.Member dataEntity)
+        private Models.ApplicationSettings _applicationSettings;
+        private Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
+
+
+        public MemberSummaryItem(Models.DB.Member dataEntity, Microsoft.Extensions.Options.IOptions<ApplicationSettings> settings, Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> usermanager)
         {
+            _applicationSettings = settings.Value;
+            _userManager = usermanager;
+
             this.First = dataEntity.FirstName;
             this.Last = dataEntity.LastName;
             this.HamCallSign = dataEntity.Ham;
@@ -19,11 +26,14 @@ namespace MonoSAR.Models.Membership
             this.PhoneWork = dataEntity.PhoneWork;
             this.State = dataEntity.State;
             this.ZIP = dataEntity.Zipcode;
+
+            ///TODO: add in the logic to figure out if someone is ICS 100, etc.
+            ///Assuming that should be config values, individually, in appsettings.
+            ///103, 242, 657, etc, individual, not broken out like it is now
+            ///
+                      
+
         }
-
-
-
-
 
         public String First { get; set; }
         public String Last { get; set; }
@@ -98,6 +108,8 @@ namespace MonoSAR.Models.Membership
         public Boolean IsICS200 { get; set; }
         public Boolean IsBuildingVehicleTested { get; set; }
         public Boolean IsPackChecked { get; set; }
+
+       // public List<MedicalSummary> MedicalSummaries { get; set; }
 
     }
 }

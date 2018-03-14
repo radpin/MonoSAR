@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MonoSAR.Models.DB
+namespace MonoSAR.Modelx
 {
     public partial class Office
     {
