@@ -6,7 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\Membership\MedicalSummary.cs" />
+    <Compile Remove="Modelx\**" />
+    <Content Remove="Modelx\**" />
+    <EmbeddedResource Remove="Modelx\**" />
+    <None Remove="Modelx\**" />
   </ItemGroup>
 
 

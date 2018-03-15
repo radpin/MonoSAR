@@ -5,16 +5,14 @@ using System.Threading.Tasks;
 
 namespace MonoSAR.Models.Membership
 {
-    public class MedicalSummary: AccessorySummaryCore
+    public class CertificationSummary: AccessorySummaryCore
     {
-
-        public MedicalSummary(Models.DB.MemberMedical dataItem)
+        public CertificationSummary(Models.DB.MemberCertification dataItem)
         {
-            this.Title = dataItem.Medical.Title;
+            this.Title = dataItem.Certification.Title;
             this.Expiration = dataItem.Expiration;
             this.Issued = dataItem.Issued;
-            this.RankOrder = dataItem.Medical.RankOrder;
+            this.RankOrder = dataItem.Certification.RankOrder;
         }
-
     }
 }

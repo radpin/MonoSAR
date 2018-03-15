@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
@@ -37,7 +38,29 @@ namespace MonoSAR.Models.DB
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(this.m_sqlConnectioNString);
+                if (string.IsNullOrEmpty(m_sqlConnectioNString))
+                {
+                    var configurationBuilder = new ConfigurationBuilder();
+                    configurationBuilder.SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("azurekeyvault.json", false, true)
+                    .AddJsonFile("appsettings.json", false, true)
+                    .AddEnvironmentVariables();
+                    
+                    var config = configurationBuilder.Build();
+
+                    configurationBuilder.AddAzureKeyVault(
+                        $"https://{config["azureKeyVault:vault"]}.vault.azure.net/",
+                        config["azureKeyVault:clientId"],
+                        config["azureKeyVault:clientSecret"]
+                    );
+
+                    config = configurationBuilder.Build();
+                    optionsBuilder.UseSqlServer(config.GetConnectionString("sqlconnectionstring"));
+                }
+                else
+                {
+                    optionsBuilder.UseSqlServer(this.m_sqlConnectioNString);
+                }
             }
         }
 

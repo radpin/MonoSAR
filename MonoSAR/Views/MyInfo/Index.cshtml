@@ -1,0 +1,176 @@
+﻿@model MonoSAR.Models.Membership.MemberSummaryItem
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>My Information</h2>
+
+<div>
+    <hr />
+
+    <div class="alert alert-info" role="alert">
+        <h4>Personal</h4>
+        @Html.DisplayFor(model => model.Last) , @Html.DisplayFor(model => model.First)<br />
+        @Html.DisplayFor(model => model.Address) <br />
+        @Html.DisplayFor(model => model.City), @Html.DisplayFor(model => model.State) @Html.DisplayFor(model => model.ZIP)
+        <br /><br />
+        Status: @Html.DisplayFor(model => model.Capacity)<br />
+        Joined: @Html.DisplayFor(model => model.Joined)
+        <br /><br />
+    </div>
+
+    <div class="alert alert-secondary" role="alert">
+        <h4>Contact</h4>
+        <table>
+            <tr>
+                <td>Email:</td>
+                <td>@Html.DisplayFor(model => model.Email)</td>
+            </tr>
+            <tr>
+                <td>Cell:</td>
+                <td>@Html.DisplayFor(model => model.PhoneCell)</td>
+            </tr>
+            <tr>
+                <td>Home:</td>
+                <td>@Html.DisplayFor(model => model.PhoneHome)</td>
+            </tr>
+            <tr>
+                <td>Work:</td>
+                <td>@Html.DisplayFor(model => model.PhoneWork)</td>
+            </tr>
+            <tr>
+                <td>Hamr:</td>
+                <td>@Html.DisplayFor(model => model.HamCallSign)</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="alert alert-success" role="alert">
+        <table>
+            <thead>
+                <tr>
+                    <th>Medical Certification</th>
+                    <th>Date Issued</th>
+                    <th>Date Expiring</th>
+                </tr>
+            </thead>
+            @foreach (var ms in Model.MedicalSummaries)
+            {
+                <tr>
+                    <td>@ms.Title</td>
+                    <td>@ms.IssuedPretty</td>
+                    <td>@ms.ExpirationPretty</td>
+                </tr>
+
+            }
+        </table>
+        <br />
+        CPR Expiration: @Html.DisplayFor(model => model.CPRExpiresPretty)
+    </div>
+
+
+    <div class="alert alert-success" role="alert">
+        <table>
+            <thead>
+                <tr>
+                    <th>Training Title</th>
+                    <th>Date</th>
+                    <th>Hours</th>
+                </tr>
+            </thead>
+            @foreach (var ts in Model.TrainingSummaries)
+            {
+                <tr>
+                    <td>@ts.TrainingTitle</td>
+                    <td>@ts.When</td>
+                    <td>@ts.Hours</td>
+                </tr>
+
+            }
+        </table>
+        <br />
+    </div>
+
+
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MedicalExpires)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MedicalExpires)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsMedicalExpired)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsMedicalExpired)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CPRExpires)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CPRExpires)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsCPRExpired)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsCPRExpired)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsBeaconExpired)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsBeaconExpired)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsWinterFieldReady)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsWinterFieldReady)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsSummerFieldReady)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsSummerFieldReady)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsICS100)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsICS100)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsICS200)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsICS200)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsBuildingVehicleTested)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsBuildingVehicleTested)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsPackChecked)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsPackChecked)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsCandidateClass)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsCandidateClass)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>
