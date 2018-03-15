@@ -1,4 +1,4 @@
-﻿@model MonoSAR.Models.Membership.MemberMedicalInsert
+﻿@model MonoSAR.Models.Membership.MemberCPRInsert
 
 @{
     ViewData["Title"] = "View";
@@ -7,12 +7,12 @@
 
 <hr />
 
-<h2>Membership - Record Medical Certification</h2>
+<h2>Membership - Record CPR Certification</h2>
 
-<form class="" asp-action="CreateOccurrence" method="post" asp-controller="TrainingOfficer">
+<form class="" asp-action="CreateOccurrence" method="post" asp-controller="MembershipOfficer">
     <div class="form-group">
-        <label for="formGroupExampleInput">Training Description</label>
-        <select required asp-for="MedicalID" class="form-control"></select>
+        <label for="formGroupExampleInput">CPR Level</label>
+        <select required asp-for="CPRID" class="form-control"></select>
 
     </div>
 
@@ -67,7 +67,7 @@
 
     function trainingJSONCall() {
 
-        let urlTraining = '/api/medical/';
+        let urlTraining = '/api/CPR/';
 
         fetch(urlTraining)
             .then(res => res.json())
@@ -99,8 +99,7 @@
 
             daySelect = document.getElementById('member');
             daySelect.options[daySelect.options.length] = new Option(obj.lastName + ', ' + obj.firstName, obj.memberId);
-            console.log(obj.lastName + ', ' + obj.firstName, obj.memberId);
-
+            
             memberList[i] = new Option(obj.lastName + ', ' + obj.firstName, obj.memberId);
 
         }
@@ -116,8 +115,8 @@
         for (var i = 0; i < jsonarray.length; i++) {
             var obj = jsonarray[i];
 
-            daySelect = document.getElementById('MedicalID');
-            daySelect.options[daySelect.options.length] = new Option(obj.title, obj.medicalId);
+            daySelect = document.getElementById('CPRID');
+            daySelect.options[daySelect.options.length] = new Option(obj.title, obj.cprid);
 
         }
 
