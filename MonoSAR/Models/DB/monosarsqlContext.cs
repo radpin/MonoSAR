@@ -30,8 +30,8 @@ namespace MonoSAR.Models.DB
         public monosarsqlContext()
         {
             //only here for scaffolding, do not use
-            throw new NotImplementedException("DBContext only used for scaffolding, make use of DI method.");
-
+            //throw new NotImplementedException("DBContext only used for scaffolding, make use of DI method.");
+            this.m_sqlConnectioNString = "Server=tcp:monosardbserver.database.windows.net,1433;Initial Catalog=monosarsql;Persist Security Info=False;User ID=monodblogin;Password=g1o4AxFzV5rdzmazjsTO;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

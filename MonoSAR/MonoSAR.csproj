@@ -12,6 +12,10 @@
     <None Remove="Modelx\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Controllers\TrainingMembersController.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />

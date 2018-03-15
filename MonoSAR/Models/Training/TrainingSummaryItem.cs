@@ -9,6 +9,7 @@ namespace MonoSAR.Models.Training
     {
         public String TrainingTitle { get; set; }
         public DateTime When { get; set; }
+        public String WhenPretty { get { return When.ToShortDateString(); } }
         public DateTime Created { get; set; }
         public Decimal Hours { get; set; }
         public String MemberName { get; set; }

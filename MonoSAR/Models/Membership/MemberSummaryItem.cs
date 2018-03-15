@@ -42,6 +42,7 @@ namespace MonoSAR.Models.Membership
             this.buildCPR(dataEntity);
             this.buildMedical(dataEntity);
             this.buildInitialFieldChecks(dataEntity);
+            this.buildTraining(dataEntity);
 
             this.Capacity = dataEntity.Capacity.CapacityName;
         }
@@ -93,27 +94,23 @@ namespace MonoSAR.Models.Membership
 
         private void buildInitialFieldChecks(Models.DB.Member dataItem)
         {
-            //I think because these are being lazy loaded that they can be coverted from _context to simply querying the dataItem (with its lazy loaded properties).
-            //a few less data calls, unless EF is smart enough to know that already so querying _context doesn't matter. - eric
-
-
-            var bv = (from tm in _context.TrainingMember
+            var bv = (from tm in dataItem.TrainingMember
                      where tm.MemberId == dataItem.MemberId && tm.TrainingId == _applicationSettings.RequiredBVTest
                      select tm).FirstOrDefault();
 
-            var bcc = (from tm in _context.TrainingMember
+            var bcc = (from tm in dataItem.TrainingMember
                           where tm.MemberId == dataItem.MemberId && tm.TrainingId == _applicationSettings.RequiredCandidateBasicClass
                           select tm).FirstOrDefault();
 
-            var ics100 = (from tm in _context.TrainingMember
+            var ics100 = (from tm in dataItem.TrainingMember
                        where tm.MemberId == dataItem.MemberId && tm.TrainingId == _applicationSettings.RequiredICS100
                        select tm).FirstOrDefault();
 
-            var ics200 = (from tm in _context.TrainingMember
+            var ics200 = (from tm in dataItem.TrainingMember
                           where tm.MemberId == dataItem.MemberId && tm.TrainingId == _applicationSettings.RequiredICS200
                           select tm).FirstOrDefault();
 
-            var pc = (from tm in _context.TrainingMember
+            var pc = (from tm in dataItem.TrainingMember
                       where tm.MemberId == dataItem.MemberId && tm.TrainingId == _applicationSettings.RequiredPackCheck
                       select tm).FirstOrDefault();
 
@@ -154,7 +151,7 @@ namespace MonoSAR.Models.Membership
                 trainingSummaries.Add(tsi);
             }
 
-            this.TrainingSummaries = trainingSummaries;
+            this.TrainingSummaries = trainingSummaries.OrderByDescending(x=> x.When).ToList();
         }
 
         public String First { get; set; }
