@@ -170,7 +170,7 @@ namespace MonoSAR.Controllers
                 return View(model);
             }
 
-            await _signInManager.SignInAsync(user, isPersistent: false);
+            await _signInManager.SignInAsync(user, isPersistent: false); 
             _logger.LogInformation("User changed their password successfully.");
             StatusMessage = "Your password has been changed.";
 

@@ -35,8 +35,7 @@ namespace MonoSAR
             configurationBuilder.AddAzureKeyVault(
                 $"https://{config["azureKeyVault:vault"]}.vault.azure.net/",
                 config["azureKeyVault:clientId"],
-                config["azureKeyVault:clientSecret"]
-            );
+                config["azureKeyVault:clientSecret"]);
         }
     }
 

@@ -31,16 +31,21 @@ namespace MonoSAR
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration["sqlconnectionstring"]));
 
-            //built-in individual user accounts
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(config =>
+            {
+                config.SignIn.RequireConfirmedEmail = true;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
             //load up appsettings.json into ApplicationSettings
             services.Configure<Models.ApplicationSettings>(Configuration.GetSection("AppSettings"));
+
+            services.Configure<AuthMessageSenderOptions>(Configuration);
 
 
             services.AddMvc();
