@@ -20,7 +20,7 @@ namespace MonoSAR.Models.Membership
         {
             get
             {
-                if (Expiration > DateTime.Now)
+                if (Expiration > DateTime.UtcNow)
                 { return true; }
 
                 return false;

@@ -127,7 +127,7 @@ namespace MonoSAR.Models.Membership
                         where tm.MemberId == dataItem.MemberId && tm.TrainingId == _applicationSettings.RequiredBeaconTest
                         select tm).FirstOrDefault();
 
-            if (beac != null && beac.TrainingDate > DateTime.Now.AddYears(-1))
+            if (beac != null && beac.TrainingDate > DateTime.UtcNow.AddYears(-1))
             { this.IsBeaconExpired = true; }
         }
 
@@ -174,7 +174,7 @@ namespace MonoSAR.Models.Membership
         public Boolean IsMedicalExpired {
 
         get {
-                if (MedicalExpires > DateTime.Now)
+                if (MedicalExpires > DateTime.UtcNow)
                 { return false; }
 
                 return true;
@@ -187,7 +187,7 @@ namespace MonoSAR.Models.Membership
 
             get
             {
-                if (CPRExpires > DateTime.Now)
+                if (CPRExpires > DateTime.UtcNow)
                 { return false; }
 
                 return true;

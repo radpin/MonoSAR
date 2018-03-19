@@ -25,7 +25,6 @@ namespace MonoSAR.Controllers
         [Authorize(Roles ="Admin,Training")]
         public ActionResult Index()
         {
-
             Models.Training.TrainingSummary model = new Models.Training.TrainingSummary();
 
             var query = (from tm in _context.TrainingMember
@@ -35,8 +34,6 @@ namespace MonoSAR.Controllers
             //Explicit loading because EF Core isn't lazy
             _context.TrainingMember.Include(x => x.Member).Load();
             _context.TrainingMember.Include(x => x.Training).Load();
-
-
 
             foreach (var item in query)
             {
@@ -88,7 +85,7 @@ namespace MonoSAR.Controllers
                         
                         //get the hours
                         string maybeHours = x["hours"][i];
-                        topi.Hours = Int32.Parse(maybeHours);
+                        topi.Hours = Decimal.Parse(maybeHours);
 
                         //keeping a counter so (above) we know how to find the hours by index. ie: for the third member, we look for the third set of hours.
                         topiList.Add(topi);
@@ -103,7 +100,7 @@ namespace MonoSAR.Controllers
             foreach (var item in topiList)
             {
                 Models.DB.TrainingMember trainingMember = new TrainingMember();
-                trainingMember.Created = DateTime.Now;
+                trainingMember.Created = DateTime.UtcNow;
                 trainingMember.MemberId = item.MemberID;
                 trainingMember.TrainingDate = toi.TrainingDate;
                 trainingMember.TrainingHours = item.Hours;

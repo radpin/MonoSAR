@@ -38,8 +38,7 @@ namespace MonoSAR.Services
                 PlainTextContent = body,
                 HtmlContent = body
             };
-            msg.AddTo(new EmailAddress(email));
-            
+            msg.AddTo(new EmailAddress(email));            
             
             //client.SendEmailAsync(msg).Wait();
             return client.SendEmailAsync(msg);
