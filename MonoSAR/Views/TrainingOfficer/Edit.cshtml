@@ -1,0 +1,73 @@
+﻿@model MonoSAR.Models.Training.TrainingSummaryItem
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+<h4>Training Summary Item</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+
+        <div class="alert alert-secondary" role="alert">
+            <h4>Contact</h4>
+            <table>
+                <tr>
+                    <td>Training:</td>
+                    <td>@Html.DisplayFor(model => model.TrainingTitle)</td>
+                </tr>
+                <tr>
+                    <td>Member:</td>
+                    <td>@Html.DisplayFor(model => model.MemberName)</td>
+                </tr>
+                <tr>
+                    <td>Date:</td>
+                    <td>@Html.DisplayFor(model => model.WhenPretty)</td>
+                </tr>
+                <tr>
+                    <td>Hours:</td>
+                    <td>@Html.DisplayFor(model => model.Hours)</td>
+                </tr>
+                <tr>
+                    <td>Created (UTC):</td>
+                    <td>@Html.DisplayFor(model => model.Created)</td>
+                </tr>
+            </table>
+        </div>
+
+
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Hours" class="control-label"></label>
+                <input asp-for="Hours" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="When" class="control-label"></label>
+                <input asp-for="When" class="form-control" type="date" />
+                <input asp-for="TrainingMemberID" hidden="hidden" type="hidden" />
+                <input asp-for="TrainingTitle" hidden="hidden" type="hidden" />
+
+                <span asp-validation-for="Hours" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Update" class="btn btn-primary" />
+            </div>
+        </form>
+        <form asp-action="Delete" onsubmit="return confirm('Really delete this?')">
+            <input asp-for="TrainingMemberID" hidden="hidden" type="hidden" />
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        </form>
+
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

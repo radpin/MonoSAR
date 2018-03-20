@@ -25,7 +25,7 @@ namespace MonoSAR.Controllers
         [Authorize(Roles ="Admin,Training")]
         public ActionResult Index()
         {
-            Models.Training.TrainingSummary model = new Models.Training.TrainingSummary();
+
 
             var query = (from tm in _context.TrainingMember
                          orderby tm.Created descending, tm.TrainingDate descending
@@ -35,18 +35,9 @@ namespace MonoSAR.Controllers
             _context.TrainingMember.Include(x => x.Member).Load();
             _context.TrainingMember.Include(x => x.Training).Load();
 
-            foreach (var item in query)
-            {
-                Models.Training.TrainingSummaryItem tsi = new Models.Training.TrainingSummaryItem();
-                tsi.Created = item.Created;
-                tsi.Hours = item.TrainingHours;
-                tsi.MemberName = item.Member.LastName + ", " + item.Member.FirstName;
-                tsi.TrainingTitle = item.Training.TrainingTitle;
-                tsi.When = item.TrainingDate;
-                tsi.TrainingMemberID = item.TrainingMemberId;
+            //converting from data models to the view model (dto), the conversions happen in the view model / dto's constructor
+            Models.Training.TrainingSummary model = new Models.Training.TrainingSummary(query);
 
-                model.Add(tsi);
-            }
 
             return View(model); 
         }
@@ -123,8 +114,10 @@ namespace MonoSAR.Controllers
         }
 
         // GET: TrainingOfficer/Details/5
+        [Authorize(Roles = "Admin,Training")]
         public ActionResult Details(int id)
         {
+
             return View();
         }
 
@@ -154,48 +147,74 @@ namespace MonoSAR.Controllers
         }
 
         // GET: TrainingOfficer/Edit/5
+        [Authorize(Roles = "Admin,Training")]
         public ActionResult Edit(int id)
         {
-            return View();
+            var query = (from tm in _context.TrainingMember
+                         where tm.TrainingMemberId == id
+                         select tm).FirstOrDefault();
+
+            //Explicit loading because EF Core isn't lazy
+            _context.TrainingMember.Include(x => x.Member).Load();
+            _context.TrainingMember.Include(x => x.Training).Load();
+
+            //converting from data models to the view model (dto), the conversions happen in the view model / dto's constructor
+            Models.Training.TrainingSummaryItem model = new Models.Training.TrainingSummaryItem(query);
+
+
+            return View(model);
+
         }
 
         // POST: TrainingOfficer/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [Authorize(Roles = "Admin,Training")]
+        public ActionResult Edit(Models.Training.TrainingSummaryItem viewModel)
         {
-            try
-            {
-                // TODO: Add update logic here
+            // only updating hours and date at the moment
+
+            try {
+
+                var query = (from tm in _context.TrainingMember
+                             where tm.TrainingMemberId == viewModel.TrainingMemberID
+                             select tm).FirstOrDefault();
+
+                query.TrainingHours = viewModel.Hours;
+                query.TrainingDate = viewModel.When;
+
+                _context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: TrainingOfficer/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+
         }
 
         // POST: TrainingOfficer/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [Authorize(Roles = "Admin,Training")]
+        public ActionResult Delete(Models.Training.TrainingSummaryItem viewModel)
         {
             try
             {
-                // TODO: Add delete logic here
+                var del = new Models.DB.TrainingMember { TrainingMemberId = viewModel.TrainingMemberID };
+                _context.TrainingMember.Attach(del);
+                _context.Remove(del);
+
+                _context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
+
             }
-            catch
+            catch (Exception exc)
             {
-                return View();
+                throw exc;
             }
         }
     }

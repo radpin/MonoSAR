@@ -37,8 +37,6 @@ namespace MonoSAR.Controllers
             _context.Member.Include(x => x.Capacity).Load();
             _context.Member.Include(x => x.TrainingMember).ThenInclude(y => y.Training).Load();
 
-            //public MemberSummaryItem(Models.DB.Member dataEntity, Microsoft.Extensions.Options.IOptions<ApplicationSettings> settings, Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> usermanager, IConfiguration config)
-
             Models.Membership.MemberSummaryItem memberSummaryItem = new Models.Membership.MemberSummaryItem(loggedInMember, _applicationOptions, _userManager, _config);
 
             return View(memberSummaryItem);

@@ -133,21 +133,12 @@ namespace MonoSAR.Models.Membership
 
         private void buildTraining(Models.DB.Member dataItem)
         {
-            //this creation should be moved to the TrainingSummaryItem constructor to keep it more consistent with other patterns - eric
 
             List<Training.TrainingSummaryItem> trainingSummaries = new List<Training.TrainingSummaryItem>();
             
-
             foreach (var tm in dataItem.TrainingMember)
             {
-                Training.TrainingSummaryItem tsi = new Training.TrainingSummaryItem();
-                tsi.Created = tm.Created;
-                tsi.Hours = tm.TrainingHours;
-                tsi.MemberName = tm.Member.LastName;
-                tsi.TrainingMemberID = tm.TrainingMemberId;
-                tsi.TrainingTitle = tm.Training.TrainingTitle;
-                tsi.When = tm.TrainingDate;
-
+                Training.TrainingSummaryItem tsi = new Training.TrainingSummaryItem(tm);
                 trainingSummaries.Add(tsi);
             }
 
