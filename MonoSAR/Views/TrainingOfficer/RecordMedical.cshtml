@@ -1,0 +1,46 @@
+﻿@model MonoSAR.Models.Training.MemberMedicalInsert
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<hr />
+
+<h2>Training - Record Medical Certification</h2>
+
+<form class="" asp-action="CreateMedicalOccurrence" method="post" asp-controller="TrainingOfficer">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label for="formGroupExampleInput">Training Description</label>
+
+            @Html.DropDownListFor(x=>x.MedicalID, new SelectList(Model.MedicalStubs, "ID", "Title"), new { @class = "form-control", })
+
+        </div>
+
+        <div class="form-group">
+            <label for="formGroupExampleInput">Issued Date</label>
+            <input type="date" class="form-control" required style="width:200px;" asp-for="Issued">
+        </div>
+
+        <div class="form-group">
+            <label for="formGroupExampleInput">Expiration Date</label>
+            <input type="date" class="form-control" required style="width:200px;" asp-for="Expiration">
+        </div>
+
+        <div class="form-inline">
+            <label for="formGroupExampleInput">Member(s)</label>
+            <div style="display:inline-block; float:left; width:100%;">
+
+                @Html.DropDownListFor(x=>x.MemberID,  new SelectList(Model.MemberStubs, "MemberID", "MemberName"), new {@class="form-control" })
+
+            </div>
+            <div id="container"><br /></div>
+            <br />
+
+        </div>
+        <div>
+            <br />
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>

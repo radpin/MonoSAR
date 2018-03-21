@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MonoSAR.Models.Membership
+namespace MonoSAR.Models.Training
 {
     public abstract class AccessorySummaryCore
     {

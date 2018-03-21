@@ -17,27 +17,23 @@
                 <th>Training</th>
                 <th>Hours</th>
                 <th>Recorded On (UTC)</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
 
 
        @foreach (var item in Model)
-    {
+        {
             <tr>
                 <td>@item.When.ToShortDateString()</td>
-                <td>@item.MemberName</td>
+                <td><a href="/TrainingOfficer/ViewMember/@item.MemberID">@item.MemberName</a></td>
                 <td>@item.TrainingTitle</td>
                 <td>@item.Hours</td>
-                <td><a href="/TrainingOfficer/Edit/@item.TrainingMemberID">@item.Created </a></td>
+                <td>@item.Created</td>
+                <td><a href="/TrainingOfficer/Edit/@item.TrainingMemberID">Edit</a></td>
             </tr>
-
-
-       
-    }
-
-
-
+        }
             <tr></tr>
 
 

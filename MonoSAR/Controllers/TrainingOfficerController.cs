@@ -8,17 +8,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using MonoSAR.Models.DB;
 using Microsoft.EntityFrameworkCore;
+using MonoSAR.Models;
+using Microsoft.Extensions.Options;
 
 namespace MonoSAR.Controllers
 {
     public class TrainingOfficerController : Controller
     {
-        private Models.DB.monosarsqlContext _context; 
+        private Models.DB.monosarsqlContext _context;
+        private IConfiguration _config;
+        private Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
+        private IOptions<ApplicationSettings> _applicationOptions;
 
-        public TrainingOfficerController(IConfiguration config)
+
+        public TrainingOfficerController(IConfiguration config, Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> usermanager, IOptions<ApplicationSettings> options)
         {
+            this._context = new Models.DB.monosarsqlContext(config);
+            this._config = config;
+            this._userManager = usermanager;
+            this._applicationOptions = options;
 
-            this._context = new monosarsqlContext(config);
         }
 
         // GET: TrainingOfficer
@@ -115,10 +124,24 @@ namespace MonoSAR.Controllers
 
         // GET: TrainingOfficer/Details/5
         [Authorize(Roles = "Admin,Training")]
-        public ActionResult Details(int id)
+        public ActionResult ViewMember(int id)
         {
+            var query = (from m in _context.Member
+                         where m.MemberId == id
+                         select m).FirstOrDefault();
 
-            return View();
+            if (query == null)
+            { throw new Exception("Unable to locate member."); }
+
+            _context.Member.Include(x => x.MemberCertification).ThenInclude(y => y.Certification).Load();
+            _context.Member.Include(x => x.MemberCpr).ThenInclude(y => y.Cpr).Load();
+            _context.Member.Include(x => x.MemberMedical).ThenInclude(y => y.Medical).Load();
+            _context.Member.Include(x => x.Capacity).Load();
+            _context.Member.Include(x => x.TrainingMember).ThenInclude(y => y.Training).Load();
+
+            var model = new Models.Membership.MemberSummaryItem(query, _applicationOptions, _config);
+            
+            return View(model);
         }
 
         
@@ -216,6 +239,92 @@ namespace MonoSAR.Controllers
             {
                 throw exc;
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Training")]
+        public ActionResult CreateMedicalOccurrence(Models.Training.MemberMedicalInsert model)
+        {
+            Models.DB.MemberMedical memberMedical = new MemberMedical();
+
+            memberMedical.Created = DateTime.UtcNow;
+            memberMedical.Expiration = model.Expiration;
+            memberMedical.Issued = model.Issued;
+            memberMedical.MedicalId = model.MedicalID;
+            memberMedical.MemberId = model.MemberID;
+
+            _context.Add(memberMedical);
+            _context.SaveChanges();
+
+            return Redirect("/TrainingOfficer/ViewMember/" + model.MemberID);
+
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Training")]
+        public ActionResult CreateCprOccurrence(Models.Training.MemberCPRInsert model)
+        {
+            Models.DB.MemberCpr memberCpr = new MemberCpr();
+
+            memberCpr.Created = DateTime.UtcNow;
+            memberCpr.Expiration = model.Expiration;
+            memberCpr.Issued = model.Issued;
+            memberCpr.Cprid = model.CPRID;
+            memberCpr.MemberId = model.MemberID;
+
+            _context.Add(memberCpr);
+            _context.SaveChanges();
+
+            return Redirect("/TrainingOfficer/ViewMember/" + model.MemberID);
+
+        }
+
+
+        public ActionResult RecordMedical()
+        {
+            var query = (from m in _context.Member
+                         orderby m.LastName
+                         select m).ToList();
+
+            Models.Training.MemberMedicalInsert model = new Models.Training.MemberMedicalInsert();
+            model.MemberStubs = new Models.Membership.MemberStubs(query);
+
+            var meds = (from med in _context.Medical
+                        orderby med.RankOrder
+                        select med).ToList();
+
+            model.MedicalStubs = new Models.Training.MedicalStubs(meds);
+
+            model.Issued = DateTime.Now;
+            model.Expiration = DateTime.Now.AddYears(2);
+
+
+            return View(model);
+        }
+
+        public ActionResult RecordCPR()
+        {
+            var query = (from m in _context.Member
+                         orderby m.LastName
+                         select m).ToList();
+
+            Models.Training.MemberCPRInsert model = new Models.Training.MemberCPRInsert();
+            model.MemberStubs = new Models.Membership.MemberStubs(query);
+
+            var cprs = (from c in _context.Cpr
+                        orderby c.RankOrder
+                        select c).ToList();
+
+            model.CPRStumps = new Models.Training.CPRStumps(cprs);
+
+            model.Issued = DateTime.Now;
+            model.Expiration = DateTime.Now.AddYears(2);
+
+
+            return View(model);
         }
     }
 }

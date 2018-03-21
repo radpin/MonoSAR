@@ -21,16 +21,7 @@ namespace MonoSAR.Controllers
             return View();
         }
 
-        // GET: MembershipOfficer/Create
-        public ActionResult RecordMedical()
-        {
-            return View();
-        }
 
-        public ActionResult RecordCPR()
-        {
-            return View();
-        }
 
         // POST: MembershipOfficer/Create
         [HttpPost]

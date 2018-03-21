@@ -33,6 +33,7 @@ namespace MonoSAR.Models.Training
             this.TrainingMemberID = dataItem.TrainingMemberId;
             this.TrainingTitle = dataItem.Training.TrainingTitle;
             this.When = dataItem.TrainingDate;
+            this.MemberID = dataItem.MemberId;
         }
 
 
@@ -43,5 +44,6 @@ namespace MonoSAR.Models.Training
         public Decimal Hours { get; set; }
         public String MemberName { get; set; }
         public Int32 TrainingMemberID { get; set; }
+        public Int32 MemberID { get; set; }
     }
 }

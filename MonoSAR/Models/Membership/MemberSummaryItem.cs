@@ -14,13 +14,11 @@ namespace MonoSAR.Models.Membership
     {
 
         private Models.ApplicationSettings _applicationSettings;
-        private Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
         private DB.monosarsqlContext _context;
 
-        public MemberSummaryItem(Models.DB.Member dataEntity, Microsoft.Extensions.Options.IOptions<ApplicationSettings> settings, Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> usermanager, IConfiguration config)
+        public MemberSummaryItem(Models.DB.Member dataEntity, Microsoft.Extensions.Options.IOptions<ApplicationSettings> settings, IConfiguration config)
         {
             _applicationSettings = settings.Value;
-            _userManager = usermanager;
             this._context = new DB.monosarsqlContext(config);
 
             this.First = dataEntity.FirstName;
@@ -50,26 +48,26 @@ namespace MonoSAR.Models.Membership
 
         private void buildMedical(Models.DB.Member dataItem)
         {
-            List<MedicalSummary> medicalSummaries = new List<MedicalSummary>();
+            List<Training.MedicalSummaryItem> medicalSummaries = new List<Training.MedicalSummaryItem>();
 
             foreach (var item in dataItem.MemberMedical)
             {
-                medicalSummaries.Add(new MedicalSummary(item));
+                medicalSummaries.Add(new Training.MedicalSummaryItem(item));
             }
 
             this.MedicalSummaries = medicalSummaries;
 
-            if (dataItem.MemberMedical != null)
+            if (dataItem.MemberMedical.Count > 0)
             { this.MedicalExpires = dataItem.MemberMedical.OrderByDescending(e => e.Expiration).FirstOrDefault().Expiration; }
         }
 
         private void buildCPR(Models.DB.Member dataItem)
         {
-            List<CPRSummary> cPRSummaries = new List<CPRSummary>();
+            List<Training.CPRSummary> cPRSummaries = new List<Training.CPRSummary>();
 
             foreach (var item in dataItem.MemberCpr)
             {
-                cPRSummaries.Add(new CPRSummary(item));
+                cPRSummaries.Add(new Training.CPRSummary(item));
             }
 
             this.CPRSummaries = cPRSummaries;
@@ -82,11 +80,11 @@ namespace MonoSAR.Models.Membership
 
         private void buildCertification(Models.DB.Member dataItem)
         {
-            List<CertificationSummary> certificationSummaries = new List<CertificationSummary>();
+            List<Training.CertificationSummary> certificationSummaries = new List<Training.CertificationSummary>();
 
             foreach (var item in dataItem.MemberCertification)
             {
-                certificationSummaries.Add(new CertificationSummary(item));
+                certificationSummaries.Add(new Training.CertificationSummary(item));
             }
 
             this.CertificationSummaries = certificationSummaries;
@@ -142,7 +140,12 @@ namespace MonoSAR.Models.Membership
                 trainingSummaries.Add(tsi);
             }
 
-            this.TrainingSummaries = trainingSummaries.OrderByDescending(x=> x.When).ToList();
+            if (dataItem.TrainingMember.Count > 0)
+            {
+                this.TrainingSummaries = trainingSummaries.OrderByDescending(x => x.When).ToList();
+            }
+
+
         }
 
         public String First { get; set; }
@@ -212,9 +215,9 @@ namespace MonoSAR.Models.Membership
         public Boolean IsPackChecked { get; set; }
         public Boolean IsCandidateClass { get; set; }
 
-        public List<MedicalSummary> MedicalSummaries { get; set; }
-        public List<CertificationSummary> CertificationSummaries { get; set; }
-        public List<CPRSummary> CPRSummaries { get; set; }
+        public List<Training.MedicalSummaryItem> MedicalSummaries { get; set; }
+        public List<Training.CertificationSummary> CertificationSummaries { get; set; }
+        public List<Training.CPRSummary> CPRSummaries { get; set; }
 
         public List<Training.TrainingSummaryItem> TrainingSummaries { get; set; }
 
