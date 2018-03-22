@@ -22,7 +22,6 @@ namespace MonoSAR.Controllers
             this._context = new monosarsqlContext(config);
         }
 
-
         // GET: api/Members
         [HttpGet]
         public IEnumerable<Member> GetMember()

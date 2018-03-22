@@ -133,7 +133,8 @@ namespace MonoSAR.Models.Membership
         {
 
             List<Training.TrainingSummaryItem> trainingSummaries = new List<Training.TrainingSummaryItem>();
-            
+            this.TrainingSummaries = trainingSummaries;
+
             foreach (var tm in dataItem.TrainingMember)
             {
                 Training.TrainingSummaryItem tsi = new Training.TrainingSummaryItem(tm);

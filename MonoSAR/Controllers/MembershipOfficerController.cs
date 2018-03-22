@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MonoSAR.Models;
@@ -57,7 +58,49 @@ namespace MonoSAR.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateMember(Models.Membership.MemberInsert model)
         {
-            return View();
+
+            Models.DB.Member dbMember = new Models.DB.Member();
+            Int32 newID;
+
+            dbMember.Address = model.Address;
+            dbMember.CapacityId = model.CapacityID;
+            dbMember.City = model.City;
+            dbMember.Email = model.Email;
+            dbMember.FirstName = model.FirstName;
+            dbMember.Ham = model.LastName;
+            dbMember.Joined = model.Joined;
+            dbMember.LastName = model.LastName;
+            dbMember.PhoneCell = model.PhoneCell;
+            dbMember.PhoneHome = model.PhoneHome;
+            dbMember.PhoneWork = model.PhoneWork;
+            dbMember.State = model.State;
+            dbMember.Status = String.Empty; //need to remove that from the db at some point
+            dbMember.Zipcode = model.Zip;
+            
+            if (dbMember.PhoneCell == null)
+            { dbMember.PhoneCell = String.Empty; }
+            if (dbMember.PhoneHome == null)
+            { dbMember.PhoneHome = String.Empty; }
+            if (dbMember.PhoneWork == null)
+            { dbMember.PhoneWork = String.Empty; }
+
+            if (dbMember.Ham == null)
+            { dbMember.Ham = String.Empty; }
+
+            try
+            {
+                _context.Member.Add(dbMember);
+                _context.SaveChanges();
+                newID = dbMember.MemberId;
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+
+
+
+            return View("Thanks",newID);
         }
 
 
@@ -103,9 +146,25 @@ namespace MonoSAR.Controllers
         }
 
         // GET: MembershipOfficer/Delete/5
-        public ActionResult Delete(int id)
+        [Authorize(Roles = "Admin,Membership")]
+        public ActionResult ViewMember(int id)
         {
-            return View();
+            var query = (from m in _context.Member
+                         where m.MemberId == id
+                         select m).FirstOrDefault();
+
+            if (query == null)
+            { throw new Exception("Unable to locate member."); }
+
+            _context.Member.Include(x => x.MemberCertification).ThenInclude(y => y.Certification).Load();
+            _context.Member.Include(x => x.MemberCpr).ThenInclude(y => y.Cpr).Load();
+            _context.Member.Include(x => x.MemberMedical).ThenInclude(y => y.Medical).Load();
+            _context.Member.Include(x => x.Capacity).Load();
+            _context.Member.Include(x => x.TrainingMember).ThenInclude(y => y.Training).Load();
+
+            var model = new Models.Membership.MemberSummaryItem(query, _applicationOptions, _config);
+
+            return View(model);
         }
 
         // POST: MembershipOfficer/Delete/5
