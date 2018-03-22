@@ -27,7 +27,6 @@ namespace MonoSAR.Controllers
             this._config = config;
             this._userManager = usermanager;
             this._applicationOptions = options;
-
         }
 
         // GET: TrainingOfficer
@@ -61,6 +60,7 @@ namespace MonoSAR.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Training")]
         public ViewResult CreateOccurrence(Models.Training.TrainingOccurrenceInsert toi)
         {
             List<Models.Training.TrainingOccurrenceParticipationInsert> topiList = new List<Models.Training.TrainingOccurrenceParticipationInsert>();
@@ -282,7 +282,7 @@ namespace MonoSAR.Controllers
 
         }
 
-
+        [Authorize(Roles = "Admin,Training")]
         public ActionResult RecordMedical()
         {
             var query = (from m in _context.Member
@@ -304,7 +304,7 @@ namespace MonoSAR.Controllers
 
             return View(model);
         }
-
+        [Authorize(Roles = "Admin,Training")]
         public ActionResult RecordCPR()
         {
             var query = (from m in _context.Member

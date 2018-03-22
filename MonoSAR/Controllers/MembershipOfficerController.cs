@@ -2,13 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using MonoSAR.Models;
 
 namespace MonoSAR.Controllers
 {
     public class MembershipOfficerController : Controller
     {
+        private Models.DB.monosarsqlContext _context;
+        private IConfiguration _config;
+        private Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
+        private IOptions<ApplicationSettings> _applicationOptions;
+
+
+        public MembershipOfficerController(IConfiguration config, Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> usermanager, IOptions<ApplicationSettings> options)
+        {
+            this._context = new Models.DB.monosarsqlContext(config);
+            this._config = config;
+            this._userManager = usermanager;
+            this._applicationOptions = options;
+        }
+
+
         // GET: MembershipOfficer
         public ActionResult Index()
         {
@@ -16,7 +35,27 @@ namespace MonoSAR.Controllers
         }
 
         // GET: MembershipOfficer/Details/5
-        public ActionResult Details(int id)
+        [Authorize(Roles = "Admin,Membership")]
+        [HttpGet]
+        public ActionResult CreateMember()
+        {
+
+            Models.Membership.MemberInsert model = new Models.Membership.MemberInsert();
+
+            var caps = (from c in _context.Capacity
+                        select c).ToList();
+
+            model.Joined = DateTime.Now;
+            model.CapacityStubs = new Models.Membership.CapacityStubs(caps);
+
+            return View(model);
+        }
+
+        // GET: MembershipOfficer/Details/5
+        [Authorize(Roles = "Admin,Membership")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateMember(Models.Membership.MemberInsert model)
         {
             return View();
         }
