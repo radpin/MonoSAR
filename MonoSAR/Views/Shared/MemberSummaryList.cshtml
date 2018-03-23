@@ -1,0 +1,69 @@
+﻿@model IEnumerable<MonoSAR.Models.Membership.MemberSummaryItem>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                Joined
+            </th>
+            <th>
+                Phone
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Capacity)
+            </th>
+            <th>
+                Summer
+            </th>
+            <th>
+                Winter
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="font-size:small;">
+                    <a href="/MembershipOfficer/ViewMember/@item.ID">@Html.DisplayFor(modelItem => item.Last), @Html.DisplayFor(modelItem => item.First)</a>
+                </td>
+                <td style="font-size:small;">
+                    @Html.DisplayFor(modelItem => item.Address)<br />
+                    @Html.DisplayFor(modelItem => item.City), @Html.DisplayFor(modelItem => item.State) @Html.DisplayFor(modelItem => item.ZIP)
+                </td>
+                <td style="font-size:small;">
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td style="font-size:small;">
+                    @Html.DisplayFor(modelItem => item.JoinedPretty)
+                </td>
+                <td style="font-size:small;">
+                    Cell: @Html.DisplayFor(modelItem => item.PhoneCell) <br />
+                    Home: @Html.DisplayFor(modelItem => item.PhoneHome) <br />
+                    Work: @Html.DisplayFor(modelItem => item.PhoneWork)
+                </td>
+                <td style="font-size:small;">
+                    @Html.DisplayFor(modelItem => item.Capacity)
+                </td>
+                <td style="font-size:small;">
+                    @Html.DisplayFor(modelItem => item.IsSummerFieldReady)
+                </td>
+                <td style="font-size:small;">
+                    @Html.DisplayFor(modelItem => item.IsWinterFieldReady)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

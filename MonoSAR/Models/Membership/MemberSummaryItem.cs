@@ -20,7 +20,7 @@ namespace MonoSAR.Models.Membership
         {
             _applicationSettings = settings.Value;
             this._context = new DB.monosarsqlContext(config);
-
+            this.ID = dataEntity.MemberId;
             this.First = dataEntity.FirstName;
             this.Last = dataEntity.LastName;
             this.HamCallSign = dataEntity.Ham;
@@ -149,6 +149,7 @@ namespace MonoSAR.Models.Membership
 
         }
 
+        public Int32 ID { get; set; }
         public String First { get; set; }
         public String Last { get; set; }
         public String HamCallSign { get; set; }

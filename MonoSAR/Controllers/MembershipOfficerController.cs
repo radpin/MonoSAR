@@ -53,6 +53,34 @@ namespace MonoSAR.Controllers
         }
 
         // GET: MembershipOfficer/Details/5
+        [Authorize(Roles = "Admin,Membership,Training")]
+        [HttpGet]
+        public ActionResult MemberReport()
+        {
+
+            List<Models.Membership.MemberSummaryItem> memberList = new List<Models.Membership.MemberSummaryItem>();
+            
+            var dbmems = (from m in _context.Member
+                          orderby m.LastName, m.FirstName
+                        select m).ToList();
+
+            _context.Member.Include(x => x.MemberCertification).ThenInclude(y => y.Certification).Load();
+            _context.Member.Include(x => x.MemberCpr).ThenInclude(y => y.Cpr).Load();
+            _context.Member.Include(x => x.MemberMedical).ThenInclude(y => y.Medical).Load();
+            _context.Member.Include(x => x.Capacity).Load();
+            _context.Member.Include(x => x.TrainingMember).ThenInclude(y => y.Training).Load();
+
+
+            foreach (var x in dbmems)
+            {
+                memberList.Add(new Models.Membership.MemberSummaryItem(x, _applicationOptions, _config));
+            }
+
+
+            return View(memberList);
+        }
+
+        // GET: MembershipOfficer/Details/5
         [Authorize(Roles = "Admin,Membership")]
         [HttpPost]
         [ValidateAntiForgeryToken]
