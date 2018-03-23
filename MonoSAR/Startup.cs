@@ -91,6 +91,11 @@ namespace MonoSAR
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
+
+            //hard-coding the email addresses is a little dorky, better would be to have a json file of email/role names which is not in source control,
+            //and then read/loop/process it.... somehow. - eric
+
+
             //initializing custom roles 
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -112,50 +117,35 @@ namespace MonoSAR
 
             var _barry = await UserManager.FindByEmailAsync("bearbnz@yahoo.com");
             var _eric = await UserManager.FindByEmailAsync("radpin@gmail.com");
-
-            //await UserManager.AddToRoleAsync(_barry, "Training");
-            //await UserManager.AddToRoleAsync(_eric, "Admin");
-
-            //UserManager.AddToRoleAsync(_barry, "Training").Wait();
-            //UserManager.AddToRoleAsync(_eric, "Admin").Wait();
+            var _lisa = await UserManager.FindByEmailAsync("lisagitel@hotmail.com");
+            var _marie = await UserManager.FindByEmailAsync("marie_pavlovsky@hotmail.com");
 
             // check if the user exists
             if (_barry != null)
             {
                 await UserManager.AddToRoleAsync(_barry, "Training");
-
             }
 
+            // check if the user exists
+            if (_lisa != null)
+            {
+                await UserManager.AddToRoleAsync(_lisa, "Admin");
+            }
 
 
             // check if the user exists
             if (_eric != null)
             {
                 await UserManager.AddToRoleAsync(_eric, "Admin");
-
             }
 
 
-            ////Here you could create the super admin who will maintain the web app
-            //var poweruser = new ApplicationUser
-            //{
-            //    UserName = "Admin",
-            //    Email = "admin@email.com",
-            //};
-            //string adminPassword = "p@$$w0rd";
-
-            //var createPowerUser = await UserManager.CreateAsync(poweruser, adminPassword);
-            //if (createPowerUser.Succeeded)
-            //{
-            //    //here we tie the new user to the role
-            //    await UserManager.AddToRoleAsync(poweruser, "Admin");
-
-            //}
+            // check if the user exists
+            if (_marie != null)
+            {
+                await UserManager.AddToRoleAsync(_marie, "Membership");
+            }
 
         }
-
-
-
-
     }
 }
