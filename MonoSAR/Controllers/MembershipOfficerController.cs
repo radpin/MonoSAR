@@ -131,7 +131,7 @@ namespace MonoSAR.Controllers
 
 
             var candidates = (from m in memberList
-                              where m.Capacity.ToLower() == "capacity"
+                              where m.Capacity.ToLower() == "rescue"
                               select m).ToList();
 
 
