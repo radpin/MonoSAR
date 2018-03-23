@@ -194,7 +194,7 @@ namespace MonoSAR.Models.Membership
         {
             get
             {
-                if (!IsMedicalExpired && !IsCPRExpired && !IsBeaconExpired)
+                if (!IsMedicalExpired && !IsCPRExpired && !IsBeaconExpired && IsCandidateClass && IsICS100 && IsICS200 && IsBuildingVehicleTested && IsPackChecked && IsCandidateClass)
                 { return true; }
                 else
                 { return false; }
@@ -204,7 +204,7 @@ namespace MonoSAR.Models.Membership
         {
             get
             {
-                if (!IsMedicalExpired && !IsCPRExpired)
+                if (!IsMedicalExpired && !IsCPRExpired && IsCandidateClass && IsICS100 && IsICS200 && IsBuildingVehicleTested && IsPackChecked && IsCandidateClass)
                 { return true; }
                 else
                 { return false; }
