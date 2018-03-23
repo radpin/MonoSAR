@@ -1,0 +1,12 @@
+﻿@model IEnumerable<MonoSAR.Models.Membership.MemberSummaryItem>
+
+@{
+    ViewData["Title"] = "MemberReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Membership - ASupport Members</h2>
+
+
+@Html.Partial("MemberSummaryList", Model)
+

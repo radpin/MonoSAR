@@ -58,26 +58,120 @@ namespace MonoSAR.Controllers
         public ActionResult MemberReport()
         {
 
-            List<Models.Membership.MemberSummaryItem> memberList = new List<Models.Membership.MemberSummaryItem>();
-            
-            var dbmems = (from m in _context.Member
-                          orderby m.LastName, m.FirstName
-                        select m).ToList();
-
-            _context.Member.Include(x => x.MemberCertification).ThenInclude(y => y.Certification).Load();
-            _context.Member.Include(x => x.MemberCpr).ThenInclude(y => y.Cpr).Load();
-            _context.Member.Include(x => x.MemberMedical).ThenInclude(y => y.Medical).Load();
-            _context.Member.Include(x => x.Capacity).Load();
-            _context.Member.Include(x => x.TrainingMember).ThenInclude(y => y.Training).Load();
-
-
-            foreach (var x in dbmems)
-            {
-                memberList.Add(new Models.Membership.MemberSummaryItem(x, _applicationOptions, _config));
-            }
+            var memberList = this.memberSummaryItems();
 
 
             return View(memberList);
+        }
+
+
+        [Authorize(Roles = "Admin,Membership,Training")]
+        [HttpGet]
+        public ActionResult CandidateReport()
+        {
+            //so in order to re-use code a bit I get a full (no where clause) list from this.memberSummaryItems()
+            //then we filter using linq
+            
+            var memberList = this.memberSummaryItems();
+
+
+            var candidates = (from m in memberList
+                              where m.Capacity.ToLower() == "candidate"
+                              select m).ToList();
+
+
+            return View(candidates);
+        }
+
+        [Authorize(Roles = "Admin,Membership,Training")]
+        [HttpGet]
+        public ActionResult ExpiredMedicalReport()
+        {
+            //so in order to re-use code a bit I get a full (no where clause) list from this.memberSummaryItems()
+            //then we filter using linq
+
+            var memberList = this.memberSummaryItems();
+
+
+            var candidates = (from m in memberList
+                              where m.IsMedicalExpired == true
+                              select m).ToList();
+
+
+            return View(candidates);
+        }
+
+
+        [Authorize(Roles = "Admin,Membership,Training")]
+        [HttpGet]
+        public ActionResult ExpiredCPRReport()
+        {
+            //so in order to re-use code a bit I get a full (no where clause) list from this.memberSummaryItems()
+            //then we filter using linq
+
+            var memberList = this.memberSummaryItems();
+
+
+            var candidates = (from m in memberList
+                              where m.IsCPRExpired == true
+                              select m).ToList();
+
+
+            return View(candidates);
+        }
+
+        [Authorize(Roles = "Admin,Membership,Training")]
+        [HttpGet]
+        public ActionResult RescueReport()
+        {
+            //so in order to re-use code a bit I get a full (no where clause) list from this.memberSummaryItems()
+            //then we filter using linq
+
+            var memberList = this.memberSummaryItems();
+
+
+            var candidates = (from m in memberList
+                              where m.Capacity.ToLower() == "capacity"
+                              select m).ToList();
+
+
+            return View(candidates);
+        }
+
+        [Authorize(Roles = "Admin,Membership,Training")]
+        [HttpGet]
+        public ActionResult WinterReadyReport()
+        {
+            //so in order to re-use code a bit I get a full (no where clause) list from this.memberSummaryItems()
+            //then we filter using linq
+
+            var memberList = this.memberSummaryItems();
+
+
+            var candidates = (from m in memberList
+                              where m.IsWinterFieldReady == true
+                              select m).ToList();
+
+
+            return View(candidates);
+        }
+
+        [Authorize(Roles = "Admin,Membership,Training")]
+        [HttpGet]
+        public ActionResult SummerReadyReport()
+        {
+            //so in order to re-use code a bit I get a full (no where clause) list from this.memberSummaryItems()
+            //then we filter using linq
+
+            var memberList = this.memberSummaryItems();
+
+
+            var candidates = (from m in memberList
+                              where m.IsSummerFieldReady == true
+                              select m).ToList();
+
+
+            return View(candidates);
         }
 
         // GET: MembershipOfficer/Details/5
@@ -210,6 +304,29 @@ namespace MonoSAR.Controllers
             {
                 return View();
             }
+        }
+
+        private List<Models.Membership.MemberSummaryItem> memberSummaryItems()
+        {
+            List<Models.Membership.MemberSummaryItem> memberList = new List<Models.Membership.MemberSummaryItem>();
+
+            var dbmems = (from m in _context.Member
+                          orderby m.LastName, m.FirstName
+                          select m).ToList();
+
+            _context.Member.Include(x => x.MemberCertification).ThenInclude(y => y.Certification).Load();
+            _context.Member.Include(x => x.MemberCpr).ThenInclude(y => y.Cpr).Load();
+            _context.Member.Include(x => x.MemberMedical).ThenInclude(y => y.Medical).Load();
+            _context.Member.Include(x => x.Capacity).Load();
+            _context.Member.Include(x => x.TrainingMember).ThenInclude(y => y.Training).Load();
+
+
+            foreach (var x in dbmems)
+            {
+                memberList.Add(new Models.Membership.MemberSummaryItem(x, _applicationOptions, _config));
+            }
+
+            return memberList;
         }
     }
 }
