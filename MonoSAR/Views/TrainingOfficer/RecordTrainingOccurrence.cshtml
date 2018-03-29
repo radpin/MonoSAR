@@ -3,47 +3,47 @@
     ViewData["Title"] = "TrainingOfficer";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <h2>Training Management - Record Training</h2>
-
 
 <form class="" asp-action="CreateOccurrence" method="post" asp-controller="TrainingOfficer">
     <div class="form-group">
         <label for="formGroupExampleInput">Training Description</label>
         <select required asp-for="TrainingID" class="form-control"></select>
-
     </div>
-
     <div class="form-group">
         <label for="formGroupExampleInput">Training Date</label>
         <input type="date" class="form-control" required style="width:200px;" asp-for="TrainingDate">
     </div>
-    
-    <div class="form-inline">
-        <label for="formGroupExampleInput">Members / Hours:</label>
-        <div style="display:inline-block; float:left; width:100%;">
-            
-            <select id="member" name="member" style="width:200px;" class="form-control"></select>
-            
-            <input name="hours" id="hours" required style="width:70px;" class="form-control" />
-        </div>
-        <div id="container"><br /></div>
-        <a href="#" id="filldetails" onclick="addFields()">[add another]</a>
-        <br /><br/>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
 
+    <div class="form-inline">
+        <div id="studentinstructorsplit" style="float:left;">
+            <div id="students">
+                <label for="formGroupExampleInput">Members / Hours:</label>
+                <select id="member" name="member" style="width:200px;" class="form-control"></select>
+
+                <input name="hours" id="hours" required style="width:70px;" class="form-control" />
+                <div id="container"><br /></div>
+                <a href="#" id="filldetails" onclick="addFields()">[add another student]</a>
+                <br /><br />
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            <div id="instructors">
+                <label for="formGroupExampleInput">Instructors:</label>
+                <select id="instructor" name="instructor" style="width:200px;" class="form-control"></select>
+                <div id="instructorcontainer"><br /></div>
+                <a href="#" id="addinstructors" onclick="addInstructor()">[add another instructor]</a>
+                <br /><br />
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
     <datalist id="traininglist"></datalist>
     <datalist id="memberlist"></datalist>
 </form>
 
-
-
-
 <script type="text/javascript">
 
     var memberList = [];
-
 
     window.onload = function () {
 
@@ -84,24 +84,27 @@
     
     function buildMemberDataList(jsonarray) {
 
+        memberSelect = document.getElementById('member');
+        instructorSelect = document.getElementById('instructor');
+
+
         //build the option list, append
         for (var i = 0; i < jsonarray.length; i++) {
             var obj = jsonarray[i];
 
-            daySelect = document.getElementById('member');
-            daySelect.options[daySelect.options.length] = new Option(obj.lastName + ', ' + obj.firstName, obj.memberId);
-            console.log(obj.lastName + ', ' + obj.firstName, obj.memberId);
+            memberSelect.options[memberSelect.options.length] = new Option(obj.lastName + ', ' + obj.firstName, obj.memberId);
+            //console.log(obj.lastName + ', ' + obj.firstName, obj.memberId);
+            memberList[i] = new Option(obj.lastName + ', ' + obj.firstName, obj.memberId);
 
+            instructorSelect.options[instructorSelect.options.length] = new Option(obj.lastName + ', ' + obj.firstName, obj.memberId);
+            //console.log(obj.lastName + ', ' + obj.firstName, obj.memberId);
             memberList[i] = new Option(obj.lastName + ', ' + obj.firstName, obj.memberId);
 
         }
-
         //memberList = daySelect.options;
-
     }
     
     function buildTripDataList(jsonarray) {
-
 
         //build the option list, append
         for (var i = 0; i < jsonarray.length; i++) {
@@ -109,11 +112,8 @@
 
             daySelect = document.getElementById('TrainingID');
             daySelect.options[daySelect.options.length] = new Option(obj.trainingTitle, obj.trainingId );
-
         }
-
     }
-
 
     function clone(obj) {
         if (obj === null || typeof (obj) !== 'object' || 'isActiveClone' in obj)
@@ -133,6 +133,33 @@
         }
 
         return temp;
+    }
+
+    function addInstructor() {
+
+        // Number of inputs to create
+        //var number = "1"; // document.getElementById("member").value;
+        // Container <div> where dynamic content will be placed
+        var container = document.getElementById("instructorcontainer");
+        // Clear previous contents of the container
+
+        var selectInstructor = document.createElement("select");
+        selectInstructor.style = "width:200px;";
+        selectInstructor.id = "member" + document.getElementsByName('member').length;
+        selectInstructor.name = "member";
+        selectInstructor.className = "form-control";
+
+        //run through the existing memberlist, make new <select> options
+        for (var i = 0; i < memberList.length; i++) {
+
+            var obj = memberList[i];
+            selectInstructor.options[selectInstructor.options.length] = new Option(obj.text, obj.value);
+        }
+
+        container.appendChild(selectInstructor);
+
+        container.appendChild(document.createElement("br"));
+
     }
 
     function addFields() {
@@ -173,3 +200,16 @@
 
 </script>
 
+<style type="text/css">
+    #studentinstructorsplit {
+        display: flex;
+    }
+
+    #students {
+        flex: 0 0 65%;
+    }
+
+    #instructors {
+        flex: 1;
+    }
+</style>

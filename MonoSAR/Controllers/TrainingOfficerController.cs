@@ -72,8 +72,6 @@ namespace MonoSAR.Controllers
 
             foreach (var item in x)
             {
-                
-
                 if (item.Key == "member")
                 {
                     foreach (var y in item.Value)
@@ -91,8 +89,16 @@ namespace MonoSAR.Controllers
                         topiList.Add(topi);
                         i = i + 1;
                     }
-
                 }
+
+                if (item.Key == "instructor")
+                {
+                    foreach (var y in item.Value)
+                    {
+
+                    }
+                }
+
             }
 
 

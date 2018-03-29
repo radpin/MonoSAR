@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MonoSAR.Models.DB
+namespace MonoSAR.Modeldump
 {
     public partial class TrainingMember
     {
