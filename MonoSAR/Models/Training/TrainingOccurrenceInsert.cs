@@ -15,7 +15,7 @@ namespace MonoSAR.Models.Training
 
         public IEnumerable<Training.TrainingOccurrenceParticipationInsert> Participants { get; set; }
 
-        public IEnumerable<Int32> Instructors { get; set; }
+        public IEnumerable<Training.TrainingOccurrenceParticipationInsert> Instructors { get; set; }
 
     }
 }
