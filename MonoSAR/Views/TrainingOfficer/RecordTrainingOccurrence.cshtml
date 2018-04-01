@@ -1,4 +1,4 @@
-﻿@model MonoSAR.Models.Training.TrainingOccurrenceInsert
+﻿@model MonoSAR.Models.Training.TrainingClassInsert
 @{
     ViewData["Title"] = "TrainingOfficer";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -16,20 +16,22 @@
     </div>
 
     <div class="form-inline">
-        <div id="studentinstructorsplit" style="float:left;">
-            <div id="students">
-                <label for="formGroupExampleInput">Members / Hours:</label>
+        <div id="studentinstructorsplit" style="float:left;width:100%">
+            <div id="students" style="float:left;text-align:left;">
+                <h4>Students/Hours</h4>
                 <select id="member" name="member" style="width:200px;" class="form-control"></select>
 
-                <input name="hours" id="hours" required style="width:70px;" class="form-control" />
+                <input name="hours" id="hours" required style="width:50px;" class="form-control" />
                 <div id="container"><br /></div>
                 <a href="#" id="filldetails" onclick="addFields()">[add another student]</a>
                 <br /><br />
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
-            <div id="instructors">
-                <label for="formGroupExampleInput">Instructors:</label>
+            <div id="instructors" style="float:left;text-align:left;">
+                <h4>Instructors / Hours:</h4>
                 <select id="instructor" name="instructor" style="width:200px;" class="form-control"></select>
+
+                <input name="ihours" id="ihours" required style="width:50px;" class="form-control" />
                 <div id="instructorcontainer"><br /></div>
                 <a href="#" id="addinstructors" onclick="addInstructor()">[add another instructor]</a>
                 <br /><br />
@@ -145,8 +147,8 @@
 
         var selectInstructor = document.createElement("select");
         selectInstructor.style = "width:200px;";
-        selectInstructor.id = "member" + document.getElementsByName('member').length;
-        selectInstructor.name = "member";
+        selectInstructor.id = "instructor" + document.getElementsByName('instructor').length;
+        selectInstructor.name = "instructor";
         selectInstructor.className = "form-control";
 
         //run through the existing memberlist, make new <select> options
@@ -157,6 +159,16 @@
         }
 
         container.appendChild(selectInstructor);
+
+        var inputHours = document.createElement("input");
+        inputHours.type = "text";
+        inputHours.required = true;
+        inputHours.style = "width:70px;";
+        inputHours.id = "ihours" + document.getElementsByName('ihours').length;
+        inputHours.name = "ihours";
+        inputHours.className = "form-control";
+        container.appendChild(inputHours);
+
 
         container.appendChild(document.createElement("br"));
 

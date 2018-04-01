@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace MonoSAR.Models.Training
 {
-    public class TrainingOccurrenceParticipationInsert
+    public class TrainingClassInsertConfirmation
     {
-        public Int32 MemberID { get; set; }
-        public Decimal Hours { get; set; }
+        public String Message { get; set; }
     }
 }

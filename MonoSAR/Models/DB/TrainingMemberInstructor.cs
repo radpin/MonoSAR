@@ -8,7 +8,7 @@ namespace MonoSAR.Models.DB
         public int TrainingMemberInstructorId { get; set; }
         public int TrainingMemberId { get; set; }
         public int IntstructorMemberId { get; set; }
-        public int InstructorHours { get; set; }
+        public decimal InstructorHours { get; set; }
         public DateTime Created { get; set; }
 
         public Member IntstructorMember { get; set; }

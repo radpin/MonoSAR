@@ -20,6 +20,9 @@ namespace MonoSAR.Models.DB
         public virtual DbSet<Training> Training { get; set; }
         public virtual DbSet<TrainingMember> TrainingMember { get; set; }
         public virtual DbSet<TrainingMemberInstructor> TrainingMemberInstructor { get; set; }
+        public virtual DbSet<TrainingClass> TrainingClass { get; set; }
+        public virtual DbSet<TrainingClassStudent> TrainingClassStudent { get; set; }
+        public virtual DbSet<TrainingClassInstructor> TrainingClassInstructor { get; set; }
 
         private String m_sqlConnectioNString;
 
@@ -334,6 +337,63 @@ namespace MonoSAR.Models.DB
                     .HasConstraintName("FK__TrainingM__Train__797309D9");
             });
 
+            modelBuilder.Entity<Operation>(entity =>
+            {
+                entity.Property(e => e.OperationId).HasColumnName("OperationID");
+
+                entity.Property(e => e.Created)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Notes)
+                    .IsRequired()
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OperationEnd).HasColumnType("datetime");
+
+                entity.Property(e => e.OperationNumber)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OperationStart).HasColumnType("datetime");
+
+                entity.Property(e => e.SequenceNumber)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<OperationMember>(entity =>
+            {
+                entity.Property(e => e.OperationMemberId).HasColumnName("OperationMemberID");
+
+                entity.Property(e => e.Created)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.MemberId).HasColumnName("MemberID");
+
+                entity.Property(e => e.OperationId).HasColumnName("OperationID");
+
+                entity.HasOne(d => d.Member)
+                    .WithMany(p => p.OperationMember)
+                    .HasForeignKey(d => d.MemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Operation__Membe__41EDCAC5");
+
+                entity.HasOne(d => d.Operation)
+                    .WithMany(p => p.OperationMember)
+                    .HasForeignKey(d => d.OperationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Operation__Opera__40F9A68C");
+            });
+
             modelBuilder.Entity<TrainingMemberInstructor>(entity =>
             {
                 entity.Property(e => e.TrainingMemberInstructorId).HasColumnName("TrainingMemberInstructorID");
@@ -341,6 +401,8 @@ namespace MonoSAR.Models.DB
                 entity.Property(e => e.Created)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.InstructorHours).HasColumnType("decimal(16, 2)");
 
                 entity.Property(e => e.IntstructorMemberId).HasColumnName("IntstructorMemberID");
 
@@ -350,14 +412,91 @@ namespace MonoSAR.Models.DB
                     .WithMany(p => p.TrainingMemberInstructor)
                     .HasForeignKey(d => d.IntstructorMemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TrainingM__Intst__498EEC8D");
+                    .HasConstraintName("FK__TrainingM__Intst__4E53A1AA");
 
                 entity.HasOne(d => d.TrainingMember)
                     .WithMany(p => p.TrainingMemberInstructor)
                     .HasForeignKey(d => d.TrainingMemberId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TrainingM__Train__489AC854");
+                    .HasConstraintName("FK__TrainingM__Train__4D5F7D71");
             });
+
+            modelBuilder.Entity<TrainingClass>(entity =>
+            {
+                entity.Property(e => e.TrainingClassId).HasColumnName("TrainingClassID");
+
+                entity.Property(e => e.Created)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.TrainingDate).HasColumnType("datetime");
+
+                entity.Property(e => e.TrainingId).HasColumnName("TrainingID");
+
+                entity.HasOne(d => d.Training)
+                    .WithMany(p => p.TrainingClass)
+                    .HasForeignKey(d => d.TrainingId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__TrainingC__Train__5224328E");
+            });
+
+            modelBuilder.Entity<TrainingClassInstructor>(entity =>
+            {
+                entity.Property(e => e.TrainingClassInstructorId).HasColumnName("TrainingClassInstructorID");
+
+                entity.Property(e => e.Created)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.TrainingClassId).HasColumnName("TrainingClassID");
+
+                entity.Property(e => e.TrainingClassInstructorMemberId).HasColumnName("TrainingClassInstructorMemberID");
+
+                entity.Property(e => e.TrainingClassStudentHours).HasColumnType("decimal(16, 2)");
+
+                entity.HasOne(d => d.TrainingClass)
+                    .WithMany(p => p.TrainingClassInstructor)
+                    .HasForeignKey(d => d.TrainingClassId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__TrainingC__Train__65370702");
+
+                entity.HasOne(d => d.TrainingClassInstructorMember)
+                    .WithMany(p => p.TrainingClassInstructor)
+                    .HasForeignKey(d => d.TrainingClassInstructorMemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__TrainingC__Train__6442E2C9");
+            });
+
+            modelBuilder.Entity<TrainingClassStudent>(entity =>
+            {
+                entity.Property(e => e.TrainingClassStudentId).HasColumnName("TrainingClassStudentID");
+
+                entity.Property(e => e.Created)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.TrainingClassId).HasColumnName("TrainingClassID");
+
+                entity.Property(e => e.TrainingClassStudentHours).HasColumnType("decimal(16, 2)");
+
+                entity.Property(e => e.TrainingClassStudentMemberId).HasColumnName("TrainingClassStudentMemberID");
+
+                entity.HasOne(d => d.TrainingClass)
+                    .WithMany(p => p.TrainingClassStudent)
+                    .HasForeignKey(d => d.TrainingClassId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__TrainingC__Train__607251E5");
+
+                entity.HasOne(d => d.TrainingClassStudentMember)
+                    .WithMany(p => p.TrainingClassStudent)
+                    .HasForeignKey(d => d.TrainingClassStudentMemberId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__TrainingC__Train__5F7E2DAC");
+            });
+
         }
     }
 }
+
+
+
