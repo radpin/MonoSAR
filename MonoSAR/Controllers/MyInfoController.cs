@@ -35,7 +35,7 @@ namespace MonoSAR.Controllers
             _context.Member.Include(x => x.MemberCpr).ThenInclude(y=>y.Cpr).Load();
             _context.Member.Include(x => x.MemberMedical).ThenInclude(y => y.Medical).Load();
             _context.Member.Include(x => x.Capacity).Load();
-            _context.Member.Include(x => x.TrainingMember).ThenInclude(y => y.Training).Load();
+            _context.Member.Include(x => x.TrainingClassStudent).ThenInclude(y => y.TrainingClass).ThenInclude(z => z.Training).Load();
 
             Models.Membership.MemberSummaryItem memberSummaryItem = new Models.Membership.MemberSummaryItem(loggedInMember, _applicationOptions, _config);
 

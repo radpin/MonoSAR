@@ -5,14 +5,15 @@ using System.Threading.Tasks;
 
 namespace MonoSAR.Models.Training
 {
-    public class TrainingOccurrenceInsert
+    public class TrainingClassInsert
     {
-
         public Int32 TrainingID { get; set; }
 
         public DateTime TrainingDate { get; set; }
 
-        public IEnumerable<Training.TrainingOccurrenceParticipationInsert> Participants { get; set; }
+        public IEnumerable<Training.TrainingClassParticipant> Participants { get; set; }
+
+        public IEnumerable<Training.TrainingClassParticipant> Instructors { get; set; }
 
     }
 }

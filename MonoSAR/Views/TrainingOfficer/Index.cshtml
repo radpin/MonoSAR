@@ -1,4 +1,4 @@
-﻿@model MonoSAR.Models.Training.TrainingSummary
+﻿@model MonoSAR.Models.Training.TrainingClassStudentSummary
 @{
     ViewData["Title"] = "TrainingOfficer";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -16,7 +16,7 @@
                 <th>Member</th>
                 <th>Training</th>
                 <th>Hours</th>
-                <th>Recorded On (UTC)</th>
+                <th>Recorded (UTC)</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -30,8 +30,8 @@
                 <td><a href="/TrainingOfficer/ViewMember/@item.MemberID">@item.MemberName</a></td>
                 <td>@item.TrainingTitle</td>
                 <td>@item.Hours</td>
-                <td>@item.Created</td>
-                <td><a href="/TrainingOfficer/Edit/@item.TrainingMemberID">Edit</a></td>
+                <td>@item.CreatedPretty</td>
+                <td><a href="/TrainingOfficer/Edit/@item.TrainingClassStudentID">Edit</a></td>
             </tr>
         }
             <tr></tr>

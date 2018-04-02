@@ -5,6 +5,11 @@ namespace MonoSAR.Models.DB
 {
     public partial class TrainingMember
     {
+        public TrainingMember()
+        {
+            TrainingMemberInstructor = new HashSet<TrainingMemberInstructor>();
+        }
+
         public int TrainingMemberId { get; set; }
         public int TrainingId { get; set; }
         public int MemberId { get; set; }
@@ -14,5 +19,6 @@ namespace MonoSAR.Models.DB
 
         public Member Member { get; set; }
         public Training Training { get; set; }
+        public ICollection<TrainingMemberInstructor> TrainingMemberInstructor { get; set; }
     }
 }

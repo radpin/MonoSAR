@@ -33,20 +33,17 @@ namespace MonoSAR.Controllers
         [Authorize(Roles ="Admin,Training")]
         public ActionResult Index()
         {
-
-
-            var query = (from tm in _context.TrainingMember
-                         orderby tm.Created descending, tm.TrainingDate descending
-                         select tm).Take(100);
+            var query = (from tsc in _context.TrainingClassStudent
+                         orderby tsc.Created descending, tsc.TrainingClass.TrainingDate descending
+                         select tsc).Take(100);
 
             //Explicit loading because EF Core isn't lazy
-            _context.TrainingMember.Include(x => x.Member).Load();
-            _context.TrainingMember.Include(x => x.Training).Load();
-
+            _context.TrainingClassStudent.Include(x => x.TrainingClassStudentMember).Load();
+            _context.TrainingClassStudent.Include(x => x.TrainingClass).ThenInclude(y=>y.Training).Load();
+                        
             //converting from data models to the view model (dto), the conversions happen in the view model / dto's constructor
-            Models.Training.TrainingSummary model = new Models.Training.TrainingSummary(query);
-
-
+            Models.Training.TrainingClassStudentSummary model = new Models.Training.TrainingClassStudentSummary(query);
+            
             return View(model); 
         }
 
@@ -61,25 +58,26 @@ namespace MonoSAR.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin,Training")]
-        public ViewResult CreateOccurrence(Models.Training.TrainingOccurrenceInsert toi)
+        public ViewResult CreateOccurrence(Models.Training.TrainingClassInsert trainingClassInsert)
         {
-            List<Models.Training.TrainingOccurrenceParticipationInsert> topiList = new List<Models.Training.TrainingOccurrenceParticipationInsert>();
+            Models.DB.TrainingClass trainingClass = new TrainingClass(); //the class itself
+            List<Models.Training.TrainingClassParticipant> students = new List<Models.Training.TrainingClassParticipant>(); //the students' participation in the above training class
+            List<Models.Training.TrainingClassParticipant> instructors = new List<Models.Training.TrainingClassParticipant>(); //the instructors' participation in the above training class
             var x = HttpContext.Request.Form;
-            var thanks = new Models.Training.TrainingOccurrenceInsertConfirmation();
-
-
+            var thanks = new Models.Training.TrainingClassInsertConfirmation();
+            
             Int32 i = 0;
+            Int32 j = 0;
 
+            //gross, but looping through the form data to find students/instructors/hours, not using binding for this
             foreach (var item in x)
             {
-                
-
                 if (item.Key == "member")
                 {
                     foreach (var y in item.Value)
                     {
                         //gets the memberid
-                        Models.Training.TrainingOccurrenceParticipationInsert topi = new Models.Training.TrainingOccurrenceParticipationInsert();
+                        Models.Training.TrainingClassParticipant topi = new Models.Training.TrainingClassParticipant();
                         String maybememberid = y.ToString();
                         topi.MemberID = Int32.Parse(y.ToString());
                         
@@ -88,37 +86,81 @@ namespace MonoSAR.Controllers
                         topi.Hours = Decimal.Parse(maybeHours);
 
                         //keeping a counter so (above) we know how to find the hours by index. ie: for the third member, we look for the third set of hours.
-                        topiList.Add(topi);
+                        students.Add(topi);
                         i = i + 1;
                     }
+                }
 
+                if (item.Key == "instructor")
+                {
+                    foreach (var y in item.Value)
+                    {
+                        //gets the memberid
+                        Models.Training.TrainingClassParticipant topi = new Models.Training.TrainingClassParticipant();
+                        String maybememberid = y.ToString();
+                        topi.MemberID = Int32.Parse(y.ToString());
+
+                        //get the hours
+                        string maybeHours = x["ihours"][j];
+                        topi.Hours = Decimal.Parse(maybeHours);
+
+                        //keeping a counter so (above) we know how to find the hours by index. ie: for the third member, we look for the third set of hours.
+                        instructors.Add(topi);
+                        j = j + 1;
+                    }
                 }
             }
 
 
-            //build ef objects to store
-            foreach (var item in topiList)
-            {
-                Models.DB.TrainingMember trainingMember = new TrainingMember();
-                trainingMember.Created = DateTime.UtcNow;
-                trainingMember.MemberId = item.MemberID;
-                trainingMember.TrainingDate = toi.TrainingDate;
-                trainingMember.TrainingHours = item.Hours;
-                trainingMember.TrainingId = toi.TrainingID;
+            trainingClass.Created = DateTime.UtcNow;
+            trainingClass.TrainingDate = trainingClassInsert.TrainingDate;
+            trainingClass.TrainingId = trainingClassInsert.TrainingID;
+            trainingClass.TrainingClassStudent = new List<TrainingClassStudent>();
+            trainingClass.TrainingClassInstructor = new List<TrainingClassInstructor>();
 
-                _context.TrainingMember.Add(trainingMember);
+
+            //parse the form and grab the instructors and students, along with their hours objects to store
+            foreach (var item in students)
+            {
+
+                Models.DB.TrainingClassStudent trainingClassStudent = new TrainingClassStudent();
+
+                trainingClassStudent.Created = DateTime.UtcNow;
+                trainingClassStudent.TrainingClassStudentMemberId = item.MemberID;
+                trainingClassStudent.TrainingClassStudentHours = item.Hours;
+
+                trainingClass.TrainingClassStudent.Add(trainingClassStudent);
+
             }
 
-            _context.SaveChanges();
+            foreach (var item in instructors)
+            {
+                Models.DB.TrainingClassInstructor trainingClassInstructor = new TrainingClassInstructor();
+
+                trainingClassInstructor.Created = DateTime.UtcNow;
+                trainingClassInstructor.TrainingClassInstructorMemberId = item.MemberID;
+                trainingClassInstructor.TrainingClassStudentHours = item.Hours;
+
+                trainingClass.TrainingClassInstructor.Add(trainingClassInstructor);
+            }
 
 
-            var hours = topiList.Sum(item => item.Hours).ToString();
-            var people = topiList.Count.ToString() ;
+            try
+            {
+                _context.Add(trainingClass);
+                _context.SaveChanges();
+            }
+            catch (Exception exc)
+            {
+                throw new Exception("Error saving new class (EF): " + exc.ToString());
+            }
 
-
+            
+            var hours = students.Sum(item => item.Hours).ToString();
+            var people = students.Count.ToString() ;
+            
             thanks.Message = "Great work, your team has added " + hours + " hours of training across " + people + " members."   ;
-
-
+            
             return View("TrainingOccurrenceInsertConfirmation", thanks);
         }
 
@@ -137,7 +179,7 @@ namespace MonoSAR.Controllers
             _context.Member.Include(x => x.MemberCpr).ThenInclude(y => y.Cpr).Load();
             _context.Member.Include(x => x.MemberMedical).ThenInclude(y => y.Medical).Load();
             _context.Member.Include(x => x.Capacity).Load();
-            _context.Member.Include(x => x.TrainingMember).ThenInclude(y => y.Training).Load();
+            _context.Member.Include(x => x.TrainingClassStudent).ThenInclude(y => y.TrainingClass).ThenInclude(z=>z.Training).Load();
 
             var model = new Models.Membership.MemberSummaryItem(query, _applicationOptions, _config);
             
@@ -173,18 +215,18 @@ namespace MonoSAR.Controllers
         [Authorize(Roles = "Admin,Training")]
         public ActionResult Edit(int id)
         {
-            var query = (from tm in _context.TrainingMember
-                         where tm.TrainingMemberId == id
-                         select tm).FirstOrDefault();
+
+            var query = (from tsc in _context.TrainingClassStudent
+                         where tsc.TrainingClassStudentId == id
+                         select tsc).FirstOrDefault();
 
             //Explicit loading because EF Core isn't lazy
-            _context.TrainingMember.Include(x => x.Member).Load();
-            _context.TrainingMember.Include(x => x.Training).Load();
+            _context.TrainingClassStudent.Include(x => x.TrainingClassStudentMember).Load();
+            _context.TrainingClassStudent.Include(x => x.TrainingClass).ThenInclude(y => y.Training).Load();
 
             //converting from data models to the view model (dto), the conversions happen in the view model / dto's constructor
-            Models.Training.TrainingSummaryItem model = new Models.Training.TrainingSummaryItem(query);
-
-
+            Models.Training.TrainingClassStudentSummaryItem model = new Models.Training.TrainingClassStudentSummaryItem(query);
+            
             return View(model);
 
         }
@@ -193,19 +235,18 @@ namespace MonoSAR.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Training")]
-        public ActionResult Edit(Models.Training.TrainingSummaryItem viewModel)
+        public ActionResult Edit(Models.Training.TrainingClassStudentSummaryItem viewModel)
         {
             // only updating hours and date at the moment
 
             try {
 
-                var query = (from tm in _context.TrainingMember
-                             where tm.TrainingMemberId == viewModel.TrainingMemberID
-                             select tm).FirstOrDefault();
+                var query = (from tsc in _context.TrainingClassStudent
+                             where tsc.TrainingClassStudentId == viewModel.TrainingClassStudentID
+                             select tsc).FirstOrDefault();
 
-                query.TrainingHours = viewModel.Hours;
-                query.TrainingDate = viewModel.When;
-
+                query.TrainingClassStudentHours = viewModel.Hours;
+                
                 _context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
@@ -222,14 +263,13 @@ namespace MonoSAR.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Training")]
-        public ActionResult Delete(Models.Training.TrainingSummaryItem viewModel)
+        public ActionResult Delete(Models.Training.TrainingClassStudentSummaryItem viewModel)
         {
             try
             {
-                var del = new Models.DB.TrainingMember { TrainingMemberId = viewModel.TrainingMemberID };
-                _context.TrainingMember.Attach(del);
+                var del = new Models.DB.TrainingClassStudent { TrainingClassStudentId = viewModel.TrainingClassStudentID };
+                _context.TrainingClassStudent.Attach(del);
                 _context.Remove(del);
-
                 _context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));

@@ -282,7 +282,7 @@ namespace MonoSAR.Controllers
             _context.Member.Include(x => x.MemberCpr).ThenInclude(y => y.Cpr).Load();
             _context.Member.Include(x => x.MemberMedical).ThenInclude(y => y.Medical).Load();
             _context.Member.Include(x => x.Capacity).Load();
-            _context.Member.Include(x => x.TrainingMember).ThenInclude(y => y.Training).Load();
+            _context.Member.Include(x => x.TrainingClassStudent).ThenInclude(y => y.TrainingClass).ThenInclude(z=>z.Training).Load();
 
             var model = new Models.Membership.MemberSummaryItem(query, _applicationOptions, _config);
 
@@ -318,7 +318,7 @@ namespace MonoSAR.Controllers
             _context.Member.Include(x => x.MemberCpr).ThenInclude(y => y.Cpr).Load();
             _context.Member.Include(x => x.MemberMedical).ThenInclude(y => y.Medical).Load();
             _context.Member.Include(x => x.Capacity).Load();
-            _context.Member.Include(x => x.TrainingMember).ThenInclude(y => y.Training).Load();
+            _context.Member.Include(x => x.TrainingClassStudent).ThenInclude(y => y.TrainingClass).ThenInclude(z => z.Training).Load();
 
 
             foreach (var x in dbmems)
