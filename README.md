@@ -3,7 +3,7 @@
 Open source project for the management of Mono County's search and rescue team. 
 Membership rosters, callout lists, training, and extensive API options for future work.
 
-There are some <a href="https://github.com/radpin/MonoSAR/wiki">on the wiki</a>.
+There are some <a href="https://github.com/radpin/MonoSAR/wiki">developer notes on the wiki</a>.
 
 Running on .Net Core 2.0, EF Core, MVC pattern. 
 
