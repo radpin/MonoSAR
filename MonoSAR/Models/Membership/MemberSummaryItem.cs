@@ -92,24 +92,24 @@ namespace MonoSAR.Models.Membership
 
         private void buildInitialFieldChecks(Models.DB.Member dataItem)
         {
-            var bv = (from tm in dataItem.TrainingMember
-                     where tm.MemberId == dataItem.MemberId && tm.TrainingId == _applicationSettings.RequiredBVTest
+            var bv = (from tm in dataItem.TrainingClassStudent
+                     where tm.TrainingClassStudentMemberId == dataItem.MemberId && tm.TrainingClass.TrainingId == _applicationSettings.RequiredBVTest
                      select tm).FirstOrDefault();
 
-            var bcc = (from tm in dataItem.TrainingMember
-                          where tm.MemberId == dataItem.MemberId && tm.TrainingId == _applicationSettings.RequiredCandidateBasicClass
+            var bcc = (from tm in dataItem.TrainingClassStudent
+                       where tm.TrainingClassStudentMemberId == dataItem.MemberId && tm.TrainingClass.TrainingId == _applicationSettings.RequiredCandidateBasicClass
                           select tm).FirstOrDefault();
 
-            var ics100 = (from tm in dataItem.TrainingMember
-                       where tm.MemberId == dataItem.MemberId && tm.TrainingId == _applicationSettings.RequiredICS100
+            var ics100 = (from tm in dataItem.TrainingClassStudent
+                          where tm.TrainingClassStudentMemberId == dataItem.MemberId && tm.TrainingClass.TrainingId == _applicationSettings.RequiredICS100
                        select tm).FirstOrDefault();
 
-            var ics200 = (from tm in dataItem.TrainingMember
-                          where tm.MemberId == dataItem.MemberId && tm.TrainingId == _applicationSettings.RequiredICS200
+            var ics200 = (from tm in dataItem.TrainingClassStudent
+                          where tm.TrainingClassStudentMemberId == dataItem.MemberId && tm.TrainingClass.TrainingId == _applicationSettings.RequiredICS200
                           select tm).FirstOrDefault();
 
-            var pc = (from tm in dataItem.TrainingMember
-                      where tm.MemberId == dataItem.MemberId && tm.TrainingId == _applicationSettings.RequiredPackCheck
+            var pc = (from tm in dataItem.TrainingClassStudent
+                      where tm.TrainingClassStudentMemberId == dataItem.MemberId && tm.TrainingClass.TrainingId == _applicationSettings.RequiredPackCheck
                       select tm).FirstOrDefault();
 
             if (bv != null) { this.IsBuildingVehicleTested = true; }
@@ -121,27 +121,27 @@ namespace MonoSAR.Models.Membership
 
         private void buildBeaconCheck(Models.DB.Member dataItem)
         {
-            var beac = (from tm in _context.TrainingMember
-                        where tm.MemberId == dataItem.MemberId && tm.TrainingId == _applicationSettings.RequiredBeaconTest
+            var beac = (from tm in dataItem.TrainingClassStudent
+                        where tm.TrainingClassStudentMemberId == dataItem.MemberId && tm.TrainingClass.TrainingId == _applicationSettings.RequiredBeaconTest
                         select tm).FirstOrDefault();
 
-            if (beac != null && beac.TrainingDate > DateTime.UtcNow.AddYears(-1))
+            if (beac != null && beac.TrainingClass.TrainingDate > DateTime.UtcNow.AddYears(-1))
             { this.IsBeaconExpired = true; }
         }
 
         private void buildTraining(Models.DB.Member dataItem)
         {
 
-            List<Training.TrainingSummaryItem> trainingSummaries = new List<Training.TrainingSummaryItem>();
+            List<Training.TrainingClassStudentSummaryItem> trainingSummaries = new List<Training.TrainingClassStudentSummaryItem>();
             this.TrainingSummaries = trainingSummaries;
 
-            foreach (var tm in dataItem.TrainingMember)
+            foreach (var tm in dataItem.TrainingClassStudent)
             {
-                Training.TrainingSummaryItem tsi = new Training.TrainingSummaryItem(tm);
+                Training.TrainingClassStudentSummaryItem tsi = new Training.TrainingClassStudentSummaryItem(tm);
                 trainingSummaries.Add(tsi);
             }
 
-            if (dataItem.TrainingMember.Count > 0)
+            if (dataItem.TrainingClassStudent.Count > 0)
             {
                 this.TrainingSummaries = trainingSummaries.OrderByDescending(x => x.When).ToList();
             }
@@ -194,7 +194,7 @@ namespace MonoSAR.Models.Membership
         {
             get
             {
-                if (!IsMedicalExpired && !IsCPRExpired && !IsBeaconExpired)
+                if (!IsMedicalExpired && !IsCPRExpired && !IsBeaconExpired && IsCandidateClass && IsICS100 && IsICS200 && IsBuildingVehicleTested && IsPackChecked && IsCandidateClass)
                 { return true; }
                 else
                 { return false; }
@@ -204,7 +204,7 @@ namespace MonoSAR.Models.Membership
         {
             get
             {
-                if (!IsMedicalExpired && !IsCPRExpired)
+                if (!IsMedicalExpired && !IsCPRExpired && IsCandidateClass && IsICS100 && IsICS200 && IsBuildingVehicleTested && IsPackChecked && IsCandidateClass)
                 { return true; }
                 else
                 { return false; }
@@ -221,7 +221,7 @@ namespace MonoSAR.Models.Membership
         public List<Training.CertificationSummary> CertificationSummaries { get; set; }
         public List<Training.CPRSummary> CPRSummaries { get; set; }
 
-        public List<Training.TrainingSummaryItem> TrainingSummaries { get; set; }
+        public List<Training.TrainingClassStudentSummaryItem> TrainingSummaries { get; set; }
 
     }
 }

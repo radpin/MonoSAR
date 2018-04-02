@@ -1,4 +1,4 @@
-﻿@model MonoSAR.Models.Training.TrainingSummaryItem
+﻿@model MonoSAR.Models.Training.TrainingClassStudentSummaryItem
 
 @{
     ViewData["Title"] = "View";
@@ -49,7 +49,7 @@
             <div class="form-group">
                 <label asp-for="When" class="control-label"></label>
                 <input asp-for="When" class="form-control" type="date" />
-                <input asp-for="TrainingMemberID" hidden="hidden" type="hidden" />
+                <input asp-for="TrainingClassStudentID" hidden="hidden" type="hidden" />
                 <input asp-for="TrainingTitle" hidden="hidden" type="hidden" />
 
                 <span asp-validation-for="Hours" class="text-danger"></span>
@@ -60,7 +60,7 @@
             </div>
         </form>
         <form asp-action="Delete" onsubmit="return confirm('Really delete this?')">
-            <input asp-for="TrainingMemberID" hidden="hidden" type="hidden" />
+            <input asp-for="TrainingClassStudentID" hidden="hidden" type="hidden" />
             <input type="submit" value="Delete" class="btn btn-danger" />
         </form>
 

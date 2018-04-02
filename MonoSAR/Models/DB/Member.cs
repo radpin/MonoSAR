@@ -10,7 +10,9 @@ namespace MonoSAR.Models.DB
             MemberCertification = new HashSet<MemberCertification>();
             MemberCpr = new HashSet<MemberCpr>();
             MemberMedical = new HashSet<MemberMedical>();
-            TrainingMember = new HashSet<TrainingMember>();
+            OperationMember = new HashSet<OperationMember>();
+            TrainingClassInstructor = new HashSet<TrainingClassInstructor>();
+            TrainingClassStudent = new HashSet<TrainingClassStudent>();
         }
 
         public int MemberId { get; set; }
@@ -33,6 +35,9 @@ namespace MonoSAR.Models.DB
         public ICollection<MemberCertification> MemberCertification { get; set; }
         public ICollection<MemberCpr> MemberCpr { get; set; }
         public ICollection<MemberMedical> MemberMedical { get; set; }
-        public ICollection<TrainingMember> TrainingMember { get; set; }
+        public ICollection<OperationMember> OperationMember { get; set; }
+        public ICollection<TrainingClassInstructor> TrainingClassInstructor { get; set; }
+        public ICollection<TrainingClassStudent> TrainingClassStudent { get; set; }
+
     }
 }

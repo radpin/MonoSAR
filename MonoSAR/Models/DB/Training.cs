@@ -7,12 +7,13 @@ namespace MonoSAR.Models.DB
     {
         public Training()
         {
-            TrainingMember = new HashSet<TrainingMember>();
+            TrainingClass = new HashSet<TrainingClass>();
         }
 
         public int TrainingId { get; set; }
         public string TrainingTitle { get; set; }
 
-        public ICollection<TrainingMember> TrainingMember { get; set; }
+        public ICollection<TrainingClass> TrainingClass { get; set; }
+
     }
 }

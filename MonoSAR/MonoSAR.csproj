@@ -6,14 +6,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Modeldump\**" />
     <Compile Remove="Modelx\**" />
+    <Content Remove="Modeldump\**" />
     <Content Remove="Modelx\**" />
+    <EmbeddedResource Remove="Modeldump\**" />
     <EmbeddedResource Remove="Modelx\**" />
+    <None Remove="Modeldump\**" />
     <None Remove="Modelx\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Controllers\TrainingMembersController.cs" />
+    <Compile Remove="Models\DB\TrainingMember.cs" />
+    <Compile Remove="Models\DB\TrainingMemberInstructor.cs" />
   </ItemGroup>
 
 
