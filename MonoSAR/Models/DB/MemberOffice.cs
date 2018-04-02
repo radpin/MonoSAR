@@ -11,5 +11,6 @@ namespace MonoSAR.Models.DB
         public DateTime Created { get; set; }
 
         public virtual Office Office { get; set; }
+
     }
 }
