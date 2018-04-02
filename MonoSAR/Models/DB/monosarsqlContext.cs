@@ -18,8 +18,6 @@ namespace MonoSAR.Models.DB
         public virtual DbSet<MemberMedical> MemberMedical { get; set; }
         public virtual DbSet<Office> Office { get; set; }
         public virtual DbSet<Training> Training { get; set; }
-        public virtual DbSet<TrainingMember> TrainingMember { get; set; }
-        public virtual DbSet<TrainingMemberInstructor> TrainingMemberInstructor { get; set; }
         public virtual DbSet<TrainingClass> TrainingClass { get; set; }
         public virtual DbSet<TrainingClassStudent> TrainingClassStudent { get; set; }
         public virtual DbSet<TrainingClassInstructor> TrainingClassInstructor { get; set; }
@@ -295,48 +293,6 @@ namespace MonoSAR.Models.DB
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<TrainingMember>(entity =>
-            {
-                entity.HasIndex(e => e.MemberId)
-                    .HasName("idx_trainingmember_memberid");
-
-                entity.HasIndex(e => new { e.Created, e.TrainingDate })
-                    .HasName("idx_trainingmember_created_trainingdate");
-
-                entity.HasIndex(e => new { e.MemberId, e.TrainingId })
-                    .HasName("idx_trainingmember_memberid_trainingid");
-
-                entity.Property(e => e.TrainingMemberId).HasColumnName("TrainingMemberID");
-
-                entity.Property(e => e.Created)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.MemberId).HasColumnName("MemberID");
-
-                entity.Property(e => e.TrainingDate)
-                    .HasColumnType("date")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.TrainingHours)
-                    .HasColumnType("decimal(16, 2)")
-                    .HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.TrainingId).HasColumnName("TrainingID");
-
-                entity.HasOne(d => d.Member)
-                    .WithMany(p => p.TrainingMember)
-                    .HasForeignKey(d => d.MemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TrainingM__Membe__7A672E12");
-
-                entity.HasOne(d => d.Training)
-                    .WithMany(p => p.TrainingMember)
-                    .HasForeignKey(d => d.TrainingId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TrainingM__Train__797309D9");
-            });
-
             modelBuilder.Entity<Operation>(entity =>
             {
                 entity.Property(e => e.OperationId).HasColumnName("OperationID");
@@ -392,33 +348,6 @@ namespace MonoSAR.Models.DB
                     .HasForeignKey(d => d.OperationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Operation__Opera__40F9A68C");
-            });
-
-            modelBuilder.Entity<TrainingMemberInstructor>(entity =>
-            {
-                entity.Property(e => e.TrainingMemberInstructorId).HasColumnName("TrainingMemberInstructorID");
-
-                entity.Property(e => e.Created)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.InstructorHours).HasColumnType("decimal(16, 2)");
-
-                entity.Property(e => e.IntstructorMemberId).HasColumnName("IntstructorMemberID");
-
-                entity.Property(e => e.TrainingMemberId).HasColumnName("TrainingMemberID");
-
-                entity.HasOne(d => d.IntstructorMember)
-                    .WithMany(p => p.TrainingMemberInstructor)
-                    .HasForeignKey(d => d.IntstructorMemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TrainingM__Intst__4E53A1AA");
-
-                entity.HasOne(d => d.TrainingMember)
-                    .WithMany(p => p.TrainingMemberInstructor)
-                    .HasForeignKey(d => d.TrainingMemberId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TrainingM__Train__4D5F7D71");
             });
 
             modelBuilder.Entity<TrainingClass>(entity =>

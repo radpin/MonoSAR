@@ -33,18 +33,17 @@ namespace MonoSAR.Controllers
         [Authorize(Roles ="Admin,Training")]
         public ActionResult Index()
         {
-            var query = (from tm in _context.TrainingMember
-                         orderby tm.Created descending, tm.TrainingDate descending
-                         select tm).Take(100);
+            var query = (from tsc in _context.TrainingClassStudent
+                         orderby tsc.Created descending, tsc.TrainingClass.TrainingDate descending
+                         select tsc).Take(100);
 
             //Explicit loading because EF Core isn't lazy
-            _context.TrainingMember.Include(x => x.Member).Load();
-            _context.TrainingMember.Include(x => x.Training).Load();
-
+            _context.TrainingClassStudent.Include(x => x.TrainingClassStudentMember).Load();
+            _context.TrainingClassStudent.Include(x => x.TrainingClass).ThenInclude(y=>y.Training).Load();
+                        
             //converting from data models to the view model (dto), the conversions happen in the view model / dto's constructor
-            Models.Training.TrainingSummary model = new Models.Training.TrainingSummary(query);
-
-
+            Models.Training.TrainingClassStudentSummary model = new Models.Training.TrainingClassStudentSummary(query);
+            
             return View(model); 
         }
 
@@ -180,7 +179,7 @@ namespace MonoSAR.Controllers
             _context.Member.Include(x => x.MemberCpr).ThenInclude(y => y.Cpr).Load();
             _context.Member.Include(x => x.MemberMedical).ThenInclude(y => y.Medical).Load();
             _context.Member.Include(x => x.Capacity).Load();
-            _context.Member.Include(x => x.TrainingMember).ThenInclude(y => y.Training).Load();
+            _context.Member.Include(x => x.TrainingClassStudent).ThenInclude(y => y.TrainingClass).ThenInclude(z=>z.Training).Load();
 
             var model = new Models.Membership.MemberSummaryItem(query, _applicationOptions, _config);
             
@@ -216,18 +215,18 @@ namespace MonoSAR.Controllers
         [Authorize(Roles = "Admin,Training")]
         public ActionResult Edit(int id)
         {
-            var query = (from tm in _context.TrainingMember
-                         where tm.TrainingMemberId == id
-                         select tm).FirstOrDefault();
+
+            var query = (from tsc in _context.TrainingClassStudent
+                         where tsc.TrainingClassStudentId == id
+                         select tsc).FirstOrDefault();
 
             //Explicit loading because EF Core isn't lazy
-            _context.TrainingMember.Include(x => x.Member).Load();
-            _context.TrainingMember.Include(x => x.Training).Load();
+            _context.TrainingClassStudent.Include(x => x.TrainingClassStudentMember).Load();
+            _context.TrainingClassStudent.Include(x => x.TrainingClass).ThenInclude(y => y.Training).Load();
 
             //converting from data models to the view model (dto), the conversions happen in the view model / dto's constructor
-            Models.Training.TrainingSummaryItem model = new Models.Training.TrainingSummaryItem(query);
-
-
+            Models.Training.TrainingClassStudentSummaryItem model = new Models.Training.TrainingClassStudentSummaryItem(query);
+            
             return View(model);
 
         }
@@ -236,19 +235,18 @@ namespace MonoSAR.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Training")]
-        public ActionResult Edit(Models.Training.TrainingSummaryItem viewModel)
+        public ActionResult Edit(Models.Training.TrainingClassStudentSummaryItem viewModel)
         {
             // only updating hours and date at the moment
 
             try {
 
-                var query = (from tm in _context.TrainingMember
-                             where tm.TrainingMemberId == viewModel.TrainingMemberID
-                             select tm).FirstOrDefault();
+                var query = (from tsc in _context.TrainingClassStudent
+                             where tsc.TrainingClassStudentId == viewModel.TrainingClassStudentID
+                             select tsc).FirstOrDefault();
 
-                query.TrainingHours = viewModel.Hours;
-                query.TrainingDate = viewModel.When;
-
+                query.TrainingClassStudentHours = viewModel.Hours;
+                
                 _context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
@@ -265,14 +263,13 @@ namespace MonoSAR.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Training")]
-        public ActionResult Delete(Models.Training.TrainingSummaryItem viewModel)
+        public ActionResult Delete(Models.Training.TrainingClassStudentSummaryItem viewModel)
         {
             try
             {
-                var del = new Models.DB.TrainingMember { TrainingMemberId = viewModel.TrainingMemberID };
-                _context.TrainingMember.Attach(del);
+                var del = new Models.DB.TrainingClassStudent { TrainingClassStudentId = viewModel.TrainingClassStudentID };
+                _context.TrainingClassStudent.Attach(del);
                 _context.Remove(del);
-
                 _context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));

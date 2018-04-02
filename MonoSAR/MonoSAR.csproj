@@ -18,6 +18,8 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\TrainingMembersController.cs" />
+    <Compile Remove="Models\DB\TrainingMember.cs" />
+    <Compile Remove="Models\DB\TrainingMemberInstructor.cs" />
   </ItemGroup>
 
 
