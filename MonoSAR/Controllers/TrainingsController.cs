@@ -35,7 +35,7 @@ namespace MonoSAR.Controllers
         public IEnumerable<Training> GetTraining()
         {
 
-            return _context.Training;
+            return _context.Training.OrderBy(x => x.TrainingTitle);
         }
 
         // GET: api/Trainings/5
