@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
+using Twilio.AspNet.Mvc;
 
 namespace MonoSAR.Services
 {
@@ -66,12 +67,13 @@ namespace MonoSAR.Services
         public void SendCalloutPhoneCallsandSMS(IEnumerable<Models.Membership.MemberSummaryItem> members, Models.DB.Callout callout)
         {
             //for testing the foreach is disabled, and just sending it to me
-            this.sendVoiceCall("619-752-0976", callout);
-            
+            this.sendSMS("619-752-0976", callout.CalloutMessage);  //for production, delete this code
+            this.sendVoiceCall("619-752-0976", callout); //for production, delete this code
+
             foreach (var x in members)
             {
-                this.sendSMS(x.PhoneCell, callout.CalloutMessage);
-                this.sendVoiceCall(x.PhoneCell, callout);
+                //this.sendSMS(x.PhoneCell, callout.CalloutMessage); //for production, uncomment this code
+                //this.sendVoiceCall(x.PhoneCell, callout); //for production, uncomment this code
             }
         }
 
@@ -89,7 +91,7 @@ namespace MonoSAR.Services
 
                 TwilioClient.Init(accountSid, authToken);
 
-                var to = new PhoneNumber("+16198493742");
+                var to = new PhoneNumber("6198493742");
                 var from = new PhoneNumber("+17602034033");
 
                 var call = CallResource.Create(to,
@@ -100,6 +102,11 @@ namespace MonoSAR.Services
             {
                 throw exc;
             }
+        }
+
+        public String FormatStringToTwiml(String rawString)
+        {
+            return new TwiMLResult(rawString, System.Text.Encoding.UTF8).ToString();
         }
 
     }

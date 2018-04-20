@@ -72,14 +72,27 @@ namespace MonoSAR.Controllers
             return View(model);
         }
 
-        public ContentResult GetTwilioMessage(Int32 calloutid)
+        [HttpGet]
+        [HttpPost]
+        public ContentResult GetTwilioMessage(Int32 id)
         {
-            //todo: render the xml
-            //1) persist the callout message in this controller
-            //2) assemble the url (this method). should it return a string? xml? json? etc.
-            //3) make the message/twilio call
+            //Twilio makes an Http Post request, but get is handy for a human looking at it without postman.
 
-            return this.Content("dsf", "text/xml");
+            System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder();
+            var callout = (from x in _context.Callout where x.CalloutId == id select x).FirstOrDefault();
+
+            String messageXmlFormatted = escapeXml(callout.CalloutMessage);
+
+
+
+            stringBuilder.Append(@"<?xml version=""1.0"" encoding=""UTF-8""?>");
+            stringBuilder.Append("<Response>");
+            stringBuilder.Append(@"<Say voice=""alice"">");
+            stringBuilder.Append(messageXmlFormatted);
+            stringBuilder.Append("</Say>");
+            stringBuilder.Append("</Response>");
+
+            return this.Content(stringBuilder.ToString(), "text/xml");
         }
 
         [Authorize(Roles = "Admin,OpsLeader")]
@@ -139,6 +152,21 @@ namespace MonoSAR.Controllers
             }
 
             return memberList;
+        }
+
+        private string escapeXml(string s)
+        {
+            string toxml = s;
+            if (!string.IsNullOrEmpty(toxml))
+            {
+                // replace literal values with entities
+                toxml = toxml.Replace("'", "&apos;");
+                toxml = toxml.Replace("\"", "&quot;");
+                toxml = toxml.Replace(">", "&gt;");
+                toxml = toxml.Replace("<", "&lt;");
+                toxml = toxml.Replace("&", "&amp;");
+            }
+            return toxml;
         }
     }
 }
