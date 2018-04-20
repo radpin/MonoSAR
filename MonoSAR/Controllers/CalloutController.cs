@@ -81,14 +81,15 @@ namespace MonoSAR.Controllers
             System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder();
             var callout = (from x in _context.Callout where x.CalloutId == id select x).FirstOrDefault();
 
-            String messageXmlFormatted = escapeXml(callout.CalloutMessage);
+            //Services.Telephony telephony = new Services.Telephony(_applicationOptions, _config, _context);
 
-
+            //String messageXmlFormatted = telephony.FormatStringToTwiml(callout.CalloutMessage);// escapeXml(callout.CalloutMessage);
+            
 
             stringBuilder.Append(@"<?xml version=""1.0"" encoding=""UTF-8""?>");
             stringBuilder.Append("<Response>");
             stringBuilder.Append(@"<Say voice=""alice"">");
-            stringBuilder.Append(messageXmlFormatted);
+            stringBuilder.Append(callout.CalloutMessage);
             stringBuilder.Append("</Say>");
             stringBuilder.Append("</Response>");
 

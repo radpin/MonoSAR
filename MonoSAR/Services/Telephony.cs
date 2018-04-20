@@ -67,8 +67,8 @@ namespace MonoSAR.Services
         public void SendCalloutPhoneCallsandSMS(IEnumerable<Models.Membership.MemberSummaryItem> members, Models.DB.Callout callout)
         {
             //for testing the foreach is disabled, and just sending it to me
-            this.sendSMS("619-752-0976", callout.CalloutMessage);  //for production, delete this code
-            this.sendVoiceCall("619-752-0976", callout); //for production, delete this code
+            this.sendSMS("6197564765", callout.CalloutMessage);  //for production, delete this code
+            this.sendVoiceCall("6197564765", callout); //for production, delete this code
 
             foreach (var x in members)
             {
@@ -91,7 +91,7 @@ namespace MonoSAR.Services
 
                 TwilioClient.Init(accountSid, authToken);
 
-                var to = new PhoneNumber("6198493742");
+                var to = new PhoneNumber(numbertocall);
                 var from = new PhoneNumber("+17602034033");
 
                 var call = CallResource.Create(to,
