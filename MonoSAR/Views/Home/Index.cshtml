@@ -34,9 +34,12 @@
     </div>
     <div class="col-md-3">
         <h2>Operations</h2>
-        <ul>
-            <li>.</li>
-        </ul>
+           <form asp-controller="Callout" method="post" asp-action="Start" onsubmit="return confirm('Really start callout?')">
+                <ul>
+                    <li>.</li>
+                    <li><button type="submit" class="alert-warning">Start Callout</button> </li>
+                </ul>
+            </form>
     </div>
     <div class="col-md-3">
         <h2>My Info</h2>

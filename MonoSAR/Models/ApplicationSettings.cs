@@ -15,5 +15,6 @@ namespace MonoSAR.Models
         public Int32 RequiredPackCheck { get; set; }
         public Int32 RequiredBeaconTest { get; set; }
 
+        public String BaseURL { get; set; }
     }
 }
