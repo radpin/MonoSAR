@@ -30,7 +30,9 @@ namespace MonoSAR.Controllers
         }
 
         // GET: TrainingOfficer
-        [Authorize(Roles ="Admin,Training")]
+        [Authorize(Roles = "Admin,Membership,Training")]
+        [HttpGet]
+        [HttpPost]
         public ActionResult Index()
         {
             var query = (from tsc in _context.TrainingClassStudent
