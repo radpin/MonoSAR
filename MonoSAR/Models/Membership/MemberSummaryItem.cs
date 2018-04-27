@@ -194,7 +194,7 @@ namespace MonoSAR.Models.Membership
         {
             get
             {
-                if (!IsMedicalExpired && !IsCPRExpired && !IsBeaconExpired && IsCandidateClass && IsICS100 && IsICS200 && IsBuildingVehicleTested && IsPackChecked && IsCandidateClass)
+                if (!IsMedicalExpired && !IsCPRExpired && !IsBeaconExpired && IsCandidateClass && IsICS100 && IsICS200 && IsBuildingVehicleTested && IsPackChecked && IsCandidateClass && (Capacity.ToLower() == "Candidate" || Capacity.ToLower() == "Rescue" || Capacity.ToLower() == "Life" )         )
                 { return true; }
                 else
                 { return false; }
@@ -204,7 +204,7 @@ namespace MonoSAR.Models.Membership
         {
             get
             {
-                if (!IsMedicalExpired && !IsCPRExpired && IsCandidateClass && IsICS100 && IsICS200 && IsBuildingVehicleTested && IsPackChecked && IsCandidateClass)
+                if (!IsMedicalExpired && !IsCPRExpired && IsCandidateClass && IsICS100 && IsICS200 && IsBuildingVehicleTested && IsPackChecked && IsCandidateClass && (Capacity.ToLower() == "Candidate" || Capacity.ToLower() == "Rescue" || Capacity.ToLower() == "Life"))
                 { return true; }
                 else
                 { return false; }

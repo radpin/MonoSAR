@@ -40,7 +40,7 @@ namespace MonoSAR.Services
             };
             msg.AddTo(new EmailAddress(email));            
             
-            //client.SendEmailAsync(msg).Wait();
+            //return client.SendEmailAsync(msg).Wait();
             return client.SendEmailAsync(msg);
         }
     }

@@ -6,13 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Modeldump\**" />
     <Compile Remove="Modelx\**" />
-    <Content Remove="Modeldump\**" />
     <Content Remove="Modelx\**" />
-    <EmbeddedResource Remove="Modeldump\**" />
     <EmbeddedResource Remove="Modelx\**" />
-    <None Remove="Modeldump\**" />
     <None Remove="Modelx\**" />
   </ItemGroup>
 
@@ -24,13 +20,15 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" PrivateAssets="All" />
     <PackageReference Include="SendGrid" Version="9.9.0" />
+    <PackageReference Include="Twilio" Version="5.11.1" />
+    <PackageReference Include="Twilio.AspNet.Mvc" Version="5.9.7" />
   </ItemGroup>
 
   <ItemGroup>

@@ -11,7 +11,7 @@
     <div class="col-md-3">
         <h2>Training</h2>
         <ul>
-            <li><a href="/TrainingOfficer">Recent Training List</a></li>
+            <li><a href="/TrainingOfficer/Index">Recent Training List</a></li>
             <li><a href="/TrainingOfficer/RecordTrainingOccurrence">Record a Training Class</a></li>
             <li><a href="/TrainingOfficer/RecordMedical">Record Medical Certifications</a></li>
             <li><a href="/TrainingOfficer/RecordCPR">Record CPR Certifications</a></li>
@@ -34,14 +34,20 @@
     </div>
     <div class="col-md-3">
         <h2>Operations</h2>
-        <ul>
-            <li>.</li>
-        </ul>
+           <form asp-controller="Callout" method="post" asp-action="Start" onsubmit="return confirm('Really start callout?')">
+               <ul>
+                   <li>.</li>
+                   @if (User.IsInRole("Admin"))
+                   {    
+                        <li><button type="submit" class="alert-warning">Start Callout</button> </li>
+                   }
+               </ul>
+            </form>
     </div>
     <div class="col-md-3">
         <h2>My Info</h2>
         <ul>
-            <li><a href="/myinfo/">My Info</a></li>
+            <li><a href="/myinfo/index">My Info</a></li>
         </ul>
     </div>
 </div>
