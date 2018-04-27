@@ -45,6 +45,20 @@ namespace MonoSAR
             //load up appsettings.json into ApplicationSettings
             services.Configure<Models.ApplicationSettings>(Configuration.GetSection("AppSettings"));
 
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = false;
+            });
+
+
+
+            //for email confirmation https://docs.microsoft.com/en-us/aspnet/core/security/authentication/accconfirm?view=aspnetcore-2.1&tabs=aspnetcore2x#enable-account-confirmation-and-password-recovery
+            services.AddSingleton<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
 
 

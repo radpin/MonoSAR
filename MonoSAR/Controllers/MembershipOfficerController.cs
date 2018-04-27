@@ -53,7 +53,7 @@ namespace MonoSAR.Controllers
         }
 
         // GET: MembershipOfficer/Details/5
-        [Authorize(Roles = "Admin,Membership,Training")]
+        [Authorize]
         [HttpGet]
         public ActionResult MemberReport()
         {
@@ -65,7 +65,7 @@ namespace MonoSAR.Controllers
         }
 
 
-        [Authorize(Roles = "Admin,Membership,Training")]
+        [Authorize]
         [HttpGet]
         public ActionResult CandidateReport()
         {
@@ -86,7 +86,7 @@ namespace MonoSAR.Controllers
             return View(ms);
         }
 
-        [Authorize(Roles = "Admin,Membership,Training")]
+        [Authorize]
         [HttpGet]
         public ActionResult CandidateReportCurrentYear()
         {
@@ -120,6 +120,7 @@ namespace MonoSAR.Controllers
 
             var candidates = (from m in memberList
                               where m.IsMedicalExpired == true
+                              && m.Capacity.ToLower() != "inactive"
                               select m).ToList();
 
             Models.Membership.MemberSummary ms = new Models.Membership.MemberSummary();
@@ -142,6 +143,7 @@ namespace MonoSAR.Controllers
 
             var candidates = (from m in memberList
                               where m.IsCPRExpired == true
+                              && m.Capacity.ToLower() != "inactive"
                               select m).ToList();
 
             Models.Membership.MemberSummary ms = new Models.Membership.MemberSummary();
@@ -151,7 +153,7 @@ namespace MonoSAR.Controllers
             return View(ms);
         }
 
-        [Authorize(Roles = "Admin,Membership,Training")]
+        [Authorize]
         [HttpGet]
         public ActionResult RescueReport()
         {
@@ -172,7 +174,7 @@ namespace MonoSAR.Controllers
             return View(ms);
         }
 
-        [Authorize(Roles = "Admin,Membership,Training")]
+        [Authorize]
         [HttpGet]
         public ActionResult WinterReadyReport()
         {
@@ -193,7 +195,7 @@ namespace MonoSAR.Controllers
             return View(ms);
         }
 
-        [Authorize(Roles = "Admin,Membership,Training")]
+        [Authorize]
         [HttpGet]
         public ActionResult SummerReadyReport()
         {
