@@ -26,9 +26,9 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="TrainingOfficer" asp-action="">Training</a></li>
-                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="MembershipOfficer/MemberReport" asp-action="">Membership</a></li>
-                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="MyInfo" asp-action="">My Info</a></li>
+                <li class="nav-item"><a class="nav-link" href="/TrainingOfficer/Index">Training</a></li>
+                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="MembershipOfficer" asp-action="MemberReport">Membership</a></li>
+                <li class="nav-item"><a class="nav-link" href="/MyInfo/Index">My Info</a></li>
             </ul>
             @await Html.PartialAsync("_LoginPartial")
         </div>

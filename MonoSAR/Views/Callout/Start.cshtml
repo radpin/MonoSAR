@@ -1,0 +1,29 @@
+﻿@model MonoSAR.Models.Callout.CalloutOccurrence
+
+@{
+    ViewData["Title"] = "Start";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Send Callout</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="Callout" method="post" asp-action="Initiate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <h5>Message</h5>
+                <textarea asp-for="VoiceMessage" class="form-control">
+                Team, we have a call out. 
+
+                Please bring rescue vehicles.
+                </textarea>
+                <span asp-validation-for="VoiceMessage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Callout Team" class="alert-success" onsubmit="return confirm('Really start callout?')" />
+            </div>
+        </form>
+    </div>
+</div>
+

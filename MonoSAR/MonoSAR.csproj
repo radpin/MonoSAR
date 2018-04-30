@@ -16,27 +16,85 @@
     <None Remove="Modelx\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Controllers\TrainingMembersController.cs" />
-    <Compile Remove="Models\DB\TrainingMember.cs" />
-    <Compile Remove="Models\DB\TrainingMemberInstructor.cs" />
-  </ItemGroup>
-
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" PrivateAssets="All" />
     <PackageReference Include="SendGrid" Version="9.9.0" />
+    <PackageReference Include="Twilio" Version="5.12.0" />
+    <PackageReference Include="Twilio.AspNet.Mvc" Version="5.9.7" />
   </ItemGroup>
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.1" />
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Account\AccessDenied.cshtml" />
+    <None Include="Views\Account\ConfirmEmail.cshtml" />
+    <None Include="Views\Account\ExternalLogin.cshtml" />
+    <None Include="Views\Account\ForgotPassword.cshtml" />
+    <None Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <None Include="Views\Account\Lockout.cshtml" />
+    <None Include="Views\Account\Login.cshtml" />
+    <None Include="Views\Account\LoginWith2fa.cshtml" />
+    <None Include="Views\Account\LoginWithRecoveryCode.cshtml" />
+    <None Include="Views\Account\Register.cshtml" />
+    <None Include="Views\Account\ResetPassword.cshtml" />
+    <None Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <None Include="Views\Account\SignedOut.cshtml" />
+    <None Include="Views\Callout\Initiate.cshtml" />
+    <None Include="Views\Callout\Start.cshtml" />
+    <None Include="Views\Home\About.cshtml" />
+    <None Include="Views\Home\Contact.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Training.cshtml" />
+    <None Include="Views\Manage\ChangePassword.cshtml" />
+    <None Include="Views\Manage\Disable2fa.cshtml" />
+    <None Include="Views\Manage\EnableAuthenticator.cshtml" />
+    <None Include="Views\Manage\ExternalLogins.cshtml" />
+    <None Include="Views\Manage\GenerateRecoveryCodes.cshtml" />
+    <None Include="Views\Manage\Index.cshtml" />
+    <None Include="Views\Manage\ResetAuthenticator.cshtml" />
+    <None Include="Views\Manage\SetPassword.cshtml" />
+    <None Include="Views\Manage\TwoFactorAuthentication.cshtml" />
+    <None Include="Views\Manage\_Layout.cshtml" />
+    <None Include="Views\Manage\_ManageNav.cshtml" />
+    <None Include="Views\Manage\_StatusMessage.cshtml" />
+    <None Include="Views\Manage\_ViewImports.cshtml" />
+    <None Include="Views\MembershipOfficer\CandidateReport.cshtml" />
+    <None Include="Views\MembershipOfficer\CandidateReportCurrentYear.cshtml" />
+    <None Include="Views\MembershipOfficer\CreateMember.cshtml" />
+    <None Include="Views\MembershipOfficer\ExpiredCPRReport.cshtml" />
+    <None Include="Views\MembershipOfficer\ExpiredMedicalReport.cshtml" />
+    <None Include="Views\MembershipOfficer\MemberReport.cshtml" />
+    <None Include="Views\MembershipOfficer\RescueReport.cshtml" />
+    <None Include="Views\MembershipOfficer\SummerReadyReport.cshtml" />
+    <None Include="Views\MembershipOfficer\SupportReport.cshtml" />
+    <None Include="Views\MembershipOfficer\Thanks.cshtml" />
+    <None Include="Views\MembershipOfficer\ViewMember.cshtml" />
+    <None Include="Views\MembershipOfficer\WinterReadyReport.cshtml" />
+    <None Include="Views\MyInfo\Index.cshtml" />
+    <None Include="Views\Shared\Error.cshtml" />
+    <None Include="Views\Shared\MemberSummaryList.cshtml" />
+    <None Include="Views\Shared\MemberView.cshtml" />
+    <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="Views\Shared\_LoginPartial.cshtml" />
+    <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Views\TrainingOfficer\ChangeMedicalSummaryThing.cshtml" />
+    <None Include="Views\TrainingOfficer\Edit.cshtml" />
+    <None Include="Views\TrainingOfficer\Index.cshtml" />
+    <None Include="Views\TrainingOfficer\RecordCPR.cshtml" />
+    <None Include="Views\TrainingOfficer\RecordMedical.cshtml" />
+    <None Include="Views\TrainingOfficer\RecordTrainingOccurrence.cshtml" />
+    <None Include="Views\TrainingOfficer\TrainingOccurrenceInsertConfirmation.cshtml" />
+    <None Include="Views\TrainingOfficer\ViewMember.cshtml" />
   </ItemGroup>
 
 </Project>

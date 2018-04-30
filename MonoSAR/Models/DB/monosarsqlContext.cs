@@ -8,6 +8,7 @@ namespace MonoSAR.Models.DB
 {
     public partial class monosarsqlContext : DbContext
     {
+        public virtual DbSet<Callout> Callout { get; set; }
         public virtual DbSet<Capacity> Capacity { get; set; }
         public virtual DbSet<Certification> Certification { get; set; }
         public virtual DbSet<Cpr> Cpr { get; set; }
@@ -67,6 +68,18 @@ namespace MonoSAR.Models.DB
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<Callout>(entity =>
+            {
+                entity.Property(e => e.CalloutId).HasColumnName("CalloutID");
+
+                entity.Property(e => e.CalloutMessage)
+                    .IsRequired()
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Created).HasColumnType("datetime");
+            });
+
 
             modelBuilder.Entity<Capacity>(entity =>
             {
