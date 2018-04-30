@@ -21,13 +21,6 @@ namespace MonoSAR.Controllers
             this._context = new monosarsqlContext(config);
         }
                 
-        //private readonly monosarsqlContext _context;
-
-        //public MedicalController(IConfiguration config)
-        //{
-        //    this._context = new monosarsqlContext(config);
-        //}
-
         // GET: api/CPR
         [HttpGet]
         public IEnumerable<Cpr> GetCpr()
