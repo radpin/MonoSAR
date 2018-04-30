@@ -1,0 +1,21 @@
+﻿@model List<Microsoft.WindowsAzure.Storage.Blob.IListBlobItem>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Forms &amp; Docs</h3>
+
+<table>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td style="font-size:small;">
+
+                <a href="@item.Uri.OriginalString">@System.Web.HttpUtility.UrlDecode( @item.Uri.Segments.Last() )</a>
+
+                
+            </td>
+        </tr>
+    }
+    </table>
