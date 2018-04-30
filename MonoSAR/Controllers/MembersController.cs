@@ -24,11 +24,8 @@ namespace MonoSAR.Controllers
         }
 
         // GET: api/Members
-        [HttpGet]
-        [Authorize]
         public IEnumerable<Member> GetMember()
         {
-
             var query = from m in _context.Member
                         where m.Capacity.CapacityName.ToLower() != "inactive"
                         orderby m.LastName ascending
