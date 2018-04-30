@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MonoSAR.Models;
 
@@ -22,24 +23,15 @@ namespace MonoSAR.Controllers
             _userManager = usermanager;
         }
 
+        [Authorize]
+        [HttpGet]
         public IActionResult Index()
         {
-
             Models.HomeScreen homeScreen = new HomeScreen();
             homeScreen.LogoPath = _applicationSettings.HomeImagePath;
 
-            //var user = await _userManager.GetUserAsync(HttpContext.User);
-
-
             var x = User;
-
-
-            //if (!User.Identity.IsAuthenticated)
-            //{
-            //    throw new Exception("Not authenticated.");
-            //}
-
-
+            
             return View(homeScreen);
         }
 

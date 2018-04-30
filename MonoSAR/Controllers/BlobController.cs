@@ -39,6 +39,8 @@ namespace MonoSAR.Controllers
             this._applicationOptions = options;
         }
         
+        [Authorize]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {            
             CloudStorageAccount account = CloudStorageAccount.Parse(_config["azure-blob-connectionstring"]);

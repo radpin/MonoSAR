@@ -33,30 +33,6 @@ namespace MonoSAR.Controllers
             this._applicationOptions = options;
         }
 
-
-
-
-
-        // GET: api/<controller>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<controller>
-        [HttpPost]
-        public void Post([FromForm]string value)
-        {
-        }
-
         // POST api/<controller>
         [Authorize(Roles = "Admin,OpsLeader")]
         [HttpPost]
@@ -119,20 +95,6 @@ namespace MonoSAR.Controllers
             return View();
             
         }
-
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
-
-
         private Models.Membership.MemberSummary memberSummaryItems()
         {
             Models.Membership.MemberSummary memberList = new Models.Membership.MemberSummary();
