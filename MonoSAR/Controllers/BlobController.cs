@@ -11,6 +11,7 @@ namespace MonoSAR.Controllers
         public IActionResult Index()
         {
             return View();
+
         }
     }
 }
