@@ -72,7 +72,7 @@ namespace MonoSAR
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider provider)
         {
 
-             CreateRoles(provider).Wait();
+            CreateRoles(provider).Wait();
 
 
             if (env.IsDevelopment())
@@ -123,7 +123,7 @@ namespace MonoSAR
                 if (!roleExist)
                 {
                     //create the roles and seed them to the database: 
-                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName)); 
+                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
                 }
             }
 
