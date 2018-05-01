@@ -53,28 +53,46 @@
                 </tr>
             </thead>
             @if (Model.MedicalSummaries != null)
-            {
-                @foreach (var ms in Model.MedicalSummaries)
-                {
-                <tr>
-                    <td>@ms.Title</td>
-                    <td>@ms.IssuedPretty</td>
-                    <td>@ms.ExpirationPretty</td>
-                </tr>
-                }
-            }
-
+        {
+            @foreach (var ms in Model.MedicalSummaries)
+        {
+            <tr>
+                <td>@ms.Title</td>
+                <td>@ms.IssuedPretty</td>
+                <td>@ms.ExpirationPretty</td>
+            </tr>
+    }
+    }
+            @if (Model.MedicalSummaries != null)
+        {
+            @foreach (var cs in Model.CPRSummaries)
+        {
+            <tr>
+                <td>@cs.Title</td>
+                <td>@cs.IssuedPretty</td>
+                <td>@cs.ExpirationPretty</td>
+            </tr>
+    }
+    }
         </table>
         <br />
         @if (Model.CPRExpires > DateTime.Now)
-        {
+    {
         <span>CPR Expiration:</span> @Html.DisplayFor(model => model.CPRExpiresPretty)
-        }
-        else
-        { 
-        <strong>CPR Expired</strong>
-        }
-
+}
+else
+{
+    <strong style="color:red;">CPR Expired</strong>
+}
+        <br/>
+    @if (Model.MedicalExpires > DateTime.Now)
+    {
+        <span>Medical Expiration:</span> @Html.DisplayFor(model => model.MedicalExpiresPretty)
+    }
+    else
+    {
+        <strong style="color:red;">Medical Expired</strong>
+    }
 
     </div>
 
