@@ -122,11 +122,15 @@ namespace MonoSAR.Models.Membership
         private void buildBeaconCheck(Models.DB.Member dataItem)
         {
             var beac = (from tm in dataItem.TrainingClassStudent
-                        where tm.TrainingClassStudentMemberId == dataItem.MemberId && tm.TrainingClass.TrainingId == _applicationSettings.RequiredBeaconTest
+                        where tm.TrainingClassStudentMemberId == dataItem.MemberId 
+                        && tm.TrainingClass.TrainingId == _applicationSettings.RequiredBeaconTest
                         select tm).FirstOrDefault();
 
-            if (beac != null && beac.TrainingClass.TrainingDate > DateTime.UtcNow.AddYears(-1))
-            { this.IsBeaconExpired = true; }
+            this.IsBeaconExpired = true;
+
+            if (beac != null )
+            { this.IsBeaconExpired = false; }
+           
         }
 
         private void buildTraining(Models.DB.Member dataItem)

@@ -328,6 +328,7 @@ namespace MonoSAR.Controllers
         public ActionResult RecordMedical()
         {
             var query = (from m in _context.Member
+                         where m.Capacity.CapacityName.ToLower() != "inactive"
                          orderby m.LastName
                          select m).ToList();
 
@@ -350,6 +351,7 @@ namespace MonoSAR.Controllers
         public ActionResult RecordCPR()
         {
             var query = (from m in _context.Member
+                         where m.Capacity.CapacityName.ToLower() != "inactive"
                          orderby m.LastName
                          select m).ToList();
 

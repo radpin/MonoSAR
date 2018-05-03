@@ -232,7 +232,7 @@ namespace MonoSAR.Controllers
             dbMember.City = model.City;
             dbMember.Email = model.Email;
             dbMember.FirstName = model.FirstName;
-            dbMember.Ham = model.LastName;
+            dbMember.Ham = String.Empty;
             dbMember.Joined = model.Joined;
             dbMember.LastName = model.LastName;
             dbMember.PhoneCell = model.PhoneCell;

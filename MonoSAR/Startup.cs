@@ -138,6 +138,7 @@ namespace MonoSAR
             if (_barry != null)
             {
                 await UserManager.AddToRoleAsync(_barry, "Training");
+                await UserManager.AddToRoleAsync(_barry, "Membership");
             }
 
             // check if the user exists
