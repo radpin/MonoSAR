@@ -63,11 +63,11 @@ namespace MonoSAR.Models.Membership
 
         private void buildCPR(Models.DB.Member dataItem)
         {
-            List<Training.CPRSummary> cPRSummaries = new List<Training.CPRSummary>();
+            List<Training.CPRSummaryItem> cPRSummaries = new List<Training.CPRSummaryItem>();
 
             foreach (var item in dataItem.MemberCpr)
             {
-                cPRSummaries.Add(new Training.CPRSummary(item));
+                cPRSummaries.Add(new Training.CPRSummaryItem(item));
             }
 
             this.CPRSummaries = cPRSummaries;
@@ -128,7 +128,7 @@ namespace MonoSAR.Models.Membership
 
             this.IsBeaconExpired = true;
 
-            if (beac != null )
+            if (beac != null && beac.TrainingClass.TrainingDate > DateTime.UtcNow.AddYears(-1) )
             { this.IsBeaconExpired = false; }
            
         }
@@ -223,7 +223,7 @@ namespace MonoSAR.Models.Membership
 
         public List<Training.MedicalSummaryItem> MedicalSummaries { get; set; }
         public List<Training.CertificationSummary> CertificationSummaries { get; set; }
-        public List<Training.CPRSummary> CPRSummaries { get; set; }
+        public List<Training.CPRSummaryItem> CPRSummaries { get; set; }
 
         public List<Training.TrainingClassStudentSummaryItem> TrainingSummaries { get; set; }
 

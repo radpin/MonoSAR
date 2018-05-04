@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace MonoSAR.Models.Training
 {
-    public class CPRSummary: AccessorySummaryCore
+    public class CPRSummary: List<CPRSummaryItem>
     {
-        public CPRSummary(Models.DB.MemberCpr dataItem)
+        public CPRSummary(IEnumerable<Models.DB.MemberCpr> datalist)
         {
-            this.Title = dataItem.Cpr.Title;
-            this.Expiration = dataItem.Expiration;
-            this.Issued = dataItem.Issued;
-            this.RankOrder = dataItem.Cpr.RankOrder;
+            foreach (var x in datalist)
+            {
+                base.Add(new CPRSummaryItem(x));
+            }
         }
     }
 }

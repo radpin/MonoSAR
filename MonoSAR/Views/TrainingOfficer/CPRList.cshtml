@@ -1,0 +1,45 @@
+﻿@model MonoSAR.Models.Training.CPRSummary
+@{
+    ViewData["Title"] = "TrainingOfficer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Recent CPR Certifications</h2>
+<a href="/TrainingOfficer/RecordCPR/">Record CPR Certification</a>
+
+<div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Member</th>
+                <th>Issued</th>
+                <th>Expiration</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+       @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td><a href="/TrainingOfficer/ViewMember/@item.MemberID">@item.MemberNameLast , @item.MemberNameFirst</a></td>
+                <td>@item.IssuedPretty</td>
+                <td>@item.ExpirationPretty</td>
+                <td><a href="/TrainingOfficer/EditCPR/@item.ID">Edit</a></td>
+            </tr>
+        }
+            <tr></tr>
+
+
+        </tbody>
+    </table>
+
+
+
+</div>
+
+

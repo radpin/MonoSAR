@@ -3,37 +3,53 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div id="logo" style="width:100%; text-align:center;">
+<div id="logo" style="width:100%; text-align:center; margin-top:20px; margin-bottom:10px;">
     <img src="@Model.LogoPath" alt="" width="250" title="" />
 </div>
 
 <div class="row">
     <div class="col-md-3">
-        <h2>Training</h2>
+        <h4>Training</h4>
         <ul>
             <li><a href="/TrainingOfficer/Index">Recent Training List</a></li>
-            <li><a href="/TrainingOfficer/RecordTrainingOccurrence">Record a Training Class</a></li>
-            <li><a href="/TrainingOfficer/RecordMedical">Record Medical Certifications</a></li>
-            <li><a href="/TrainingOfficer/RecordCPR">Record CPR Certifications</a></li>
+            <li><a href="/TrainingOfficer/RecordTrainingOccurrence">Record Training</a></li>
         </ul>
-    </div>
-    <div class="col-md-3">
-        <h2>Members</h2>
+        <h4>CPR</h4>
         <ul>
-            <li><a href="/MembershipOfficer/MemberReport">Members</a></li>
-            <li><a href="/MembershipOfficer/CandidateReportCurrentYear">Candidates (@Model.CurrentYearPretty)</a></li>
-        <li><a href="/MembershipOfficer/CandidateReport">Candidates (All)</a></li>
-        <li><a href="/MembershipOfficer/RescueReport">Rescue Members</a></li>
-        <li><a href="/MembershipOfficer/ExpiredMedicalReport">Expired Medical Members</a></li>
-        <li><a href="/MembershipOfficer/ExpiredCPRReport">Expired CPR Members</a></li>
-        <li><a href="/MembershipOfficer/SummerReadyReport">Summer Qualified</a></li>
-        <li><a href="/MembershipOfficer/WinterReadyReport">Winter Qualified</a></li>
-        <li><a href="/MembershipOfficer/CreateMember">Add New Member</a></li>
+            <li><a href="/TrainingOfficer/RecordCPR">Record CPR</a></li>
+            <li><a href="/TrainingOfficer/CPRList">Recent CPR List</a></li>
+        </ul>
+        <h4>Medical</h4>
+        <ul>
+            <li><a href="/TrainingOfficer/RecordMedical">Record Medical</a></li>
+        </ul>
 
+    </div>
+    <div class="col-md-3">
+        <h4>Members</h4>
+        <ul>
+            <li><a href="/MembershipOfficer/SummerReadyReport">Summer Qualified</a></li>
+            <li><a href="/MembershipOfficer/WinterReadyReport">Winter Qualified</a></li>
+            <li><a href="/MembershipOfficer/MemberReport">All Members</a></li>
+            <li><a href="/MembershipOfficer/CreateMember">Add New Member</a></li>
+        </ul>
+        <h4>Candidates</h4>
+        <ul>
+            <li><a href="/MembershipOfficer/CandidateReportCurrentYear">Candidates (@Model.CurrentYearPretty)</a></li>
+            <li><a href="/MembershipOfficer/CandidateReport">Candidates (All)</a></li>
+        </ul>
+        <h4>Rescue</h4>
+        <ul>
+            <li><a href="/MembershipOfficer/RescueReport">Rescue Members</a></li>
+        </ul>
+        <h4>Expirations</h4>
+        <ul>
+            <li><a href="/MembershipOfficer/ExpiredMedicalReport">Expired Medical Members</a></li>
+            <li><a href="/MembershipOfficer/ExpiredCPRReport">Expired CPR Members</a></li>
         </ul>
     </div>
     <div class="col-md-3">
-        <h2>Operations</h2>
+        <h3>Operations</h3>
            <form asp-controller="Callout" method="post" asp-action="Start" onsubmit="return confirm('Really start callout?')">
                <ul>
                    <li>.</li>
@@ -45,7 +61,7 @@
             </form>
     </div>
     <div class="col-md-3">
-        <h2>My Info</h2>
+        <h3>My Info</h3>
         <ul>
             <li><a href="/myinfo/index">My Info</a></li>
             <li><a href="/blob/index">Forms &amp; Docs</a></li>

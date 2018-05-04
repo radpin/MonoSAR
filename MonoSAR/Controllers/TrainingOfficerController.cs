@@ -50,6 +50,26 @@ namespace MonoSAR.Controllers
         }
 
         // GET: TrainingOfficer
+        [Authorize(Roles = "Admin,Membership,Training")]
+        [HttpGet]
+        [HttpPost]
+        public ActionResult CPRList()
+        {
+            var query = (from mc in _context.MemberCpr
+                         orderby mc.Created descending
+                         select mc).Take(100);
+
+            //Explicit loading because EF Core isn't lazy
+            _context.MemberCpr.Include(x => x.Member).Load();
+            _context.MemberCpr.Include(x => x.Cpr).Load();
+
+            //converting from data models to the view model (dto), the conversions happen in the view model / dto's constructor
+            Models.Training.CPRSummary model = new Models.Training.CPRSummary(query);
+
+            return View(model);
+        }
+
+        // GET: TrainingOfficer
         [Authorize(Roles = "Admin,Training")]
         public ActionResult RecordTrainingOccurrence()
         {
@@ -233,6 +253,49 @@ namespace MonoSAR.Controllers
 
         }
 
+        // GET: TrainingOfficer/Edit/5
+        [Authorize(Roles = "Admin,Training")]
+        public ActionResult EditCPR(int id)
+        {
+
+            var query = (from mcpr in _context.MemberCpr
+                         where mcpr.MemberCprid == id
+                         select mcpr).FirstOrDefault();
+
+            //Explicit loading because EF Core isn't lazy
+            _context.MemberCpr.Include(x => x.Member).Load();
+            _context.MemberCpr.Include(x => x.Cpr).Load();
+
+            //converting from data models to the view model (dto), the conversions happen in the view model / dto's constructor
+            Models.Training.CPRSummaryItem model = new Models.Training.CPRSummaryItem(query);
+
+            return View(model);
+
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Training")]
+        public ActionResult DeleteCPR(Models.Training.CPRSummaryItem viewModel)
+        {
+            try
+            {
+                var del = new Models.DB.MemberCpr { MemberCprid = viewModel.ID };
+                _context.MemberCpr.Attach(del);
+                _context.Remove(del);
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(CPRList));
+
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+        }
+
+
         // POST: TrainingOfficer/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -260,6 +323,39 @@ namespace MonoSAR.Controllers
             }
 
         }
+
+
+
+        // POST: TrainingOfficer/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Training")]
+        public ActionResult EditCPR(Models.Training.CPRSummaryItem viewModel)
+        {
+            // only updating the issued and expiration
+
+            try
+            {
+
+                var query = (from mcpr in _context.MemberCpr
+                             where mcpr.MemberCprid == viewModel.ID
+                             select mcpr).FirstOrDefault();
+
+                query.Issued = viewModel.Issued;
+                query.Expiration = viewModel.Expiration;
+
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(CPRList));
+
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+
+        }
+
 
         // POST: TrainingOfficer/Delete/5
         [HttpPost]
