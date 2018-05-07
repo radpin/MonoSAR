@@ -44,8 +44,7 @@ namespace MonoSAR.Models.Membership
 
             this.Capacity = dataEntity.Capacity.CapacityName;
         }
-
-
+        
         private void buildMedical(Models.DB.Member dataItem)
         {
             List<Training.MedicalSummaryItem> medicalSummaries = new List<Training.MedicalSummaryItem>();
@@ -129,7 +128,10 @@ namespace MonoSAR.Models.Membership
             this.IsBeaconExpired = true;
 
             if (beac != null && beac.TrainingClass.TrainingDate > DateTime.UtcNow.AddYears(-1) )
-            { this.IsBeaconExpired = false; }
+            {
+                this.IsBeaconExpired = false;
+                this.BeaconExpires = beac.TrainingClass.TrainingDate.AddYears(1);
+            }
            
         }
 
@@ -168,7 +170,6 @@ namespace MonoSAR.Models.Membership
         public String PhoneCell { get; set; }
         public String PhoneWork { get; set; }
         public String Capacity { get; set; }
-
         public DateTime MedicalExpires { get; set; }
         public String MedicalExpiresPretty { get { return MedicalExpires.ToShortDateString(); } }
         public Boolean IsMedicalExpired {
@@ -194,6 +195,8 @@ namespace MonoSAR.Models.Membership
             }
         }
         public Boolean IsBeaconExpired{get;set;}
+        public DateTime BeaconExpires { get; set; }
+        public String BeaconExpiresPretty { get { return BeaconExpires.ToShortDateString(); } }
         public Boolean IsWinterFieldReady
         {
             get
@@ -214,7 +217,6 @@ namespace MonoSAR.Models.Membership
                 { return false; }
             }
         }
-
         public Boolean IsICS100 { get; set; }
         public Boolean IsICS200 { get; set; }
         public Boolean IsBuildingVehicleTested { get; set; }
