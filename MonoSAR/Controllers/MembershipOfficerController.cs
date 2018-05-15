@@ -311,7 +311,7 @@ namespace MonoSAR.Controllers
         }
 
         // GET: MembershipOfficer/Delete/5
-        [Authorize(Roles = "Admin,Membership")]
+        [Authorize(Roles = "Admin,Membership,Training")]
         public ActionResult ViewMember(int id)
         {
             var query = (from m in _context.Member

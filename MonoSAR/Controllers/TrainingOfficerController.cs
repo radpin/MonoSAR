@@ -49,6 +49,12 @@ namespace MonoSAR.Controllers
             return View(model); 
         }
 
+        [Authorize]
+        public ActionResult GPSTraining()
+        {
+            return View();
+        }
+
         // GET: TrainingOfficer
         [Authorize(Roles = "Admin,Membership,Training")]
         [HttpGet]

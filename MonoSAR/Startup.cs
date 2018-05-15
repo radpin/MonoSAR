@@ -133,6 +133,12 @@ namespace MonoSAR
             var _eric = await UserManager.FindByEmailAsync("radpin@gmail.com");
             var _lisa = await UserManager.FindByEmailAsync("lisagitel@hotmail.com");
             var _marie = await UserManager.FindByEmailAsync("marie_pavlovsky@hotmail.com");
+            var _jim = await UserManager.FindByEmailAsync("jgnjneer@gmail.com");
+
+            if (_jim != null)
+            {
+                await UserManager.AddToRoleAsync(_jim, "Membership");
+            }
 
             // check if the user exists
             if (_barry != null)
