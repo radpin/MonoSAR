@@ -134,6 +134,7 @@ namespace MonoSAR
             var _lisa = await UserManager.FindByEmailAsync("lisagitel@hotmail.com");
             var _marie = await UserManager.FindByEmailAsync("marie_pavlovsky@hotmail.com");
             var _jim = await UserManager.FindByEmailAsync("jgnjneer@gmail.com");
+            var _kr = await UserManager.FindByEmailAsync("khansen@monosheriff.org");
 
             if (_jim != null)
             {
@@ -142,6 +143,12 @@ namespace MonoSAR
 
             // check if the user exists
             if (_barry != null)
+            {
+                await UserManager.AddToRoleAsync(_barry, "Training");
+                await UserManager.AddToRoleAsync(_barry, "Membership");
+            }
+
+            if (_kr != null)
             {
                 await UserManager.AddToRoleAsync(_barry, "Training");
                 await UserManager.AddToRoleAsync(_barry, "Membership");
