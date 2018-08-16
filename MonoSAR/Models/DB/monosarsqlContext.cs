@@ -18,6 +18,8 @@ namespace MonoSAR.Models.DB
         public virtual DbSet<MemberCpr> MemberCpr { get; set; }
         public virtual DbSet<MemberMedical> MemberMedical { get; set; }
         public virtual DbSet<Office> Office { get; set; }
+        public virtual DbSet<Operation> Operation { get; set; }
+        public virtual DbSet<OperationMember> OperationMember { get; set; }
         public virtual DbSet<Training> Training { get; set; }
         public virtual DbSet<TrainingClass> TrainingClass { get; set; }
         public virtual DbSet<TrainingClassStudent> TrainingClassStudent { get; set; }
