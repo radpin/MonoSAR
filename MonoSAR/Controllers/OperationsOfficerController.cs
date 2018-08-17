@@ -31,29 +31,37 @@ namespace MonoSAR.Controllers
         [System.Web.Mvc.HttpGet]
         public ActionResult Index()
         {
-            return View(operationSummaryItems());
-        }
-
-        private List<Models.Operations.OperationSummaryItem> operationSummaryItems()
-        {
-            return _context.Operation
+            var operationListItems = _context.Operation
                 .OrderByDescending(o => o.OperationStart)
-                .Select(o => new Models.Operations.OperationSummaryItem(o, _applicationOptions, _config))
+                .Select(o => new Models.Operations.OperationListItem() {
+                    ID = o.OperationId,
+                    OperationNumber = o.OperationNumber,
+                    SequenceNumber = o.SequenceNumber,
+                    Start = o.OperationStart,
+                    End = o.OperationEnd,
+                    Title = o.Title,
+                    NumParticipants = o.OperationMember.Where(p => p.OperationId == o.OperationId).Count()
+                })
                 .ToList();
+
+            return View(operationListItems);
         }
 
         // GET: OperationsOfficer/ViewOperation/5
         [Authorize]
         public ActionResult ViewOperation(int id)
         {
-            var query = (from m in _context.Operation
-                         where m.OperationId == id
-                         select m).FirstOrDefault();
+            var query = _context.Operation
+                .Where(o => o.OperationId == id)
+                .FirstOrDefault();
 
             if (query == null)
             { throw new Exception("Invalid operation ID."); }
 
-            var model = new Models.Operations.OperationSummaryItem(query, _applicationOptions, _config);
+            //Explicit loading because EF Core isn't lazy
+            _context.Operation.Include(x => x.OperationMember).ThenInclude(y => y.Member).Load();
+
+            Models.Operations.OperationSummaryItem model = new Models.Operations.OperationSummaryItem(query);
 
             return View(model);
         }
@@ -64,6 +72,8 @@ namespace MonoSAR.Controllers
         public ActionResult CreateOperation()
         {
             Models.Operations.OperationInsert model = new Models.Operations.OperationInsert();
+            model.Start = DateTime.Now;
+            model.End = DateTime.Now;
 
             return View(model);
         }
@@ -99,5 +109,53 @@ namespace MonoSAR.Controllers
 
             return View("Thanks", newID);
         }
+
+        // GET: OperationsOfficer/Edit/5
+        [Authorize(Roles = "Admin,Operations")]
+        public ActionResult Edit(int id)
+        {
+            var operationSummaryItem = _context.Operation
+                .Select(o => new Models.Operations.OperationUpdate(o))
+                .Where(o => o.ID == id)
+                .FirstOrDefault();
+
+            if (operationSummaryItem == null)
+            { throw new Exception("Invalid operation ID."); }
+
+            return View(operationSummaryItem);
+
+        }
+
+
+        // GET: OperationsOfficer/Edit
+        [Authorize(Roles = "Admin,Operations")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Models.Operations.OperationUpdate viewModel)
+        {
+            try
+            {
+                var operation = _context.Operation
+                    .Where(o => o.OperationId == viewModel.ID)
+                    .FirstOrDefault();
+
+                operation.OperationNumber = viewModel.OperationNumber;
+                operation.SequenceNumber = viewModel.SequenceNumber;
+                operation.OperationStart = viewModel.Start;
+                operation.OperationEnd = viewModel.End;
+                operation.Title = viewModel.Title;
+                operation.Notes = viewModel.Notes;
+
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+        }
+
+
     }
 }

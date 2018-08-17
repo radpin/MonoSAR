@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MonoSAR.Models.Operations.OperationSummaryItem>
+﻿@model IEnumerable<MonoSAR.Models.Operations.OperationListItem>
 
 @{
     ViewData["Title"] = "Operations";
@@ -14,12 +14,12 @@
     <table class="table">
         <thead>
             <tr>
+                <th>Title</th>
+                <th>Number of Participants</th>
                 <th>Operation Number</th>
                 <th>Sequence Number</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Title</th>
-                <th>Created (UTC)</th>
+                <th>Start Date</th>
+                <th>End Date</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -29,12 +29,12 @@
             @foreach (var item in Model)
             {
             <tr>
+                <td><a href="/OperationsOfficer/ViewOperation/@item.ID">@item.Title</a></td>
+                <td>@item.NumParticipants</td>
                 <td>@item.OperationNumber</td>
                 <td>@item.SequenceNumber</td>
                 <td>@item.Start.ToShortDateString()</td>
                 <td>@item.End.ToShortDateString()</td>
-                <td><a href="/OperationsOfficer/ViewOperation/@item.ID">@item.Title</a></td>
-                <td>@item.Created.ToShortDateString()</td>
                 <td><a href="/OperationsOfficer/Edit/@item.ID">Edit</a></td>
             </tr>
             }

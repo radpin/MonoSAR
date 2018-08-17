@@ -12,34 +12,38 @@
     <table class="table">
         <thead>
             <tr>
+                <th>Title</th>
                 <th>Operation Number</th>
                 <th>Sequence Number</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Title</th>
-                <th>Created (UTC)</th>
+                <th>Start Date</th>
+                <th>End Date</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
 
             <tr>
+                <td><b>@Model.Title</b></td>
                 <td>@Model.OperationNumber</td>
                 <td>@Model.SequenceNumber</td>
                 <td>@Model.Start.ToShortDateString()</td>
                 <td>@Model.End.ToShortDateString()</td>
-                <td>@Model.Title</td>
-                <td>@Model.Created.ToShortDateString()</td>
                 <td><a href="/OperationsOfficer/Edit/@Model.ID">Edit</a></td>
             </tr>
-            <tr>
-                <td colspan="7">@Model.Notes</td>
-            </tr>
-            <tr></tr>
-
-
         </tbody>
     </table>
+
+    <h4>Notes</h4>
+    <p>@Model.Notes</p>
+
+    <h4>Participants (@Model.MemberStubs.Count)</h4>
+    @foreach(MemberStubItem member in Model.MemberStubs)
+    {
+        <a href="/MembershipOfficer/ViewMember/@member.MemberID">@member.MemberName</a>
+        <br />
+    }
+
+    <hr />
 
     <div>
         <a asp-action="Index">Back to List</a>

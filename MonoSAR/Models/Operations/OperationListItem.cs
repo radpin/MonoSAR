@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MonoSAR.Models.Operations
 {
-    public class OperationSummaryItem
+    public class OperationListItem
     {
         public Int32 ID;
         public string OperationNumber;
@@ -14,15 +14,15 @@ namespace MonoSAR.Models.Operations
         public DateTime Start;
         public DateTime End;
         public string Title;
-        public string Notes;
-        public List<Membership.MemberStubItem> MemberStubs;
+        public int NumParticipants;
 
-        public OperationSummaryItem()
+        public OperationListItem()
         {
             //parameterless constructors are required for mvc binding, this should not be used for user created code
         }
 
-        public OperationSummaryItem(Models.DB.Operation dataEntity)
+        /* Keeping for now (8/16/2018) - Can delete if we don't end up needing this
+        public OperationListItem(Models.DB.Operation dataEntity)
         {
             this.ID = dataEntity.OperationId;
             this.OperationNumber = dataEntity.OperationNumber;
@@ -30,21 +30,7 @@ namespace MonoSAR.Models.Operations
             this.Start = dataEntity.OperationStart;
             this.End = dataEntity.OperationEnd;
             this.Title = dataEntity.Title;
-            this.Notes = dataEntity.Notes;
-            buildMemberStubs(dataEntity);
         }
-
-
-        private void buildMemberStubs(Models.DB.Operation dataEntity)
-        {
-            List<Membership.MemberStubItem> memberStubs = new List<Membership.MemberStubItem>();
-
-            foreach (var item in dataEntity.OperationMember)
-            {
-                memberStubs.Add(new Membership.MemberStubItem(item.Member));
-            }
-
-            this.MemberStubs = memberStubs;
-        }
+        */
     }
 }
