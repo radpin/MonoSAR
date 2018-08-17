@@ -31,31 +31,27 @@ namespace MonoSAR.Controllers
         [System.Web.Mvc.HttpGet]
         public ActionResult Index()
         {
-            return View(operationSummaryItems());
-        }
-
-        private List<Models.Operations.OperationSummaryItem> operationSummaryItems()
-        {
-            return _context.Operation
+            var operationSummaryItems = _context.Operation
                 .OrderByDescending(o => o.OperationStart)
-                .Select(o => new Models.Operations.OperationSummaryItem(o, _applicationOptions, _config))
+                .Select(o => new Models.Operations.OperationSummaryItem(o))
                 .ToList();
+
+            return View(operationSummaryItems);
         }
 
         // GET: OperationsOfficer/ViewOperation/5
         [Authorize]
         public ActionResult ViewOperation(int id)
         {
-            var query = (from m in _context.Operation
-                         where m.OperationId == id
-                         select m).FirstOrDefault();
+            var operationSummaryItem = _context.Operation
+                .Select(o => new Models.Operations.OperationSummaryItem(o))
+                .Where(o => o.ID == id)
+                .FirstOrDefault();
 
-            if (query == null)
+            if (operationSummaryItem == null)
             { throw new Exception("Invalid operation ID."); }
 
-            var model = new Models.Operations.OperationSummaryItem(query, _applicationOptions, _config);
-
-            return View(model);
+            return View(operationSummaryItem);
         }
 
         // GET: OperationOfficer/CreateOperation
@@ -64,6 +60,8 @@ namespace MonoSAR.Controllers
         public ActionResult CreateOperation()
         {
             Models.Operations.OperationInsert model = new Models.Operations.OperationInsert();
+            model.Start = DateTime.Now;
+            model.End = DateTime.Now;
 
             return View(model);
         }
@@ -99,5 +97,53 @@ namespace MonoSAR.Controllers
 
             return View("Thanks", newID);
         }
+
+        // GET: OperationsOfficer/Edit/5
+        [Authorize(Roles = "Admin,Operations")]
+        public ActionResult Edit(int id)
+        {
+            var operationSummaryItem = _context.Operation
+                .Select(o => new Models.Operations.OperationUpdate(o))
+                .Where(o => o.ID == id)
+                .FirstOrDefault();
+
+            if (operationSummaryItem == null)
+            { throw new Exception("Invalid operation ID."); }
+
+            return View(operationSummaryItem);
+
+        }
+
+
+        // GET: OperationsOfficer/Edit
+        [Authorize(Roles = "Admin,Operations")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Models.Operations.OperationUpdate viewModel)
+        {
+            try
+            {
+                var operation = _context.Operation
+                    .Where(o => o.OperationId == viewModel.ID)
+                    .FirstOrDefault();
+
+                operation.OperationNumber = viewModel.OperationNumber;
+                operation.SequenceNumber = viewModel.SequenceNumber;
+                operation.OperationStart = viewModel.Start;
+                operation.OperationEnd = viewModel.End;
+                operation.Title = viewModel.Title;
+                operation.Notes = viewModel.Notes;
+
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+        }
+
+
     }
 }

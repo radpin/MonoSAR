@@ -1,17 +1,16 @@
-﻿@model MonoSAR.Models.Operations.OperationInsert
+﻿@model MonoSAR.Models.Operations.OperationUpdate
 
 @{
-    ViewData["Title"] = "CreateOperation";
+    ViewData["Title"] = "EditOperation";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Membership</h2>
+<h2>Update Operation</h2>
 
-<h4>Create Operation</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateOperation">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="OperationNumber" class="control-label">Operation Number</label>
@@ -30,7 +29,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="End" class="control-label">End Date</label>
-                <input asp-for="End" required class="form-control" type="date"/>
+                <input asp-for="End" required class="form-control" type="date" />
                 <span asp-validation-for="End" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -42,9 +41,11 @@
                 <label asp-for="Notes" class="control-label">Notes</label>
                 <textarea asp-for="Notes" required class="form-control" rows="5"></textarea>
                 <span asp-validation-for="Notes" class="text-danger"></span>
+
+                <input asp-for="ID" hidden="hidden" type="hidden" />
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Update" class="btn btn-default" />
             </div>
         </form>
     </div>

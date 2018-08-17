@@ -1,28 +1,26 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MonoSAR.Models.Operations
 {
-    public class OperationSummaryItem
+    public class OperationUpdate
     {
-        public Int32 ID;
-        public string OperationNumber;
-        public string SequenceNumber;
-        public DateTime Start;
-        public DateTime End;
-        public string Title;
-        public string Notes;
-        public DateTime Created;
+        public Int32 ID { get; set; }
+        public string OperationNumber { get; set; }
+        public string SequenceNumber { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+        public string Title { get; set; }
+        public string Notes { get; set; }
 
-        public OperationSummaryItem()
+        public OperationUpdate()
         {
             //parameterless constructors are required for mvc binding, this should not be used for user created code
         }
 
-        public OperationSummaryItem(Models.DB.Operation dataEntity)
+        public OperationUpdate(Models.DB.Operation dataEntity)
         {
             this.ID = dataEntity.OperationId;
             this.OperationNumber = dataEntity.OperationNumber;
@@ -31,8 +29,8 @@ namespace MonoSAR.Models.Operations
             this.End = dataEntity.OperationEnd;
             this.Title = dataEntity.Title;
             this.Notes = dataEntity.Notes;
-            this.Created = dataEntity.Created;
         }
+
 
     }
 }
