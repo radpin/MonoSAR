@@ -78,7 +78,7 @@ namespace MonoSAR.Controllers
             return View(model);
         }
 
-        // GET: OperationsOfficer/OperationInsert
+        // POST: OperationsOfficer/OperationInsert
         [Authorize(Roles = "Admin,Operations")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -94,7 +94,7 @@ namespace MonoSAR.Controllers
             dbOperation.OperationEnd = model.End;
             dbOperation.Title = model.Title;
             dbOperation.Notes = model.Notes;
-            dbOperation.Created = DateTime.Now;
+            dbOperation.Created = DateTime.UtcNow;
 
             try
             {
@@ -115,7 +115,7 @@ namespace MonoSAR.Controllers
         public ActionResult Edit(int id)
         {
             var operationSummaryItem = _context.Operation
-                .Select(o => new Models.Operations.OperationUpdate(o))
+                .Select(o => new Models.Operations.OperationSummaryItem(o))
                 .Where(o => o.ID == id)
                 .FirstOrDefault();
 
@@ -127,11 +127,11 @@ namespace MonoSAR.Controllers
         }
 
 
-        // GET: OperationsOfficer/Edit
+        // POST: OperationsOfficer/Edit
         [Authorize(Roles = "Admin,Operations")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Models.Operations.OperationUpdate viewModel)
+        public ActionResult Edit(Models.Operations.OperationSummaryItem viewModel)
         {
             try
             {
@@ -155,7 +155,5 @@ namespace MonoSAR.Controllers
                 throw exc;
             }
         }
-
-
     }
 }

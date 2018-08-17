@@ -27,6 +27,7 @@ namespace MonoSAR.Controllers
         {
             return _context.Operation.OrderBy(x => x.OperationId);
         }
+
         // GET: api/Operations/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOperation([FromRoute] int id)

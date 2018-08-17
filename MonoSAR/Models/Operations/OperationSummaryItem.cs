@@ -8,14 +8,14 @@ namespace MonoSAR.Models.Operations
 {
     public class OperationSummaryItem
     {
-        public Int32 ID;
-        public string OperationNumber;
-        public string SequenceNumber;
-        public DateTime Start;
-        public DateTime End;
-        public string Title;
-        public string Notes;
-        public List<Membership.MemberStubItem> MemberStubs;
+        public Int32 ID { get; set; }
+        public string OperationNumber { get; set; }
+        public string SequenceNumber { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+        public string Title { get; set; }
+        public string Notes { get; set; }
+        public List<Membership.MemberStubItem> MemberStubs { get; set; }
 
         public OperationSummaryItem()
         {
