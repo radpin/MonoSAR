@@ -1,0 +1,51 @@
+﻿@model IEnumerable<MonoSAR.Models.Operations.OperationSummaryItem>
+
+@{
+    ViewData["Title"] = "Operations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Operations</h2>
+
+<a href="/OperationsOfficer/CreateOperation">Create Operation</a>
+
+<div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Operation Number</th>
+                <th>Sequence Number</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Title</th>
+                <th>Created (UTC)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>@item.OperationNumber</td>
+                <td>@item.SequenceNumber</td>
+                <td>@item.Start.ToShortDateString()</td>
+                <td>@item.End.ToShortDateString()</td>
+                <td><a href="/OperationsOfficer/ViewOperation/@item.ID">@item.Title</a></td>
+                <td>@item.Created.ToShortDateString()</td>
+                <td><a href="/OperationsOfficer/Edit/@item.ID">Edit</a></td>
+            </tr>
+            }
+            <tr></tr>
+
+
+        </tbody>
+    </table>
+
+
+
+</div>
+
+

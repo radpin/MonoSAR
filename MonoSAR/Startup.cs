@@ -118,9 +118,9 @@ namespace MonoSAR
 
             foreach (var roleName in roleNames)
             {
-                var roleExist = await RoleManager.RoleExistsAsync(roleName);
+                var roleExists = await RoleManager.RoleExistsAsync(roleName);
                 // ensure that the role does not exist
-                if (!roleExist)
+                if (!roleExists)
                 {
                     //create the roles and seed them to the database: 
                     roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
@@ -138,7 +138,9 @@ namespace MonoSAR
 
             if (_jim != null)
             {
+                await UserManager.AddToRoleAsync(_jim, "Training");
                 await UserManager.AddToRoleAsync(_jim, "Membership");
+                await UserManager.AddToRoleAsync(_jim, "Operations");
             }
 
             // check if the user exists
@@ -146,6 +148,7 @@ namespace MonoSAR
             {
                 await UserManager.AddToRoleAsync(_barry, "Training");
                 await UserManager.AddToRoleAsync(_barry, "Membership");
+                await UserManager.AddToRoleAsync(_barry, "Operations");
             }
 
             if (_kr != null)

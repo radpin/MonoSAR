@@ -1,0 +1,50 @@
+﻿@model MonoSAR.Models.Operations.OperationSummaryItem
+
+@{
+    ViewData["Title"] = "ViewOperation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>View Operation</h2>
+
+<div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Operation Number</th>
+                <th>Sequence Number</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Title</th>
+                <th>Created (UTC)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>@Model.OperationNumber</td>
+                <td>@Model.SequenceNumber</td>
+                <td>@Model.Start.ToShortDateString()</td>
+                <td>@Model.End.ToShortDateString()</td>
+                <td>@Model.Title</td>
+                <td>@Model.Created.ToShortDateString()</td>
+                <td><a href="/OperationsOfficer/Edit/@Model.ID">Edit</a></td>
+            </tr>
+            <tr>
+                <td colspan="7">@Model.Notes</td>
+            </tr>
+            <tr></tr>
+
+
+        </tbody>
+    </table>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+
+</div>
+
+
