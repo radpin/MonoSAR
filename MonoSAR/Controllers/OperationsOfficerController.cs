@@ -31,27 +31,39 @@ namespace MonoSAR.Controllers
         [System.Web.Mvc.HttpGet]
         public ActionResult Index()
         {
-            var operationSummaryItems = _context.Operation
+            var operationListItems = _context.Operation
                 .OrderByDescending(o => o.OperationStart)
-                .Select(o => new Models.Operations.OperationSummaryItem(o))
+                .Select(o => new Models.Operations.OperationListItem() {
+                    ID = o.OperationId,
+                    OperationNumber = o.OperationNumber,
+                    SequenceNumber = o.SequenceNumber,
+                    Start = o.OperationStart,
+                    End = o.OperationEnd,
+                    Title = o.Title,
+                    NumParticipants = o.OperationMember.Where(p => p.OperationId == o.OperationId).Count()
+                })
                 .ToList();
 
-            return View(operationSummaryItems);
+            return View(operationListItems);
         }
 
         // GET: OperationsOfficer/ViewOperation/5
         [Authorize]
         public ActionResult ViewOperation(int id)
         {
-            var operationSummaryItem = _context.Operation
-                .Select(o => new Models.Operations.OperationSummaryItem(o))
-                .Where(o => o.ID == id)
+            var query = _context.Operation
+                .Where(o => o.OperationId == id)
                 .FirstOrDefault();
 
-            if (operationSummaryItem == null)
+            if (query == null)
             { throw new Exception("Invalid operation ID."); }
 
-            return View(operationSummaryItem);
+            //Explicit loading because EF Core isn't lazy
+            _context.Operation.Include(x => x.OperationMember).ThenInclude(y => y.Member).Load();
+
+            Models.Operations.OperationSummaryItem model = new Models.Operations.OperationSummaryItem(query);
+
+            return View(model);
         }
 
         // GET: OperationOfficer/CreateOperation

@@ -14,6 +14,11 @@
         <form asp-action="CreateOperation">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="Title" class="control-label">Title</label>
+                <input asp-for="Title" required class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="OperationNumber" class="control-label">Operation Number</label>
                 <input asp-for="OperationNumber" required class="form-control" />
                 <span asp-validation-for="OperationNumber" class="text-danger"></span>
@@ -30,13 +35,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="End" class="control-label">End Date</label>
-                <input asp-for="End" required class="form-control" type="date"/>
+                <input asp-for="End" required class="form-control" type="date" />
                 <span asp-validation-for="End" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label">Title</label>
-                <input asp-for="Title" required class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Notes" class="control-label">Notes</label>
