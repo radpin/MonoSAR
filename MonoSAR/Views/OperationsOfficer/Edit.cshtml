@@ -1,0 +1,53 @@
+﻿@model MonoSAR.Models.Operations.OperationUpdate
+
+@{
+    ViewData["Title"] = "EditOperation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Update Operation</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label">Title</label>
+                <input asp-for="Title" required class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OperationNumber" class="control-label">Operation Number</label>
+                <input asp-for="OperationNumber" required class="form-control" />
+                <span asp-validation-for="OperationNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SequenceNumber" class="control-label">Sequence Number</label>
+                <input asp-for="SequenceNumber" required class="form-control" />
+                <span asp-validation-for="SequenceNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Start" class="control-label">Start Date</label>
+                <input asp-for="Start" required class="form-control" type="date" />
+                <span asp-validation-for="Start" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="End" class="control-label">End Date</label>
+                <input asp-for="End" required class="form-control" type="date" />
+                <span asp-validation-for="End" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Notes" class="control-label">Notes</label>
+                <textarea asp-for="Notes" required class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Notes" class="text-danger"></span>
+
+                <input asp-for="ID" hidden="hidden" type="hidden" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Update" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+

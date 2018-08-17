@@ -52,10 +52,11 @@
         <h3>Operations</h3>
            <form asp-controller="Callout" method="post" asp-action="Start" onsubmit="return confirm('Really start callout?')">
                <ul>
-                   <li>.</li>
+                   <li><a href="/OperationsOfficer/Index">All Operations</a></li>
+                   <li><a href="/OperationsOfficer/CreateOperation">Create Operation</a></li>
                    @if (User.IsInRole("Admin"))
-                   {    
-                        <li><button type="submit" class="alert-warning">Start Callout</button> </li>
+                   {
+                       <li><button type="submit" class="alert-warning">Start Callout</button> </li>
                    }
                </ul>
             </form>
