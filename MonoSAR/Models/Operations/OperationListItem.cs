@@ -20,17 +20,5 @@ namespace MonoSAR.Models.Operations
         {
             //parameterless constructors are required for mvc binding, this should not be used for user created code
         }
-
-        /* Keeping for now (8/16/2018) - Can delete if we don't end up needing this
-        public OperationListItem(Models.DB.Operation dataEntity)
-        {
-            this.ID = dataEntity.OperationId;
-            this.OperationNumber = dataEntity.OperationNumber;
-            this.SequenceNumber = dataEntity.SequenceNumber;
-            this.Start = dataEntity.OperationStart;
-            this.End = dataEntity.OperationEnd;
-            this.Title = dataEntity.Title;
-        }
-        */
     }
 }

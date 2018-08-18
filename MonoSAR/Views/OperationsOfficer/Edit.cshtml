@@ -107,7 +107,8 @@
 
         $('.add-participant').click(  function () {
 
-            console.log('add-participant clicked');
+            //console.log('add-participant clicked');
+            //console.log('/api/OperationMember/@Model.ID/' + $('#memberId').val());
             fetch('/api/OperationMember/@Model.ID/' + $('#memberId').val(),
                 { method: 'PUT' });
             location.reload();
