@@ -36,7 +36,7 @@
                 <td>@Html.DisplayFor(model => model.PhoneWork)</td>
             </tr>
             <tr>
-                <td>Hamr:</td>
+                <td>Ham:</td>
                 <td>@Html.DisplayFor(model => model.HamCallSign)</td>
             </tr>
         </table>
@@ -53,27 +53,27 @@
                 </tr>
             </thead>
             @if (Model.MedicalSummaries != null)
-        {
-            @foreach (var ms in Model.MedicalSummaries)
-        {
-            <tr>
-                <td>@ms.Title</td>
-                <td>@ms.IssuedPretty</td>
-                <td>@ms.ExpirationPretty</td>
-            </tr>
-    }
-    }
+            {
+                @foreach (var ms in Model.MedicalSummaries)
+                {
+                    <tr>
+                        <td>@ms.Title</td>
+                        <td>@ms.IssuedPretty</td>
+                        <td>@ms.ExpirationPretty</td>
+                    </tr>
+                }
+            }
             @if (Model.CPRSummaries != null)
-        {
-            @foreach (var cs in Model.CPRSummaries)
-        {
-            <tr>
-                <td>@cs.Title</td>
-                <td>@cs.IssuedPretty</td>
-                <td>@cs.ExpirationPretty</td>
-            </tr>
-    }
-    }
+            {
+                @foreach (var cs in Model.CPRSummaries)
+                {
+                    <tr>
+                        <td>@cs.Title</td>
+                        <td>@cs.IssuedPretty</td>
+                        <td>@cs.ExpirationPretty</td>
+                    </tr>
+                }
+            }
         </table>
         <br />
         @if (Model.CPRExpires > DateTime.Now)
@@ -84,8 +84,8 @@
         {
             <strong style="color:red;">CPR Expired</strong>
         }
-    
-        <br/>
+
+        <br />
         @if (Model.MedicalExpires > DateTime.Now)
         {
             <span>Medical Expiration:</span> @Html.DisplayFor(model => model.MedicalExpiresPretty)
@@ -97,9 +97,42 @@
 
     </div>
 
+    <p>
+        <h4>
+            Operations
+            <button data-toggle="collapse" data-target="#operations" class="btn btn-default collapse-button">Show</button>
+        </h4>
+    </p>
 
+    <div class="alert alert-warning collapse" role="alert" id="operations">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Operation Title</th>
+                    <th>Operation Number</th>
+                    <th>Start Date</th>
+                </tr>
+            </thead>
+            @foreach (var os in Model.OperationSummaries)
+            {
+                <tr>
+                    <td><a href="/OperationsOfficer/ViewOperation/@os.ID">@os.Title</a></td>
+                    <td>@os.OperationNumber</td>
+                    <td>@os.Start.ToShortDateString()</td>
+                </tr>
 
-    <div class="alert alert-success" role="alert">
+            }
+        </table>
+        <br />
+    </div>
+    <p>
+        <h4>
+            Training
+            <button data-toggle="collapse" data-target="#training" class="btn btn-default collapse-button">Show</button>
+        </h4>
+    </p>
+
+    <div class="alert alert-info collapse" role="alert" id="training">
         <table class="table">
             <thead>
                 <tr>
@@ -121,3 +154,15 @@
         <br />
     </div>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+
+        $('.collapse-button').click(function () {
+            $(this).text(function (i, collapseText) {
+                return collapseText == 'Show' ? 'Hide' : 'Show';
+            });
+        });
+
+    })
+</script>

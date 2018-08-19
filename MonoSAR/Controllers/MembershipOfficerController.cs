@@ -326,6 +326,7 @@ namespace MonoSAR.Controllers
             _context.Member.Include(x => x.MemberMedical).ThenInclude(y => y.Medical).Load();
             _context.Member.Include(x => x.Capacity).Load();
             _context.Member.Include(x => x.TrainingClassStudent).ThenInclude(y => y.TrainingClass).ThenInclude(z=>z.Training).Load();
+            _context.Member.Include(x => x.OperationMember).ThenInclude(y => y.Operation).Load();
 
             var model = new Models.Membership.MemberSummaryItem(query, _applicationOptions, _config);
 

@@ -42,6 +42,8 @@ namespace MonoSAR.Models.Membership
             this.buildInitialFieldChecks(dataEntity);
             this.buildTraining(dataEntity);
 
+            this.buildOperations(dataEntity);
+
             this.Capacity = dataEntity.Capacity.CapacityName;
         }
         
@@ -155,6 +157,26 @@ namespace MonoSAR.Models.Membership
 
         }
 
+        private void buildOperations(Models.DB.Member dataItem)
+        {
+
+            List<Operations.OperationSummaryItem> operationSummaries = new List<Operations.OperationSummaryItem>();
+            this.OperationSummaries = operationSummaries;
+
+            foreach (var om in dataItem.OperationMember)
+            {
+                Operations.OperationSummaryItem osi = new Operations.OperationSummaryItem(om.Operation);
+                OperationSummaries.Add(osi);
+            }
+
+            if (dataItem.OperationMember.Count > 0)
+            {
+                this.OperationSummaries = OperationSummaries.OrderByDescending(x => x.Start).ToList();
+            }
+
+
+        }
+
         public Int32 ID { get; set; }
         public String First { get; set; }
         public String Last { get; set; }
@@ -229,5 +251,6 @@ namespace MonoSAR.Models.Membership
 
         public List<Training.TrainingClassStudentSummaryItem> TrainingSummaries { get; set; }
 
+        public List<Operations.OperationSummaryItem> OperationSummaries { get; set; }
     }
 }
