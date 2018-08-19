@@ -159,22 +159,8 @@ namespace MonoSAR.Models.Membership
 
         private void buildOperations(Models.DB.Member dataItem)
         {
-
-            List<Operations.OperationSummaryItem> operationSummaries = new List<Operations.OperationSummaryItem>();
-            this.OperationSummaries = operationSummaries;
-
-            foreach (var om in dataItem.OperationMember)
-            {
-                Operations.OperationSummaryItem osi = new Operations.OperationSummaryItem(om.Operation);
-                OperationSummaries.Add(osi);
-            }
-
-            if (dataItem.OperationMember.Count > 0)
-            {
-                this.OperationSummaries = OperationSummaries.OrderByDescending(x => x.Start).ToList();
-            }
-
-
+            this.OperationSummaries = dataItem.OperationMember.Select(o => new Operations.OperationSummaryItem(o.Operation)).ToList();
+            this.OperationSummaries = OperationSummaries.OrderByDescending(x => x.Start).ToList();
         }
 
         public Int32 ID { get; set; }
