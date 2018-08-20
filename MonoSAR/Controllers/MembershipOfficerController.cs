@@ -35,7 +35,7 @@ namespace MonoSAR.Controllers
             return View();
         }
 
-        // GET: MembershipOfficer/Details/5
+        // GET: MembershipOfficer/CreateMember
         [Authorize(Roles = "Admin,Membership")]
         [HttpGet]
         public ActionResult CreateMember()
@@ -64,7 +64,7 @@ namespace MonoSAR.Controllers
             return View(memberList);
         }
 
-
+        // GET: /MembershipOfficer/CandidateReport
         [Authorize]
         [HttpGet]
         public ActionResult CandidateReport()
@@ -86,6 +86,7 @@ namespace MonoSAR.Controllers
             return View(ms);
         }
 
+        // GET: /MembershipOfficer/CandidateReportCurrentYear
         [Authorize]
         [HttpGet]
         public ActionResult CandidateReportCurrentYear()
@@ -108,6 +109,7 @@ namespace MonoSAR.Controllers
             return View(ms);
         }
 
+        // GET: /MembershipOfficer/ExpiredMedicalReport
         [Authorize(Roles = "Admin,Membership,Training")]
         [HttpGet]
         public ActionResult ExpiredMedicalReport()
@@ -130,7 +132,7 @@ namespace MonoSAR.Controllers
             return View(ms);
         }
 
-
+        // GET: MembershipOfficer/ExpiredCPRReport
         [Authorize(Roles = "Admin,Membership,Training")]
         [HttpGet]
         public ActionResult ExpiredCPRReport()
@@ -153,6 +155,7 @@ namespace MonoSAR.Controllers
             return View(ms);
         }
 
+        // GET: MembershipOfficer/RescueReport
         [Authorize]
         [HttpGet]
         public ActionResult RescueReport()
@@ -174,6 +177,7 @@ namespace MonoSAR.Controllers
             return View(ms);
         }
 
+        // GET: /MembershipOfficer/WinterReadyReport
         [Authorize]
         [HttpGet]
         public ActionResult WinterReadyReport()
@@ -195,6 +199,7 @@ namespace MonoSAR.Controllers
             return View(ms);
         }
 
+        // GET: MembershipOfficer/SummerReadyReport
         [Authorize]
         [HttpGet]
         public ActionResult SummerReadyReport()
@@ -217,7 +222,7 @@ namespace MonoSAR.Controllers
             return View(ms);
         }
 
-        // GET: MembershipOfficer/Details/5
+        // POST: MembershipOfficer/CreateMember
         [Authorize(Roles = "Admin,Membership")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -268,25 +273,6 @@ namespace MonoSAR.Controllers
             return View("Thanks",newID);
         }
 
-
-
-        // POST: MembershipOfficer/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         // GET: MembershipOfficer/Edit/5
         public ActionResult Edit(int id)
         {
@@ -310,7 +296,7 @@ namespace MonoSAR.Controllers
             }
         }
 
-        // GET: MembershipOfficer/Delete/5
+        // GET: MembershipOfficer/ViewMember/5
         [Authorize(Roles = "Admin,Membership,Training")]
         public ActionResult ViewMember(int id)
         {
@@ -326,27 +312,11 @@ namespace MonoSAR.Controllers
             _context.Member.Include(x => x.MemberMedical).ThenInclude(y => y.Medical).Load();
             _context.Member.Include(x => x.Capacity).Load();
             _context.Member.Include(x => x.TrainingClassStudent).ThenInclude(y => y.TrainingClass).ThenInclude(z=>z.Training).Load();
+            _context.Member.Include(x => x.OperationMember).ThenInclude(y => y.Operation).Load();
 
             var model = new Models.Membership.MemberSummaryItem(query, _applicationOptions, _config);
 
             return View(model);
-        }
-
-        // POST: MembershipOfficer/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         private Models.Membership.MemberSummary memberSummaryItems()
