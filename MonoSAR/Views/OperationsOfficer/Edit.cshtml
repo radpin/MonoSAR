@@ -1,4 +1,4 @@
-﻿@model MonoSAR.Models.Operations.OperationUpdate
+﻿@model MonoSAR.Models.Operations.OperationSummaryItem
 
 @{
     ViewData["Title"] = "EditOperation";
@@ -8,8 +8,13 @@
 <h2>Update Operation</h2>
 
 <hr />
+
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
+        
+        <h4>Operation</h4>
+        <hr />
+
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -48,6 +53,100 @@
                 <input type="submit" value="Update" class="btn btn-default" />
             </div>
         </form>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <h4>Participants (@Model.MemberStubs.Count)</h4>
+        <hr />
+
+        <form>
+            <label for="memberId">Participant</label>
+            <select id="memberId"></select>
+            <input type="button" value="Add" class="btn btn-default add-participant" />
+        </form>
+
+        <p></p>
+
+        @if (Model.MemberStubs.Count > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (MemberStubItem member in Model.MemberStubs)
+                    {
+                        <tr>
+                            <td><a href="/MembershipOfficer/ViewMember/@member.MemberID">@member.MemberName</a></td>
+                            <td>
+                                <form>
+                                    <input hidden="hidden" type="hidden" name="memberId" class="member-id" value="@member.MemberID" />
+                                    <input type="button" value="Delete" class="btn btn-default delete-participant" />
+                                </form>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        }
+
     </div>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+
+        memberJSONCall();
+
+        $('.add-participant').click(  function () {
+
+            //console.log('add-participant clicked');
+            //console.log('/api/OperationMember/@Model.ID/' + $('#memberId').val());
+            fetch('/api/OperationMember/@Model.ID/' + $('#memberId').val(),
+                { method: 'PUT' });
+            location.reload();
+
+        });
+
+        $('.delete-participant').click(  function () {
+
+            //console.log('delete-participant clicked');
+            //console.log('/api/OperationMember/@Model.ID/' + $(this).prev('.member-id').val());
+            fetch('/api/OperationMember/@Model.ID/' + $(this).prev('.member-id').val(),
+                { method: 'DELETE' });
+            location.reload();
+
+        });
+
+    });
+
+    function memberJSONCall() {
+
+        let urlMember = '/api/members/';
+
+        fetch(urlMember)
+            .then(res => res.json())
+            .then((out) => {
+                buildMemberSelect(out);
+            })
+            .catch(err => { throw err });
+    }
+
+    function buildMemberSelect(jsonarray) {
+
+        var memberSelect = $('#memberId');
+        $.each(jsonarray, function (i, member)
+        { 
+            memberSelect.append(new Option(member.lastName + ', ' + member.firstName, member.memberId));
+        });
+    }
+
+</script>
 

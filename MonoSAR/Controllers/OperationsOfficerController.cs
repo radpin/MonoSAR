@@ -78,7 +78,7 @@ namespace MonoSAR.Controllers
             return View(model);
         }
 
-        // GET: OperationsOfficer/OperationInsert
+        // POST: OperationsOfficer/OperationInsert
         [Authorize(Roles = "Admin,Operations")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -86,7 +86,7 @@ namespace MonoSAR.Controllers
         {
 
             Models.DB.Operation dbOperation = new Models.DB.Operation();
-            Int32 newID;
+            Int32 operationId;
 
             dbOperation.OperationNumber = model.OperationNumber;
             dbOperation.SequenceNumber = model.SequenceNumber;
@@ -94,44 +94,47 @@ namespace MonoSAR.Controllers
             dbOperation.OperationEnd = model.End;
             dbOperation.Title = model.Title;
             dbOperation.Notes = model.Notes;
-            dbOperation.Created = DateTime.Now;
+            dbOperation.Created = DateTime.UtcNow;
 
             try
             {
                 _context.Operation.Add(dbOperation);
                 _context.SaveChanges();
-                newID = dbOperation.OperationId;
+                operationId = dbOperation.OperationId;
             }
             catch (Exception exc)
             {
                 throw exc;
             }
 
-            return View("Thanks", newID);
+            return RedirectToAction("Edit", new { id = operationId });
         }
 
         // GET: OperationsOfficer/Edit/5
         [Authorize(Roles = "Admin,Operations")]
         public ActionResult Edit(int id)
         {
-            var operationSummaryItem = _context.Operation
-                .Select(o => new Models.Operations.OperationUpdate(o))
-                .Where(o => o.ID == id)
+            var query = _context.Operation
+                .Where(o => o.OperationId == id)
                 .FirstOrDefault();
 
-            if (operationSummaryItem == null)
+            if (query == null)
             { throw new Exception("Invalid operation ID."); }
 
-            return View(operationSummaryItem);
+            //Explicit loading because EF Core isn't lazy
+            _context.Operation.Include(x => x.OperationMember).ThenInclude(y => y.Member).Load();
 
+            Models.Operations.OperationSummaryItem model = new Models.Operations.OperationSummaryItem(query);
+
+            return View(model);
         }
 
 
-        // GET: OperationsOfficer/Edit
+        // POST: OperationsOfficer/Edit
         [Authorize(Roles = "Admin,Operations")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Models.Operations.OperationUpdate viewModel)
+        public ActionResult Edit(Models.Operations.OperationSummaryItem viewModel)
         {
             try
             {
@@ -155,7 +158,5 @@ namespace MonoSAR.Controllers
                 throw exc;
             }
         }
-
-
     }
 }
