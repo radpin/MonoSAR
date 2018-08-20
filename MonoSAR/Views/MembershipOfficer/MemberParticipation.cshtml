@@ -1,0 +1,44 @@
+﻿@model IEnumerable<MonoSAR.Models.Membership.MemberParticipationItem>
+
+@{
+    ViewData["Title"] = "MemberParticipation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Participation</h2>
+
+<div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Operations (@DateTime.Now.Year)</th>
+                <th>Trainings (@DateTime.Now.Year)</th>
+                <th>Operations (Total)</th>
+                <th>Trainings (Total)</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td><a href="/MembershipOfficer/ViewMember/@item.ID">@item.Last, @item.First</a></td>
+                <td>@item.NumOperationsThisYear</td>
+                <td>@item.NumTrainingsThisYear</td>
+                <td>@item.NumOperationsTotal</td>
+                <td>@item.NumTrainingsTotal</td>
+            </tr>
+            }
+
+
+        </tbody>
+    </table>
+
+
+
+</div>
+
+

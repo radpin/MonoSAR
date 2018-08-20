@@ -52,7 +52,7 @@ namespace MonoSAR.Controllers
             return View(model);
         }
 
-        // GET: MembershipOfficer/Details/5
+        // GET: MembershipOfficer/MemberReport
         [Authorize]
         [HttpGet]
         public ActionResult MemberReport()
@@ -369,6 +369,50 @@ namespace MonoSAR.Controllers
             }
 
             return memberList;
+        }
+
+        // GET: MembershipOfficer/MemberParticipation
+        [Authorize]
+        [HttpGet]
+        public ActionResult MemberParticipation()
+        {
+            List<Int32> excludedCapacities = new List<Int32>() {
+                5,  // Inactive
+                6   // Sheriff Office
+            };
+
+
+            DateTime startOfYear = new DateTime(DateTime.Now.Year, 1, 1);
+
+            var memberParticipationItems = (
+                from mem in _context.Member
+                orderby mem.LastName, mem.FirstName
+                where !excludedCapacities.Contains(mem.CapacityId ?? 0)
+                select new Models.Membership.MemberParticipationItem
+                {
+                    ID = mem.MemberId,
+                    First = mem.FirstName,
+                    Last = mem.LastName,
+                    NumOperationsThisYear = (from opMem in _context.OperationMember
+                                             join op in _context.Operation on opMem.OperationId equals op.OperationId
+                                             where (opMem.MemberId == mem.MemberId)
+                                             && (op.OperationStart >= startOfYear)
+                                             select opMem).Count(),
+                    NumOperationsTotal = (from opMem in _context.OperationMember
+                                          where opMem.MemberId == mem.MemberId
+                                          select opMem).Count(),
+                    NumTrainingsThisYear = (from tcs in _context.TrainingClassStudent
+                                         where tcs.TrainingClassStudentMemberId == mem.MemberId
+                                         select tcs).Count(),
+                    NumTrainingsTotal = (from tcs in _context.TrainingClassStudent
+                                         join tClass in _context.TrainingClass on tcs.TrainingClassId equals tClass.TrainingClassId
+                                         where tcs.TrainingClassStudentMemberId == mem.MemberId
+                                         && (tClass.TrainingDate >= startOfYear)
+                                         select tcs).Count()
+                })
+                .ToList();
+
+            return View(memberParticipationItems);
         }
     }
 }
