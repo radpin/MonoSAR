@@ -111,7 +111,7 @@
             //console.log('/api/OperationMember/@Model.ID/' + $('#memberId').val());
             fetch('/api/OperationMember/@Model.ID/' + $('#memberId').val(),
                 { method: 'PUT' });
-            location.reload();
+            location.reload(true);
 
         });
 
@@ -121,7 +121,7 @@
             //console.log('/api/OperationMember/@Model.ID/' + $(this).prev('.member-id').val());
             fetch('/api/OperationMember/@Model.ID/' + $(this).prev('.member-id').val(),
                 { method: 'DELETE' });
-            location.reload();
+            location.reload(true);
 
         });
 
