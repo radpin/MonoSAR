@@ -406,12 +406,12 @@ namespace MonoSAR.Controllers
                                           where opMem.MemberId == mem.MemberId
                                           select opMem).Count(),
                     NumTrainingsThisYear = (from tcs in _context.TrainingClassStudent
-                                         where tcs.TrainingClassStudentMemberId == mem.MemberId
-                                         select tcs).Count(),
+                                            join tClass in _context.TrainingClass on tcs.TrainingClassId equals tClass.TrainingClassId
+                                            where tcs.TrainingClassStudentMemberId == mem.MemberId
+                                            && (tClass.TrainingDate >= startOfYear)
+                                            select tcs).Count(),
                     NumTrainingsTotal = (from tcs in _context.TrainingClassStudent
-                                         join tClass in _context.TrainingClass on tcs.TrainingClassId equals tClass.TrainingClassId
                                          where tcs.TrainingClassStudentMemberId == mem.MemberId
-                                         && (tClass.TrainingDate >= startOfYear)
                                          select tcs).Count()
                 })
                 .ToList();
