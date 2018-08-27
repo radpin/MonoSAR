@@ -1,0 +1,41 @@
+﻿@model IEnumerable<MonoSAR.Models.Training.TrainingListItem>
+
+@{
+    ViewData["Title"] = "Trainings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Training Class Types</h2>
+
+<a href="/TrainingOfficer/CreateTraining">Create Training</a>
+
+<div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td><a href="/TrainingOfficer/EditTraining/@item.ID">Edit</a></td>
+                </tr>
+            }
+            <tr></tr>
+
+
+        </tbody>
+    </table>
+
+
+
+</div>
+
+
