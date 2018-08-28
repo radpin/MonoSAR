@@ -102,6 +102,12 @@
     <Content Update="Views\MyInfo\Edit.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\TrainingOfficer\CreateTraining.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\TrainingOfficer\EditTraining.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\TrainingOfficer\ViewTrainingClasses.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

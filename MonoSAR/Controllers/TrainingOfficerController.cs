@@ -215,31 +215,6 @@ namespace MonoSAR.Controllers
             return View(model);
         }
 
-        
-
-        // GET: TrainingOfficer/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: TrainingOfficer/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         // GET: TrainingOfficer/Edit/5
         [Authorize(Roles = "Admin,Training")]
         public ActionResult Edit(int id)
@@ -510,6 +485,78 @@ namespace MonoSAR.Controllers
             return View(trainingClasses);
         }
 
+        // GET: TrainingOfficer/CreateTraining
+        [Authorize(Roles = "Admin,Training")]
+        [HttpGet]
+        public ActionResult CreateTraining()
+        {
+            return View();
+        }
+
+        // POST: TrainingOfficer/TrainingInsert
+        [Authorize(Roles = "Admin,Training")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateTraining(Models.Training.TrainingInsert training)
+        {
+
+            Models.DB.Training dbTraining = new Models.DB.Training();
+
+            dbTraining.TrainingTitle = training.Title;
+
+            try
+            {
+                _context.Training.Add(dbTraining);
+                _context.SaveChanges();
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+
+            return RedirectToAction("ViewTrainings");
+        }
+
+        // GET: TrainingOfficer/Edit/5
+        [Authorize(Roles = "Admin,Training")]
+        public ActionResult EditTraining(int id)
+        {
+            var query = _context.Training
+                .Where(t => t.TrainingId == id)
+                .FirstOrDefault();
+
+            if (query == null)
+            { throw new Exception("Invalid training ID."); }
+
+            Models.Training.TrainingListItem model = new Models.Training.TrainingListItem(query);
+
+            return View(model);
+        }
+
+
+        // POST: TrainingOfficer/Edit
+        [Authorize(Roles = "Admin,Training")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditTraining(Models.Training.TrainingListItem viewModel)
+        {
+            try
+            {
+                var training = _context.Training
+                    .Where(t => t.TrainingId == viewModel.ID)
+                    .FirstOrDefault();
+
+                training.TrainingTitle = viewModel.Title;
+
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(ViewTrainings));
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+        }
 
     }
 }
