@@ -450,6 +450,49 @@ namespace MonoSAR.Controllers
             return View(model);
         }
 
+        // GET: TrainingOfficer/ViewTrainingClasses
+        [Authorize]
+        [HttpGet]
+        public ActionResult ViewTrainingClasses()
+        {
+            var trainingClasses = _context.TrainingClass
+                .OrderByDescending(t => t.TrainingDate)
+                .Select(t => new Models.Training.TrainingClassListItem()
+                {
+                    ID = t.TrainingClassId,
+                    Date = t.TrainingDate,
+                    Title = t.Training.TrainingTitle,
+                    NumStudents = t.TrainingClassStudent.Where(u => u.TrainingClassId == t.TrainingClassId).Count(),
+                    NumInstructors = t.TrainingClassInstructor.Where(u => u.TrainingClassId == t.TrainingClassId).Count()
+                })
+                .ToList();
+
+            return View(trainingClasses);
+        }
+
+        // GET: TrainingOfficer/ViewTrainingClass/5
+        [Authorize]
+        [HttpGet]
+        public ActionResult ViewTrainingClass(int id)
+        {
+            var query = _context.TrainingClass
+                .Where(tc => tc.TrainingClassId == id)
+                .FirstOrDefault();
+
+            if (query == null)
+            { throw new Exception("Invalid training class ID."); }
+
+            //Explicit loading because EF Core isn't lazy
+            _context.TrainingClass.Include(x => x.Training)
+                .Include(x => x.TrainingClassInstructor).ThenInclude(y => y.TrainingClassInstructorMember)
+                .Include(x => x.TrainingClassStudent).ThenInclude(y => y.TrainingClassStudentMember)
+                .Load();
+
+            Models.Training.TrainingClassSummaryItem model = new Models.Training.TrainingClassSummaryItem(query);
+
+            return View(model);
+        }
+
         // GET: TrainingOfficer/ViewTrainings
         [Authorize]
         [HttpGet]
@@ -465,24 +508,6 @@ namespace MonoSAR.Controllers
                 .ToList();
 
             return View(trainings);
-        }
-
-        // GET: TrainingOfficer/ViewTrainingClasses
-        [Authorize]
-        [HttpGet]
-        public ActionResult ViewTrainingClasses()
-        {
-            var trainingClasses = _context.TrainingClass
-                .OrderByDescending(t => t.TrainingDate)
-                .Select(t => new Models.Training.TrainingClassListItem()
-                {
-                    ID = t.TrainingClassId,
-                    Date = t.TrainingDate,
-                    Title = t.Training.TrainingTitle,
-                })
-                .ToList();
-
-            return View(trainingClasses);
         }
 
         // GET: TrainingOfficer/CreateTraining

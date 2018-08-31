@@ -16,6 +16,11 @@
         "css/jquery.dataTables.css",
         "css/jquery.dataTables.min.css"
       ]
+    },
+    {
+      "library": "moment.js@2.22.2",
+      "destination": "wwwroot/lib/moment.js/",
+      "files": [ "moment.js", "moment.min.js" ]
     }
   ]
 }

@@ -12,5 +12,9 @@ namespace MonoSAR.Models.Training
         public DateTime Date { get; set; }
 
         public string Title { get; set; }
+
+        public Int32 NumStudents { get; set; }
+
+        public Int32 NumInstructors { get; set; }
     }
 }

@@ -5,17 +5,23 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section Styles {
+    <link href="@Url.Content("~/lib/datatables/css/jquery.dataTables.min.css")" rel="stylesheet" type="text/css" />
+}
+
 <h2>Training Class Occurrences</h2>
 
 <a href="/TrainingOfficer/RecordTraining">Record Training</a>
 
 <div>
 
-    <table class="table">
+    <table class="table" id="training-classes-table">
         <thead>
             <tr>
                 <th>Title</th>
                 <th>Date</th>
+                <th>Number of Instructors</th>
+                <th>Number of Students</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -26,19 +32,36 @@
             {
                 <tr>
                     <td><a href="/TrainingOfficer/ViewTrainingClass/@item.ID">@item.Title</a></td>
-                    <td>@item.Date</td>
+                    <td>@item.Date.ToShortDateString()</td>
+                    <td>@item.NumInstructors</td>
+                    <td>@item.NumStudents</td>
                     <td><a href="/TrainingOfficer/EditTrainingClass/@item.ID">Edit</a></td>
                 </tr>
             }
-            <tr></tr>
 
 
         </tbody>
     </table>
 
-
-
 </div>
 
+<script type="text/javascript" charset="utf8" src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="~/lib/moment.js/moment.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="~/lib/datatables/js/datetime-moment.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // Sortable searchable table: https://datatables.net
+
+        $.fn.dataTable.moment('M/D/YYYY');
+
+        $('#training-classes-table').DataTable({
+            'order': [[1, 'desc']]
+        });
+
+    });
+
+</script>
 
 
