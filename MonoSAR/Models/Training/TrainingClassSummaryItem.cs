@@ -43,7 +43,7 @@ namespace MonoSAR.Models.Training
                 students.Add(new Training.TrainingClassStudentSummaryItem(item));
             }
 
-            this.Students = students;
+            this.Students = students.OrderBy(s => s.MemberName).ToList();
         }
 
         private void buildInstructors(Models.DB.TrainingClass dataEntity)
@@ -55,7 +55,7 @@ namespace MonoSAR.Models.Training
                 instructors.Add(new Training.TrainingClassInstructorSummaryItem(item));
             }
 
-            this.Instructors = instructors;
+            this.Instructors = instructors.OrderBy(i => i.MemberName).ToList();
         }
 
     }

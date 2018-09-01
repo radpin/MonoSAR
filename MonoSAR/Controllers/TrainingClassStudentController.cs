@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MonoSAR.Models.DB;
+using MonoSAR.Models.Training;
 
 namespace MonoSAR.Controllers
 {
@@ -48,20 +49,21 @@ namespace MonoSAR.Controllers
         }
 
         // PUT: api/TrainingClassStudent/5/5
-        [HttpPut("{trainingClassId}/{memberId}")]
-        public async Task<IActionResult> PutTrainingClassStudent([FromRoute] int trainingClassId, [FromRoute] int memberId)
+        [HttpPut("{trainingClassId}")]
+        public async Task<IActionResult> PutTrainingClassStudent([FromRoute] int trainingClassId, [FromBody] TrainingClassParticipant trainingClassParticipant)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (!TrainingClassStudentExists(trainingClassId, memberId))
+            if (!TrainingClassStudentExists(trainingClassId, trainingClassParticipant.MemberID))
             {
                 var trainingClassStudent = new TrainingClassStudent()
                 {
                     TrainingClassId = trainingClassId,
-                    TrainingClassStudentMemberId = memberId,
+                    TrainingClassStudentMemberId = trainingClassParticipant.MemberID,
+                    TrainingClassStudentHours = trainingClassParticipant.Hours,
                     Created = DateTime.UtcNow
                 };
 
@@ -72,7 +74,7 @@ namespace MonoSAR.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TrainingClassStudentExists(trainingClassId, memberId))
+                    if (!TrainingClassStudentExists(trainingClassId, trainingClassParticipant.MemberID))
                     {
                         return NotFound();
                     }
