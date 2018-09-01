@@ -140,41 +140,50 @@
 
         $('.add-student').click(  function () {
 
-            //console.log('add-student clicked');
-            //console.log('/api/TrainingClassStudent/@Model.TrainingClassID/' + $('#studentMemberId').val());
+            console.log('add-student clicked');
+            console.log('/api/TrainingClassStudent/@Model.TrainingClassID/' + $('#studentMemberId').val());
             fetch('/api/TrainingClassStudent/@Model.TrainingClassID/' + $('#studentMemberId').val(),
-                { method: 'PUT' });
-            location.reload(true);
+                { method: 'PUT' })
+                .then(function () {
+                    location.reload(true);
+                });
+            
 
         });
 
         $('.add-instructor').click(  function () {
 
-            //console.log('add-instructor clicked');
-            //console.log('/api/TrainingClassInstructor/@Model.TrainingClassID/' + $('#instructorMemberId').val());
+            console.log('add-instructor clicked');
+            console.log('/api/TrainingClassInstructor/@Model.TrainingClassID/' + $('#instructorMemberId').val());
             fetch('/api/TrainingClassInstructor/@Model.TrainingClassID/' + $('#instructorMemberId').val(),
-                { method: 'PUT' });
-            location.reload(true);
+                { method: 'PUT' })
+                .then(function () {
+                    location.reload(true);
+                });
 
         });
 
         $('.delete-student').click(  function () {
 
-            //console.log('delete-student clicked');
-            //console.log('/api/TrainingClassStudent/@Model.TrainingClassID/' + $(this).prev('.member-id').val());
-            fetch('/api/TrainingClassStudent/@Model.TrainingClassID/' + $(this).prev('.member-id').val(),
-                { method: 'DELETE' });
-            location.reload(true);
+            console.log('delete-student clicked');
+            console.log('/api/TrainingClassStudent/' + $(this).prev('.training-class-student-id').val());
+            fetch('/api/TrainingClassStudent/' + $(this).prev('.training-class-student-id').val(),
+                { method: 'DELETE' })
+                .then(function () {
+                    location.reload(true);
+                });
 
         });
 
         $('.delete-instructor').click(  function () {
 
-            //console.log('delete-instructor clicked');
-            //console.log('/api/TrainingClassInstructor/@Model.TrainingClassID/' + $(this).prev('.member-id').val());
-            fetch('/api/TrainingClassInstructor/@Model.TrainingClassID/' + $(this).prev('.member-id').val(),
-                { method: 'DELETE' });
-            location.reload(true);
+            console.log('delete-instructor clicked');
+            console.log('/api/TrainingClassInstructor/' + $(this).prev('.training-class-instructor-id').val());
+            fetch('/api/TrainingClassInstructor/' + $(this).prev('.training-class-instructor-id').val(),
+                { method: 'DELETE' })
+                .then(function () {
+                    location.reload(true);
+                });
 
         });
         

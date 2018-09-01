@@ -111,10 +111,5 @@ namespace MonoSAR.Controllers
 
             return Ok(operationMember);
         }
-
-        private bool OperationExists(int id)
-        {
-            return _context.Operation.Any(e => e.OperationId == id);
-        }
     }
 }

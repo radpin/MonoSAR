@@ -110,8 +110,11 @@
             //console.log('add-participant clicked');
             //console.log('/api/OperationMember/@Model.ID/' + $('#memberId').val());
             fetch('/api/OperationMember/@Model.ID/' + $('#memberId').val(),
-                { method: 'PUT' });
-            location.reload(true);
+                { method: 'PUT' })
+                .then(function () {
+                    location.reload(true);
+                });
+
 
         });
 
@@ -120,8 +123,10 @@
             //console.log('delete-participant clicked');
             //console.log('/api/OperationMember/@Model.ID/' + $(this).prev('.member-id').val());
             fetch('/api/OperationMember/@Model.ID/' + $(this).prev('.member-id').val(),
-                { method: 'DELETE' });
-            location.reload(true);
+                { method: 'DELETE' })
+                .then(function () {
+                    location.reload(true);
+                });
 
         });
 
