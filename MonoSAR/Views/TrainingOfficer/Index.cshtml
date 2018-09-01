@@ -26,7 +26,7 @@
        @foreach (var item in Model)
         {
             <tr>
-                <td>@item.When.ToShortDateString()</td>
+                <td>@item.TrainingDatePretty</td>
                 <td><a href="/TrainingOfficer/ViewMember/@item.MemberID">@item.MemberName</a></td>
                 <td>@item.TrainingTitle</td>
                 <td>@item.Hours</td>

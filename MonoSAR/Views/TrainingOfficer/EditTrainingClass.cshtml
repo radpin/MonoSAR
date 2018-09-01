@@ -1,0 +1,211 @@
+﻿@model MonoSAR.Models.Training.TrainingClassSummaryItem
+
+@{
+    ViewData["Title"] = "EditTrainingClass";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Update Training Occurrence</h2>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+
+        <h4>Training Occurrence</h4>
+        <hr />
+
+        <form asp-action="EditTrainingClass">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TrainingId" class="control-label">Training Type</label>
+                <select asp-for="TrainingId" required class="form-control"></select>
+                <span asp-validation-for="TrainingId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TrainingDate" class="control-label">Date</label>
+                <input asp-for="TrainingDate" required class="form-control" type="date" />
+                <span asp-validation-for="TrainingDate" class="text-danger"></span>
+
+                <input asp-for="TrainingClassId" hidden="hidden" type="hidden" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Update" class="btn btn-default" />
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+
+        <h4>Instructors (@Model.Instructors.Count)</h4>
+        <hr />
+
+        <form>
+            <label for="instructor-id">Instructor</label>
+            <select id="instructor-id"></select>
+            <input type="button" value="Add" class="btn btn-default add-instructor" />
+        </form>
+
+        <p></p>
+
+        @if (Model.Instructors.Count > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Hours</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (TrainingClassInstructorSummaryItem participant in Model.Instructors) // TODO: Enable updating hours
+                    {
+                        <tr>
+                            <td><a href="/MembershipOfficer/ViewMember/@participant.MemberID">@participant.MemberName</a></td>
+                            <td>@participant.Hours</td>
+                            <td>
+                                <form>
+                                    <input hidden="hidden" type="hidden" name="memberId" class="member-id" value="@participant.MemberID" />
+                                    <input type="button" value="Delete" class="btn btn-default delete-instructor" />
+                                </form>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        }
+
+    </div>
+
+    <div class="col-md-6">
+
+        <h4>Students (@Model.Students.Count)</h4>
+        <hr />
+
+        <form>
+            <label for="student-id">Student</label>
+            <select id="student-id"></select>
+            <input type="button" value="Add" class="btn btn-default add-student" />
+        </form>
+
+        <p></p>
+
+        @if (Model.Students.Count > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Hours</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (TrainingClassStudentSummaryItem student in Model.Students) // TODO: Enable updating hours
+                    {
+                        <tr>
+                            <td><a href="/MembershipOfficer/ViewMember/@student.MemberID">@student.MemberName</a></td>
+                            <td>@student.Hours</td>
+                            <td>
+                                <form>
+                                    <input hidden="hidden" type="hidden" name="memberId" class="member-id" value="@student.MemberID" />
+                                    <input type="button" value="Delete" class="btn btn-default delete-student" />
+                                </form>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        }
+
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        memberJSONCall();
+        trainingJSONCall()
+
+        @*$('.add-participant').click(  function () {
+
+            //console.log('add-participant clicked');
+            //console.log('/api/OperationMember/@Model.ID/' + $('#memberId').val());
+            fetch('/api/OperationMember/@Model.ID/' + $('#memberId').val(),
+                { method: 'PUT' });
+            location.reload(true);
+
+        });
+
+        $('.delete-participant').click(  function () {
+
+            //console.log('delete-participant clicked');
+            //console.log('/api/OperationMember/@Model.ID/' + $(this).prev('.member-id').val());
+            fetch('/api/OperationMember/@Model.ID/' + $(this).prev('.member-id').val(),
+                { method: 'DELETE' });
+            location.reload(true);
+
+        });*@
+        
+    });
+
+    function memberJSONCall() {
+
+        let urlMember = '/api/members/';
+
+        fetch(urlMember)
+            .then(res => res.json())
+            .then((out) => {
+                buildMemberSelect(out);
+            })
+            .catch(err => { throw err; });
+    }
+
+    function buildMemberSelect(jsonarray) {
+
+        var instructorSelect = $('#instructor-id');
+        var studentSelect = $('#student-id');
+        $.each(jsonarray, function (i, member)
+        {
+            instructorSelect.append(new Option(member.lastName + ', ' + member.firstName, member.memberId));
+            studentSelect.append(new Option(member.lastName + ', ' + member.firstName, member.memberId));
+        });
+    }
+
+    function trainingJSONCall() {
+
+        let urlTraining = '/api/trainings/';
+
+        fetch(urlTraining)
+            .then(res => res.json())
+            .then((out) => {
+                buildTrainingSelect(out);
+            })
+            .catch(err => { throw err; });
+    }
+
+    function buildTrainingSelect(jsonarray) {
+
+        var trainingSelect = $('#TrainingId');
+        $.each(jsonarray, function (i, training) {
+            trainingSelect.append(new Option(training.trainingTitle, training.trainingId));
+        });
+    }
+
+</script>
+
+
+
+
+

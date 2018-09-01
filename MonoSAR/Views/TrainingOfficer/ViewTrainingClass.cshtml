@@ -21,9 +21,9 @@
         <tbody>
 
             <tr>
-                <td><b>@Model.Title</b></td>
-                <td>@Model.Date.ToShortDateString()</td>
-                <td><a href="/TrainingOfficer/EditTrainingClass/@Model.ID">Edit</a></td>
+                <td><b>@Model.TrainingTitle</b></td>
+                <td>@Model.TrainingDate.ToShortDateString()</td>
+                <td><a href="/TrainingOfficer/EditTrainingClass/@Model.TrainingId">Edit</a></td>
             </tr>
         </tbody>
     </table>
@@ -38,7 +38,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach(TrainingClassParticipantSummaryItem instructor in Model.Instructors)
+            @foreach(TrainingClassInstructorSummaryItem instructor in Model.Instructors)
     {
             <tr>
                 <td><a href="/MembershipOfficer/ViewMember/@instructor.MemberID">@instructor.MemberName</a></td>
@@ -59,7 +59,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach(TrainingClassParticipantSummaryItem student in Model.Students)
+            @foreach(TrainingClassStudentSummaryItem student in Model.Students)
     {
             <tr>
                 <td><a href="/MembershipOfficer/ViewMember/@student.MemberID">@student.MemberName</a></td>

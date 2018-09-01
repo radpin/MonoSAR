@@ -493,6 +493,54 @@ namespace MonoSAR.Controllers
             return View(model);
         }
 
+        // GET: TrainingOfficer/EditTrainingClass/5
+        [Authorize(Roles = "Admin,Training")]
+        [HttpGet]
+        public ActionResult EditTrainingClass(int id)
+        {
+            var query = _context.TrainingClass
+                .Where(tc => tc.TrainingClassId == id)
+                .FirstOrDefault();
+
+            if (query == null)
+            { throw new Exception("Invalid training class ID."); }
+
+            //Explicit loading because EF Core isn't lazy
+            _context.TrainingClass.Include(x => x.Training)
+                .Include(x => x.TrainingClassInstructor).ThenInclude(y => y.TrainingClassInstructorMember)
+                .Include(x => x.TrainingClassStudent).ThenInclude(y => y.TrainingClassStudentMember)
+                .Load();
+
+            Models.Training.TrainingClassSummaryItem model = new Models.Training.TrainingClassSummaryItem(query);
+
+            return View(model);
+        }
+
+        // POST: TrainingOfficer/EditTrainingClass
+        [Authorize(Roles = "Admin,Training")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditTrainingClass(Models.Training.TrainingClassSummaryItem viewModel)
+        {
+            try
+            {
+                var trainingClass = _context.TrainingClass
+                    .Where(tc => tc.TrainingClassId == viewModel.TrainingClassId)
+                    .FirstOrDefault();
+
+                trainingClass.TrainingId = viewModel.TrainingId;
+                trainingClass.TrainingDate = viewModel.TrainingDate;
+
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(ViewTrainingClasses));
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+        }
+
         // GET: TrainingOfficer/ViewTrainings
         [Authorize]
         [HttpGet]

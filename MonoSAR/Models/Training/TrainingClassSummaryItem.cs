@@ -7,15 +7,17 @@ namespace MonoSAR.Models.Training
 {
     public class TrainingClassSummaryItem
     {
-        public Int32 ID { get; set; }
+        public Int32 TrainingClassId { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime TrainingDate { get; set; }
 
-        public string Title { get; set; }
+        public string TrainingTitle { get; set; }
 
-        public List<Training.TrainingClassParticipantSummaryItem> Students { get; set; }
+        public Int32 TrainingId { get; set; }
 
-        public List<Training.TrainingClassParticipantSummaryItem> Instructors { get; set; }
+        public List<Training.TrainingClassStudentSummaryItem> Students { get; set; }
+
+        public List<Training.TrainingClassInstructorSummaryItem> Instructors { get; set; }
 
         public TrainingClassSummaryItem()
         {
@@ -24,20 +26,21 @@ namespace MonoSAR.Models.Training
 
         public TrainingClassSummaryItem(Models.DB.TrainingClass dataEntity)
         {
-            this.ID = dataEntity.TrainingClassId;
-            this.Date = dataEntity.TrainingDate;
-            this.Title = dataEntity.Training.TrainingTitle;
+            this.TrainingClassId = dataEntity.TrainingClassId;
+            this.TrainingDate = dataEntity.TrainingDate;
+            this.TrainingTitle = dataEntity.Training.TrainingTitle;
+            this.TrainingId = dataEntity.TrainingId;
             buildStudents(dataEntity);
             buildInstructors(dataEntity);
         }
 
         private void buildStudents(Models.DB.TrainingClass dataEntity)
         {
-            List<Training.TrainingClassParticipantSummaryItem> students = new List<Training.TrainingClassParticipantSummaryItem>();
+            List<Training.TrainingClassStudentSummaryItem> students = new List<Training.TrainingClassStudentSummaryItem>();
 
             foreach (var item in dataEntity.TrainingClassStudent)
             {
-                students.Add(new Training.TrainingClassParticipantSummaryItem(item));
+                students.Add(new Training.TrainingClassStudentSummaryItem(item));
             }
 
             this.Students = students;
@@ -45,11 +48,11 @@ namespace MonoSAR.Models.Training
 
         private void buildInstructors(Models.DB.TrainingClass dataEntity)
         {
-            List<Training.TrainingClassParticipantSummaryItem> instructors = new List<Training.TrainingClassParticipantSummaryItem>();
+            List<Training.TrainingClassInstructorSummaryItem> instructors = new List<Training.TrainingClassInstructorSummaryItem>();
 
             foreach (var item in dataEntity.TrainingClassInstructor)
             {
-                instructors.Add(new Training.TrainingClassParticipantSummaryItem(item));
+                instructors.Add(new Training.TrainingClassInstructorSummaryItem(item));
             }
 
             this.Instructors = instructors;
