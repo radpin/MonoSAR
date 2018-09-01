@@ -525,10 +525,10 @@ namespace MonoSAR.Controllers
             try
             {
                 var trainingClass = _context.TrainingClass
-                    .Where(tc => tc.TrainingClassId == viewModel.TrainingClassId)
+                    .Where(tc => tc.TrainingClassId == viewModel.TrainingClassID)
                     .FirstOrDefault();
 
-                trainingClass.TrainingId = viewModel.TrainingId;
+                trainingClass.TrainingId = viewModel.TrainingID;
                 trainingClass.TrainingDate = viewModel.TrainingDate;
 
                 _context.SaveChanges();
@@ -539,6 +539,47 @@ namespace MonoSAR.Controllers
             {
                 throw exc;
             }
+        }
+
+        // GET: TrainingOfficer/CreateTrainingClass
+        [Authorize(Roles = "Admin,Training")]
+        [HttpGet]
+        public ActionResult CreateTrainingClass()
+        {
+            Models.Training.TrainingClassInsert model = new Models.Training.TrainingClassInsert();
+            model.TrainingDate = DateTime.Now;
+
+            return View(model);
+        }
+
+        // POST: OperationsOfficer/CreateTrainingClass
+        [Authorize(Roles = "Admin,Training")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateTrainingClass(Models.Training.TrainingClassInsert model)
+        {
+
+            Models.DB.TrainingClass dbTrainingClass = new Models.DB.TrainingClass();
+            Int32 trainingClassId;
+
+            dbTrainingClass.TrainingId = model.TrainingID;
+            dbTrainingClass.TrainingDate = model.TrainingDate;
+            dbTrainingClass.TrainingClassStudent = new List<TrainingClassStudent>();
+            dbTrainingClass.TrainingClassInstructor = new List<TrainingClassInstructor>();
+            dbTrainingClass.Created = DateTime.UtcNow;
+
+            try
+            {
+                _context.TrainingClass.Add(dbTrainingClass);
+                _context.SaveChanges();
+                trainingClassId = dbTrainingClass.TrainingClassId;
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+
+            return RedirectToAction("EditTrainingClass", new { id = trainingClassId });
         }
 
         // GET: TrainingOfficer/ViewTrainings

@@ -7,13 +7,13 @@ namespace MonoSAR.Models.Training
 {
     public class TrainingClassSummaryItem
     {
-        public Int32 TrainingClassId { get; set; }
+        public Int32 TrainingClassID { get; set; }
 
         public DateTime TrainingDate { get; set; }
 
         public string TrainingTitle { get; set; }
 
-        public Int32 TrainingId { get; set; }
+        public Int32 TrainingID { get; set; }
 
         public List<Training.TrainingClassStudentSummaryItem> Students { get; set; }
 
@@ -26,10 +26,10 @@ namespace MonoSAR.Models.Training
 
         public TrainingClassSummaryItem(Models.DB.TrainingClass dataEntity)
         {
-            this.TrainingClassId = dataEntity.TrainingClassId;
+            this.TrainingClassID = dataEntity.TrainingClassId;
             this.TrainingDate = dataEntity.TrainingDate;
             this.TrainingTitle = dataEntity.Training.TrainingTitle;
-            this.TrainingId = dataEntity.TrainingId;
+            this.TrainingID = dataEntity.TrainingId;
             buildStudents(dataEntity);
             buildInstructors(dataEntity);
         }

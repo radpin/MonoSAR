@@ -18,16 +18,16 @@
         <form asp-action="EditTrainingClass">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="TrainingId" class="control-label">Training Type</label>
-                <select asp-for="TrainingId" required class="form-control"></select>
-                <span asp-validation-for="TrainingId" class="text-danger"></span>
+                <label asp-for="TrainingID" class="control-label">Training Type</label>
+                <select asp-for="TrainingID" required class="form-control"></select>
+                <span asp-validation-for="TrainingID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TrainingDate" class="control-label">Date</label>
                 <input asp-for="TrainingDate" required class="form-control" type="date" />
                 <span asp-validation-for="TrainingDate" class="text-danger"></span>
 
-                <input asp-for="TrainingClassId" hidden="hidden" type="hidden" />
+                <input asp-for="TrainingClassID" hidden="hidden" type="hidden" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Update" class="btn btn-default" />
@@ -45,8 +45,8 @@
         <hr />
 
         <form>
-            <label for="instructor-id">Instructor</label>
-            <select id="instructor-id"></select>
+            <label for="instructorMemberId">Instructor</label>
+            <select id="instructorMemberId"></select>
             <input type="button" value="Add" class="btn btn-default add-instructor" />
         </form>
 
@@ -64,14 +64,14 @@
                 </thead>
                 <tbody>
 
-                    @foreach (TrainingClassInstructorSummaryItem participant in Model.Instructors) // TODO: Enable updating hours
+                    @foreach (TrainingClassInstructorSummaryItem participant in Model.Instructors)
                     {
                         <tr>
                             <td><a href="/MembershipOfficer/ViewMember/@participant.MemberID">@participant.MemberName</a></td>
                             <td>@participant.Hours</td>
                             <td>
                                 <form>
-                                    <input hidden="hidden" type="hidden" name="memberId" class="member-id" value="@participant.MemberID" />
+                                    <input hidden="hidden" type="hidden" class="training-class-instructor-id" value="@participant.TrainingClassInstructorID" />
                                     <input type="button" value="Delete" class="btn btn-default delete-instructor" />
                                 </form>
                             </td>
@@ -90,8 +90,8 @@
         <hr />
 
         <form>
-            <label for="student-id">Student</label>
-            <select id="student-id"></select>
+            <label for="studentMemberId">Student</label>
+            <select id="studentMemberId"></select>
             <input type="button" value="Add" class="btn btn-default add-student" />
         </form>
 
@@ -109,14 +109,14 @@
                 </thead>
                 <tbody>
 
-                    @foreach (TrainingClassStudentSummaryItem student in Model.Students) // TODO: Enable updating hours
+                    @foreach (TrainingClassStudentSummaryItem student in Model.Students)
                     {
                         <tr>
                             <td><a href="/MembershipOfficer/ViewMember/@student.MemberID">@student.MemberName</a></td>
                             <td>@student.Hours</td>
                             <td>
                                 <form>
-                                    <input hidden="hidden" type="hidden" name="memberId" class="member-id" value="@student.MemberID" />
+                                    <input hidden="hidden" type="hidden" class="training-class-student-id" value="@student.TrainingClassStudentID" />
                                     <input type="button" value="Delete" class="btn btn-default delete-student" />
                                 </form>
                             </td>
@@ -136,27 +136,47 @@
     $(function () {
 
         memberJSONCall();
-        trainingJSONCall()
+        trainingJSONCall();
 
-        @*$('.add-participant').click(  function () {
+        $('.add-student').click(  function () {
 
-            //console.log('add-participant clicked');
-            //console.log('/api/OperationMember/@Model.ID/' + $('#memberId').val());
-            fetch('/api/OperationMember/@Model.ID/' + $('#memberId').val(),
+            //console.log('add-student clicked');
+            //console.log('/api/TrainingClassStudent/@Model.TrainingClassID/' + $('#studentMemberId').val());
+            fetch('/api/TrainingClassStudent/@Model.TrainingClassID/' + $('#studentMemberId').val(),
                 { method: 'PUT' });
             location.reload(true);
 
         });
 
-        $('.delete-participant').click(  function () {
+        $('.add-instructor').click(  function () {
 
-            //console.log('delete-participant clicked');
-            //console.log('/api/OperationMember/@Model.ID/' + $(this).prev('.member-id').val());
-            fetch('/api/OperationMember/@Model.ID/' + $(this).prev('.member-id').val(),
+            //console.log('add-instructor clicked');
+            //console.log('/api/TrainingClassInstructor/@Model.TrainingClassID/' + $('#instructorMemberId').val());
+            fetch('/api/TrainingClassInstructor/@Model.TrainingClassID/' + $('#instructorMemberId').val(),
+                { method: 'PUT' });
+            location.reload(true);
+
+        });
+
+        $('.delete-student').click(  function () {
+
+            //console.log('delete-student clicked');
+            //console.log('/api/TrainingClassStudent/@Model.TrainingClassID/' + $(this).prev('.member-id').val());
+            fetch('/api/TrainingClassStudent/@Model.TrainingClassID/' + $(this).prev('.member-id').val(),
                 { method: 'DELETE' });
             location.reload(true);
 
-        });*@
+        });
+
+        $('.delete-instructor').click(  function () {
+
+            //console.log('delete-instructor clicked');
+            //console.log('/api/TrainingClassInstructor/@Model.TrainingClassID/' + $(this).prev('.member-id').val());
+            fetch('/api/TrainingClassInstructor/@Model.TrainingClassID/' + $(this).prev('.member-id').val(),
+                { method: 'DELETE' });
+            location.reload(true);
+
+        });
         
     });
 
@@ -174,8 +194,8 @@
 
     function buildMemberSelect(jsonarray) {
 
-        var instructorSelect = $('#instructor-id');
-        var studentSelect = $('#student-id');
+        var instructorSelect = $('#instructorMemberId');
+        var studentSelect = $('#studentMemberId');
         $.each(jsonarray, function (i, member)
         {
             instructorSelect.append(new Option(member.lastName + ', ' + member.firstName, member.memberId));
@@ -197,7 +217,7 @@
 
     function buildTrainingSelect(jsonarray) {
 
-        var trainingSelect = $('#TrainingId');
+        var trainingSelect = $('#TrainingID');
         $.each(jsonarray, function (i, training) {
             trainingSelect.append(new Option(training.trainingTitle, training.trainingId));
         });

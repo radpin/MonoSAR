@@ -1,0 +1,71 @@
+﻿@model MonoSAR.Models.Training.TrainingClassInsert
+
+@{
+    ViewData["Title"] = "CreateTrainingClass";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create Training Occurrence</h2>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+
+        <h4>Training Occurrence</h4>
+        <hr />
+
+        <form asp-action="CreateTrainingClass">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TrainingID" class="control-label">Training Type</label>
+                <select asp-for="TrainingID" required class="form-control"></select>
+                <span asp-validation-for="TrainingID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TrainingDate" class="control-label">Date</label>
+                <input asp-for="TrainingDate" required class="form-control" type="date" />
+                <span asp-validation-for="TrainingDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        trainingJSONCall();
+        
+    });
+
+    function trainingJSONCall() {
+
+        let urlTraining = '/api/trainings/';
+
+        fetch(urlTraining)
+            .then(res => res.json())
+            .then((out) => {
+                buildTrainingSelect(out);
+            })
+            .catch(err => { throw err; });
+    }
+
+    function buildTrainingSelect(jsonarray) {
+
+        var trainingSelect = $('#TrainingID');
+        $.each(jsonarray, function (i, training) {
+            trainingSelect.append(new Option(training.trainingTitle, training.trainingId));
+        });
+    }
+
+</script>
+
+
+
+
+
