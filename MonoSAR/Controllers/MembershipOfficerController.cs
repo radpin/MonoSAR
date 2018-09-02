@@ -386,32 +386,69 @@ namespace MonoSAR.Controllers
             };
 
 
-            DateTime startOfYear = new DateTime(DateTime.Now.Year, 1, 1);
+            DateTime startOfThisYear = new DateTime(DateTime.Now.Year, 1, 1);
+            DateTime startOfLastYear = startOfThisYear.AddYears(-1);
 
             var memberParticipationItems = (
                 from mem in _context.Member
                 orderby mem.LastName, mem.FirstName
-                where !excludedCapacities.Contains(mem.CapacityId ?? 0)
+                //where !excludedCapacities.Contains(mem.CapacityId ?? 0)
                 select new Models.Membership.MemberParticipationItem
                 {
                     ID = mem.MemberId,
                     First = mem.FirstName,
                     Last = mem.LastName,
+                    CapacityName = mem.Capacity.CapacityName,
+
                     NumOperationsThisYear = (from opMem in _context.OperationMember
                                              join op in _context.Operation on opMem.OperationId equals op.OperationId
                                              where (opMem.MemberId == mem.MemberId)
-                                             && (op.OperationStart >= startOfYear)
+                                             && (op.OperationStart >= startOfThisYear)
                                              select opMem).Count(),
+
+                    NumOperationsLastYear = (from opMem in _context.OperationMember
+                                             join op in _context.Operation on opMem.OperationId equals op.OperationId
+                                             where (opMem.MemberId == mem.MemberId)
+                                             && (op.OperationStart >= startOfLastYear)
+                                             && (op.OperationStart < startOfThisYear)
+                                             select opMem).Count(),
+
                     NumOperationsTotal = (from opMem in _context.OperationMember
                                           where opMem.MemberId == mem.MemberId
                                           select opMem).Count(),
-                    NumTrainingsThisYear = (from tcs in _context.TrainingClassStudent
+
+                    NumTrainingsThisYear = (from tcs in _context.TrainingClassStudent       // Student
                                             join tClass in _context.TrainingClass on tcs.TrainingClassId equals tClass.TrainingClassId
                                             where tcs.TrainingClassStudentMemberId == mem.MemberId
-                                            && (tClass.TrainingDate >= startOfYear)
+                                            && (tClass.TrainingDate >= startOfThisYear)
+                                            select tcs).Count() 
+                                           +
+                                           (from tcs in _context.TrainingClassInstructor    // Instructor
+                                            join tClass in _context.TrainingClass on tcs.TrainingClassId equals tClass.TrainingClassId
+                                            where tcs.TrainingClassInstructorMemberId == mem.MemberId
+                                            && (tClass.TrainingDate >= startOfThisYear)
                                             select tcs).Count(),
-                    NumTrainingsTotal = (from tcs in _context.TrainingClassStudent
+
+                    NumTrainingsLastYear = (from tcs in _context.TrainingClassStudent       // Student
+                                            join tClass in _context.TrainingClass on tcs.TrainingClassId equals tClass.TrainingClassId
+                                            where tcs.TrainingClassStudentMemberId == mem.MemberId
+                                            && (tClass.TrainingDate >= startOfLastYear)
+                                            && (tClass.TrainingDate < startOfThisYear)
+                                            select tcs).Count()
+                                           +
+                                           (from tcs in _context.TrainingClassInstructor    // Instructor
+                                            join tClass in _context.TrainingClass on tcs.TrainingClassId equals tClass.TrainingClassId
+                                            where tcs.TrainingClassInstructorMemberId == mem.MemberId
+                                            && (tClass.TrainingDate >= startOfLastYear)
+                                            && (tClass.TrainingDate < startOfThisYear)
+                                            select tcs).Count(),
+
+                    NumTrainingsTotal = (from tcs in _context.TrainingClassStudent          // Student
                                          where tcs.TrainingClassStudentMemberId == mem.MemberId
+                                         select tcs).Count()
+                                        +
+                                        (from tcs in _context.TrainingClassInstructor       // Instructor
+                                         where tcs.TrainingClassInstructorMemberId == mem.MemberId
                                          select tcs).Count()
                 })
                 .ToList();
