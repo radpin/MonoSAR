@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -57,7 +58,7 @@ namespace MonoSAR.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!TrainingClassInstructorExists(trainingClassId, trainingClassParticipant.MemberID))
+            if (!TrainingClassParticipantExists(trainingClassId, trainingClassParticipant.MemberID))
             {
                 var trainingClassInstructor = new TrainingClassInstructor()
                 {
@@ -88,9 +89,21 @@ namespace MonoSAR.Controllers
             return NoContent();
         }
 
+        private bool TrainingClassParticipantExists(int trainingClassId, int memberId)
+        {
+            bool studentExists = TrainingClassStudentExists(trainingClassId, memberId);
+            bool instructorExists = TrainingClassInstructorExists(trainingClassId, memberId);
+
+            return (studentExists || instructorExists);
+        }
         private bool TrainingClassInstructorExists(int trainingClassId, int memberId)
         {
             return _context.TrainingClassInstructor.Any(e => e.TrainingClassId == trainingClassId && e.TrainingClassInstructorMemberId == memberId);
+        }
+
+        private bool TrainingClassStudentExists(int trainingClassId, int memberId)
+        {
+            return _context.TrainingClassStudent.Any(e => e.TrainingClassId == trainingClassId && e.TrainingClassStudentMemberId == memberId);
         }
 
         // DELETE: api/TrainingClassInstructor/5
@@ -113,5 +126,43 @@ namespace MonoSAR.Controllers
 
             return Ok(trainingClassInstructor);
         }
+
+        // PATCH: api/TrainingClassInstructor/5
+        [HttpPatch("{trainingClassInstructorId}")]
+        public async Task<IActionResult> PatchTrainingClassInstructor([FromRoute] int trainingClassInstructorId, [FromBody] JsonPatchDocument<TrainingClassInstructor> patchDocument)
+        {
+            // https://janaks.com.np/implementing-json-patch-in-asp-net-core/
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (patchDocument == null)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var trainingClassInstructor = await _context.TrainingClassInstructor.SingleOrDefaultAsync(m => m.TrainingClassInstructorId == trainingClassInstructorId);
+
+                if (trainingClassInstructor == null)
+                {
+                    return NotFound();
+                }
+
+                patchDocument.ApplyTo(trainingClassInstructor);
+                _context.SaveChanges();
+
+                return Ok(trainingClassInstructor);
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+
+        }
+
     }
 }

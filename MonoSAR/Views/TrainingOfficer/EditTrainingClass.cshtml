@@ -72,14 +72,24 @@
                 </thead>
                 <tbody>
 
-                    @foreach (TrainingClassInstructorSummaryItem participant in Model.Instructors)
+                    @foreach (TrainingClassInstructorSummaryItem instructor in Model.Instructors)
                     {
                         <tr>
-                            <td><a href="/MembershipOfficer/ViewMember/@participant.MemberID">@participant.MemberName</a></td>
-                            <td>@participant.Hours</td>
+                            <td><a href="/MembershipOfficer/ViewMember/@instructor.MemberID">@instructor.MemberName</a></td>
+                            <td>
+                                <form class="update-instructor-hours-form form-inline">
+                                    <div class="form-group">
+                                        <input hidden="hidden" type="hidden" class="training-class-instructor-id" value="@instructor.TrainingClassInstructorID" />
+                                        <input class="instructor-hours form-control" value="@instructor.Hours" required style="width:100px;" type="number" placeholder="0" step="0.25" min="0.25" max="24" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="button" value="Update" class="btn btn-default update-instructor-hours" />
+                                    </div>
+                                </form>
+                            </td>
                             <td>
                                 <form>
-                                    <input hidden="hidden" type="hidden" class="training-class-instructor-id" value="@participant.TrainingClassInstructorID" />
+                                    <input hidden="hidden" type="hidden" class="training-class-instructor-id" value="@instructor.TrainingClassInstructorID" />
                                     <input type="button" value="Delete" class="btn btn-default delete-instructor" />
                                 </form>
                             </td>
@@ -157,6 +167,7 @@
 
     </div>
 
+    <div id="snackbar">Hours updated</div>
 
 </div>
 
@@ -171,9 +182,9 @@
 
             var $f = $(this).closest('.update-student-hours-form');
             var hours = $f.find('.student-hours').val();
-            var tcsi = $f.find('.training-class-student-id').val();
+            var id = $f.find('.training-class-student-id').val();
 
-            console.log('/api/TrainingClassStudent/' + tcsi);
+            console.log('/api/TrainingClassStudent/' + id);
             console.log('Student hours:' + hours);
 
             var $form = $(this.form).get(0);
@@ -183,8 +194,7 @@
                 var patchDocument = '[{"op": "replace", "path": "/TrainingClassStudentHours", "value": ' + hours + '}]';
                 console.log('patchDocument: ' + patchDocument);
 
-                // TODO: Update hours
-                fetch('/api/TrainingClassStudent/' + tcsi,
+                fetch('/api/TrainingClassStudent/' + id,
                     {
                         headers: {
                             'Accept': 'application/json',
@@ -194,7 +204,7 @@
                         body: patchDocument
                     })
                     .then(function () {
-                        alert('Updated student hours');
+                        showSnackbar();
                     });
 
             } else {
@@ -204,6 +214,46 @@
                     console.log('reportValidity exists');
                     $form.reportValidity();
                 } 
+            }
+        });
+
+        $('.update-instructor-hours').click(function () {
+            console.log('instructor-hours changed');
+
+            var $f = $(this).closest('.update-instructor-hours-form');
+            var hours = $f.find('.instructor-hours').val();
+            var id = $f.find('.training-class-instructor-id').val();
+
+            console.log('/api/TrainingClassInstructor/' + id);
+            console.log('Instructor hours:' + hours);
+
+            var $form = $(this.form).get(0);
+            if (!$form.checkValidity || $form.checkValidity()) {
+                console.log('Form is valid');
+
+                var patchDocument = '[{"op": "replace", "path": "/TrainingClassStudentHours", "value": ' + hours + '}]';
+                console.log('patchDocument: ' + patchDocument);
+
+                fetch('/api/TrainingClassStudent/' + id,
+                    {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        method: 'PATCH',
+                        body: patchDocument
+                    })
+                    .then(function () {
+                        showSnackbar();
+                    });
+
+            } else {
+                console.log('Form is not valid');
+
+                if ($form.reportValidity) {
+                    console.log('reportValidity exists');
+                    $form.reportValidity();
+                }
             }
         });
 
@@ -360,6 +410,17 @@
             trainingSelect.append(new Option(training.trainingTitle, training.trainingId));
         });
     }
+
+    function showSnackbar() {
+        // Get the snackbar DIV
+        var x = document.getElementById("snackbar");
+
+        // Add the "show" class to DIV
+        x.className = "show";
+
+        // After 3 seconds, remove the show class from DIV
+        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+    } 
 
 </script>
 

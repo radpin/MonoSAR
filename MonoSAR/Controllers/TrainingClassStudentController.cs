@@ -58,7 +58,7 @@ namespace MonoSAR.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!TrainingClassStudentExists(trainingClassId, trainingClassParticipant.MemberID))
+            if (!TrainingClassParticipantExists(trainingClassId, trainingClassParticipant.MemberID))
             {
                 var trainingClassStudent = new TrainingClassStudent()
                 {
@@ -87,6 +87,18 @@ namespace MonoSAR.Controllers
             }
 
             return NoContent();
+        }
+
+        private bool TrainingClassParticipantExists(int trainingClassId, int memberId)
+        {
+            bool studentExists = TrainingClassStudentExists(trainingClassId, memberId);
+            bool instructorExists = TrainingClassInstructorExists(trainingClassId, memberId);
+
+            return (studentExists || instructorExists);
+        }
+        private bool TrainingClassInstructorExists(int trainingClassId, int memberId)
+        {
+            return _context.TrainingClassInstructor.Any(e => e.TrainingClassId == trainingClassId && e.TrainingClassInstructorMemberId == memberId);
         }
 
         private bool TrainingClassStudentExists(int trainingClassId, int memberId)
@@ -121,12 +133,10 @@ namespace MonoSAR.Controllers
         {
             // https://janaks.com.np/implementing-json-patch-in-asp-net-core/
 
-            /*
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            */
 
             if (patchDocument == null)
             {
