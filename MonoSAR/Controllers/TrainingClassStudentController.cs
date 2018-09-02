@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -48,7 +49,7 @@ namespace MonoSAR.Controllers
             return Ok(trainingClassStudent);
         }
 
-        // PUT: api/TrainingClassStudent/5/5
+        // PUT: api/TrainingClassStudent/5
         [HttpPut("{trainingClassId}")]
         public async Task<IActionResult> PutTrainingClassStudent([FromRoute] int trainingClassId, [FromBody] TrainingClassParticipant trainingClassParticipant)
         {
@@ -113,5 +114,45 @@ namespace MonoSAR.Controllers
 
             return Ok(trainingClassStudent);
         }
+
+        // PATCH: api/TrainingClassStudent/5
+        [HttpPatch("{trainingClassStudentId}")]
+        public async Task<IActionResult> PatchTrainingClassStudent([FromRoute] int trainingClassStudentId, [FromBody] JsonPatchDocument<TrainingClassStudent> patchDocument)
+        {
+            // https://janaks.com.np/implementing-json-patch-in-asp-net-core/
+
+            /*
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            */
+
+            if (patchDocument == null)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var trainingClassStudent = await _context.TrainingClassStudent.SingleOrDefaultAsync(m => m.TrainingClassStudentId == trainingClassStudentId);
+
+                if (trainingClassStudent == null)
+                {
+                    return NotFound();
+                }
+
+                patchDocument.ApplyTo(trainingClassStudent);
+                _context.SaveChanges();
+
+                return Ok(trainingClassStudent);
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+
+        }
+
     }
 }
