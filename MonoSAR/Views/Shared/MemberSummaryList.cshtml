@@ -7,7 +7,7 @@
             <th>
                 Name
             </th>
-            <th>
+            <th style="min-width: 160px">
                 Address
             </th>
             <th>
@@ -16,7 +16,7 @@
             <th>
                 Joined
             </th>
-            <th>
+            <th style="min-width: 160px">
                 Phone
             </th>
             <th>
@@ -28,7 +28,9 @@
             <th>
                 Winter
             </th>
-
+            <th>
+                Actions
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -61,6 +63,9 @@
                 </td>
                 <td style="font-size:small;">
                     @Html.DisplayFor(modelItem => item.IsWinterFieldReady)
+                </td>
+                <td style="font-size:small;">
+                    <a href="/MembershipOfficer/Edit/@item.ID">Edit</a>
                 </td>
             </tr>
         }

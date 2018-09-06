@@ -98,4 +98,13 @@
     <None Include="Views\TrainingOfficer\ViewMember.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\MembershipOfficer\Edit.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\MyInfo\Edit.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
 </Project>

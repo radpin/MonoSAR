@@ -274,25 +274,59 @@ namespace MonoSAR.Controllers
         }
 
         // GET: MembershipOfficer/Edit/5
+        [Authorize(Roles = "Admin,Membership")]
         public ActionResult Edit(int id)
         {
-            return View();
+            var query = (from m in _context.Member
+                         where m.MemberId == id
+                         select m).FirstOrDefault();
+
+            if (query == null)
+            { throw new Exception("Unable to locate member."); }
+
+            _context.Member.Include(x => x.Capacity).Load();
+
+            var model = new Models.Membership.MemberUpdate(query);
+
+            var caps = (from c in _context.Capacity
+                        select c).ToList();
+
+            model.CapacityStubs = new Models.Membership.CapacityStubs(caps);
+
+            return View(model);
         }
 
-        // POST: MembershipOfficer/Edit/5
+        // POST: MembershipOfficer/Edit
+        [Authorize(Roles = "Admin,Membership")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Models.Membership.MemberUpdate viewModel)
         {
             try
             {
-                // TODO: Add update logic here
+                var query = (from m in _context.Member
+                             where m.MemberId == viewModel.MemberID
+                             select m).FirstOrDefault();
 
-                return RedirectToAction(nameof(Index));
+                query.FirstName = viewModel.FirstName;
+                query.LastName = viewModel.LastName;
+                query.Address = viewModel.Address;
+                query.City = viewModel.City;
+                query.State = viewModel.State;
+                query.Zipcode = viewModel.Zip;
+                query.Email = viewModel.Email;
+                query.PhoneHome = viewModel.PhoneHome ?? String.Empty;
+                query.PhoneCell = viewModel.PhoneCell ?? String.Empty;
+                query.PhoneWork = viewModel.PhoneWork ?? String.Empty;
+                query.CapacityId = viewModel.CapacityID;
+
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(MemberReport));
             }
-            catch
+            catch (Exception exc)
             {
-                return View();
+                throw exc;
             }
         }
 

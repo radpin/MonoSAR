@@ -53,5 +53,54 @@ namespace MonoSAR.Controllers
            
         }
 
+        // GET: MyInfo/Edit
+        public ActionResult Edit()
+        {
+            var loggedInMember = (from x in _context.Member
+                                  where x.Email.ToLower() == User.Identity.Name.ToLower()
+                                  select x).FirstOrDefault();
+
+            if (loggedInMember == null)
+            { throw new Exception("Email address of logged in user not found in membership data."); }
+
+            var model = new Models.Membership.MyInfoUpdate(loggedInMember);
+
+            return View(model);
+        }
+
+        // POST: MyInfo/Edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Models.Membership.MyInfoUpdate viewModel)
+        {
+            try
+            {
+                var loggedInMember = (from x in _context.Member
+                                      where x.Email.ToLower() == User.Identity.Name.ToLower()
+                                      select x).FirstOrDefault();
+
+                if (loggedInMember == null)
+                { throw new Exception("Email address of logged in user not found in membership data."); }
+
+                loggedInMember.FirstName = viewModel.FirstName;
+                loggedInMember.LastName = viewModel.LastName;
+                loggedInMember.Address = viewModel.Address;
+                loggedInMember.City = viewModel.City;
+                loggedInMember.State = viewModel.State;
+                loggedInMember.Zipcode = viewModel.Zip;
+                loggedInMember.Email = viewModel.Email;
+                loggedInMember.PhoneHome = viewModel.PhoneHome ?? String.Empty;
+                loggedInMember.PhoneCell = viewModel.PhoneCell ?? String.Empty;
+                loggedInMember.PhoneWork = viewModel.PhoneWork ?? String.Empty;
+
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+        }
     }
 }
