@@ -52,10 +52,7 @@
     <None Include="Views\Account\SignedOut.cshtml" />
     <None Include="Views\Callout\Initiate.cshtml" />
     <None Include="Views\Callout\Start.cshtml" />
-    <None Include="Views\Home\About.cshtml" />
-    <None Include="Views\Home\Contact.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
-    <None Include="Views\Home\Training.cshtml" />
     <None Include="Views\Manage\ChangePassword.cshtml" />
     <None Include="Views\Manage\Disable2fa.cshtml" />
     <None Include="Views\Manage\EnableAuthenticator.cshtml" />
@@ -103,6 +100,21 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\MyInfo\Edit.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\TrainingOfficer\CreateTraining.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\TrainingOfficer\EditTraining.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\TrainingOfficer\CreateTrainingClass.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\TrainingOfficer\ViewTrainingClass.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\TrainingOfficer\ViewTrainingClasses.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>

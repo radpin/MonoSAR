@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Current Training Status</h2>
+<h2>Recently Recorded Trainings</h2>
 <a href="/TrainingOfficer/RecordTrainingOccurrence/">Record Training Class</a>
 
 <div>
@@ -26,7 +26,7 @@
        @foreach (var item in Model)
         {
             <tr>
-                <td>@item.When.ToShortDateString()</td>
+                <td>@item.TrainingDatePretty</td>
                 <td><a href="/TrainingOfficer/ViewMember/@item.MemberID">@item.MemberName</a></td>
                 <td>@item.TrainingTitle</td>
                 <td>@item.Hours</td>

@@ -1,0 +1,430 @@
+﻿@model MonoSAR.Models.Training.TrainingClassSummaryItem
+
+@{
+    ViewData["Title"] = "EditTrainingClass";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Update Training Occurrence</h2>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+
+        <h4>Training Occurrence</h4>
+        <hr />
+
+        <form asp-action="EditTrainingClass">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TrainingID" class="control-label">Training Type</label>
+                <select asp-for="TrainingID" required class="form-control"></select>
+                <span asp-validation-for="TrainingID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TrainingDate" class="control-label">Date</label>
+                <input asp-for="TrainingDate" required class="form-control" type="date" />
+                <span asp-validation-for="TrainingDate" class="text-danger"></span>
+
+                <input asp-for="TrainingClassID" hidden="hidden" type="hidden" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Update" class="btn btn-default" />
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+
+        <h4>Instructors (@Model.Instructors.Count)</h4>
+        <hr />
+
+        <form id="add-instructor-form">
+            <div class="form-inline">
+                <div class="form-group">
+                    <select id="instructorMemberId" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <input id="instructorHours" required style="width:100px;" class="form-control" type="number" placeholder="0" step="0.25" min="0.25" max="24" />
+                </div>
+                <div class="form-group">
+                    <input type="button" value="Add" class="btn btn-default add-instructor" />
+                </div>
+            </div>
+        </form>
+
+        <p></p>
+
+        @if (Model.Instructors.Count > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Hours</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (TrainingClassInstructorSummaryItem instructor in Model.Instructors)
+                    {
+                        <tr>
+                            <td><a href="/MembershipOfficer/ViewMember/@instructor.MemberID">@instructor.MemberName</a></td>
+                            <td>
+                                <form class="update-instructor-hours-form form-inline">
+                                    <div class="form-group">
+                                        <input hidden="hidden" type="hidden" class="training-class-instructor-id" value="@instructor.TrainingClassInstructorID" />
+                                        <input class="instructor-hours form-control" value="@instructor.Hours" required style="width:100px;" type="number" placeholder="0" step="0.25" min="0.25" max="24" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="button" value="Update" class="btn btn-default update-instructor-hours" />
+                                    </div>
+                                </form>
+                            </td>
+                            <td>
+                                <form>
+                                    <input hidden="hidden" type="hidden" class="training-class-instructor-id" value="@instructor.TrainingClassInstructorID" />
+                                    <input type="button" value="Delete" class="btn btn-default delete-instructor" />
+                                </form>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        }
+
+    </div>
+
+    <div class="col-md-6">
+
+        <h4>Students (@Model.Students.Count)</h4>
+        <hr />
+
+        <form id="add-student-form">
+            <div class="form-inline">
+                <div class="form-group">
+                    <select id="studentMemberId" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <input id="studentHours" required style="width:100px;" class="form-control" type="number" placeholder="0" step="0.25" min="0.25" max="24" />
+                </div>
+                <div class="form-group">
+                    <input type="button" value="Add" class="btn btn-default add-student" />
+                </div>
+            </div>
+        </form>
+
+        <p></p>
+
+        @if (Model.Students.Count > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Hours</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (TrainingClassStudentSummaryItem student in Model.Students)
+                    {
+                        <tr>
+                            <td><a href="/MembershipOfficer/ViewMember/@student.MemberID">@student.MemberName</a></td>
+                            <td>
+                                <form class="update-student-hours-form form-inline">
+                                    <div class="form-group">
+                                        <input hidden="hidden" type="hidden" class="training-class-student-id" value="@student.TrainingClassStudentID" />
+                                        <input class="student-hours form-control" value="@student.Hours" required style="width:100px;" type="number" placeholder="0" step="0.25" min="0.25" max="24" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="button" value="Update" class="btn btn-default update-student-hours" />
+                                    </div>
+                                </form>
+                            </td>
+                            <td>
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <input hidden="hidden" type="hidden" class="training-class-student-id" value="@student.TrainingClassStudentID" />
+                                        <input type="button" value="Delete" class="btn btn-default delete-student" />
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        }
+
+    </div>
+
+    <div id="snackbar">Hours updated</div>
+
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        memberJSONCall();
+        trainingJSONCall();
+
+        $('.update-student-hours').click( function () {
+            console.log('student-hours changed');
+
+            var $f = $(this).closest('.update-student-hours-form');
+            var hours = $f.find('.student-hours').val();
+            var id = $f.find('.training-class-student-id').val();
+
+            console.log('/api/TrainingClassStudent/' + id);
+            console.log('Student hours:' + hours);
+
+            var $form = $(this.form).get(0);
+            if (!$form.checkValidity || $form.checkValidity()) {
+                console.log('Form is valid');
+
+                var patchDocument = '[{"op": "replace", "path": "/TrainingClassStudentHours", "value": ' + hours + '}]';
+                console.log('patchDocument: ' + patchDocument);
+
+                fetch('/api/TrainingClassStudent/' + id,
+                    {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        method: 'PATCH',
+                        body: patchDocument
+                    })
+                    .then(function () {
+                        showSnackbar();
+                    });
+
+            } else {
+                console.log('Form is not valid');
+
+                if ($form.reportValidity) {
+                    console.log('reportValidity exists');
+                    $form.reportValidity();
+                } 
+            }
+        });
+
+        $('.update-instructor-hours').click(function () {
+            console.log('instructor-hours changed');
+
+            var $f = $(this).closest('.update-instructor-hours-form');
+            var hours = $f.find('.instructor-hours').val();
+            var id = $f.find('.training-class-instructor-id').val();
+
+            console.log('/api/TrainingClassInstructor/' + id);
+            console.log('Instructor hours:' + hours);
+
+            var $form = $(this.form).get(0);
+            if (!$form.checkValidity || $form.checkValidity()) {
+                console.log('Form is valid');
+
+                var patchDocument = '[{"op": "replace", "path": "/TrainingClassStudentHours", "value": ' + hours + '}]';
+                console.log('patchDocument: ' + patchDocument);
+
+                fetch('/api/TrainingClassStudent/' + id,
+                    {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        method: 'PATCH',
+                        body: patchDocument
+                    })
+                    .then(function () {
+                        showSnackbar();
+                    });
+
+            } else {
+                console.log('Form is not valid');
+
+                if ($form.reportValidity) {
+                    console.log('reportValidity exists');
+                    $form.reportValidity();
+                }
+            }
+        });
+
+        $('.add-student').click( function () {
+
+            console.log('add-student clicked');
+            console.log('/api/TrainingClassStudent/@Model.TrainingClassID/');
+            console.log('Student member ID:' + $('#studentMemberId').val());
+            console.log('Student hours:' + $('#studentHours').val());
+
+            var $form = $('#add-student-form').get(0);
+            if (!$form.checkValidity || $form.checkValidity()) {
+                /* submit the form */
+                console.log('Form is valid');
+
+                var trainingClassParticipant = {
+                    MemberID: $('#studentMemberId').val(),
+                    Hours: $('#studentHours').val()
+                };
+
+                fetch('/api/TrainingClassStudent/@Model.TrainingClassID/',
+                    {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        method: 'PUT',
+                        body: JSON.stringify(trainingClassParticipant)
+                    })
+                    .then(function () {
+                        location.reload(true);
+                    });
+
+            } else {
+                console.log('Form is not valid');
+
+                if ($form.reportValidity) {
+                    console.log('reportValidity exists');
+                    $form.reportValidity();
+                } 
+            }
+
+        });
+
+        $('.add-instructor').click(  function () {
+
+            console.log('add-instructor clicked');
+            console.log('/api/TrainingClassInstructor/@Model.TrainingClassID/')
+            console.log('Instructor member ID:' + $('#instructorMemberId').val());
+            console.log('Instructor hours:' + $('#instructorHours').val());
+
+            var $form = $('#add-instructor-form').get(0);
+            if (!$form.checkValidity || $form.checkValidity()) {
+                /* submit the form */
+                console.log('Form is valid');
+
+                var trainingClassParticipant = {
+                MemberID: $('#instructorMemberId').val(),
+                Hours: $('#instructorHours').val()
+            };
+
+            console.log(trainingClassParticipant);
+            console.log(JSON.stringify(trainingClassParticipant));
+
+            fetch('/api/TrainingClassInstructor/@Model.TrainingClassID/',
+                {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'PUT',
+                    body: JSON.stringify(trainingClassParticipant)
+                })
+                .then(function () {
+                    location.reload(true);
+                });
+
+            } else {
+                console.log('Form is not valid');
+
+                if ($form.reportValidity) {
+                    console.log('reportValidity exists');
+                    $form.reportValidity();
+                } 
+            }
+
+        });
+
+        $('.delete-student').click(  function () {
+
+            console.log('delete-student clicked');
+            console.log('/api/TrainingClassStudent/' + $(this).prev('.training-class-student-id').val());
+            fetch('/api/TrainingClassStudent/' + $(this).prev('.training-class-student-id').val(),
+                { method: 'DELETE' })
+                .then(function () {
+                    location.reload(true);
+                });
+
+        });
+
+        $('.delete-instructor').click(  function () {
+
+            console.log('delete-instructor clicked');
+            console.log('/api/TrainingClassInstructor/' + $(this).prev('.training-class-instructor-id').val());
+            fetch('/api/TrainingClassInstructor/' + $(this).prev('.training-class-instructor-id').val(),
+                { method: 'DELETE' })
+                .then(function () {
+                    location.reload(true);
+                });
+
+        });
+        
+    });
+
+    function memberJSONCall() {
+
+        let urlMember = '/api/members/';
+
+        fetch(urlMember)
+            .then(res => res.json())
+            .then((out) => {
+                buildMemberSelect(out);
+            })
+            .catch(err => { throw err; });
+    }
+
+    function buildMemberSelect(jsonarray) {
+
+        var instructorSelect = $('#instructorMemberId');
+        var studentSelect = $('#studentMemberId');
+        $.each(jsonarray, function (i, member)
+        {
+            instructorSelect.append(new Option(member.lastName + ', ' + member.firstName, member.memberId));
+            studentSelect.append(new Option(member.lastName + ', ' + member.firstName, member.memberId));
+        });
+    }
+
+    function trainingJSONCall() {
+
+        let urlTraining = '/api/trainings/';
+
+        fetch(urlTraining)
+            .then(res => res.json())
+            .then((out) => {
+                buildTrainingSelect(out);
+            })
+            .catch(err => { throw err; });
+    }
+
+    function buildTrainingSelect(jsonarray) {
+
+        var trainingSelect = $('#TrainingID');
+        $.each(jsonarray, function (i, training) {
+            trainingSelect.append(new Option(training.trainingTitle, training.trainingId));
+        });
+    }
+
+    function showSnackbar() {
+        // Get the snackbar DIV
+        var x = document.getElementById("snackbar");
+
+        // Add the "show" class to DIV
+        x.className = "show";
+
+        // After 3 seconds, remove the show class from DIV
+        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+    } 
+
+</script>
+
+
+
+
+

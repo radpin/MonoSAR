@@ -7,7 +7,7 @@
 
 <h2>Membership</h2>
 
-<h4>Create New Member</h4>
+<h4>Create Member</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -65,7 +65,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="PhoneCell" class="control-label"></label>
-                <input asp-for="PhoneCell" required class="form-control" type="tel" />
+                <input asp-for="PhoneCell" class="form-control" type="tel" />
                 <span asp-validation-for="PhoneCell" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -81,6 +81,6 @@
 </div>
 
 <div>
-    <a asp-action="/MemberReport">Back to List</a>
+    <a asp-action="MemberReport">Back to List</a>
 </div>
 

@@ -19,9 +19,12 @@ namespace MonoSAR.Models.Membership
         public Int32 ID { get; set; }
         public String First { get; set; }
         public String Last { get; set; }
+        public String CapacityName { get; set; }
         public int NumOperationsThisYear { get; set; }
-        public int NumTrainingsThisYear { get; set; }
+        public int NumOperationsLastYear { get; set; }
         public int NumOperationsTotal { get; set; }
+        public int NumTrainingsThisYear { get; set; }
+        public int NumTrainingsLastYear { get; set; }
         public int NumTrainingsTotal { get; set; }
     }
 }

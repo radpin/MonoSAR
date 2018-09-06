@@ -151,7 +151,7 @@ namespace MonoSAR.Models.Membership
 
             if (dataItem.TrainingClassStudent.Count > 0)
             {
-                this.TrainingSummaries = trainingSummaries.OrderByDescending(x => x.When).ToList();
+                this.TrainingSummaries = trainingSummaries.OrderByDescending(x => x.TrainingDate).ToList();
             }
 
 

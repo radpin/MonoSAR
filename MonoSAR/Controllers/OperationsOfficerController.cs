@@ -78,7 +78,7 @@ namespace MonoSAR.Controllers
             return View(model);
         }
 
-        // POST: OperationsOfficer/OperationInsert
+        // POST: OperationsOfficer/CreateOperation
         [Authorize(Roles = "Admin,Operations")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -128,7 +128,6 @@ namespace MonoSAR.Controllers
 
             return View(model);
         }
-
 
         // POST: OperationsOfficer/Edit
         [Authorize(Roles = "Admin,Operations")]

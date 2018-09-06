@@ -192,7 +192,7 @@ namespace MonoSAR.Controllers
             return View("TrainingOccurrenceInsertConfirmation", thanks);
         }
 
-        // GET: TrainingOfficer/Details/5
+        // GET: TrainingOfficer/ViewMember/5
         [Authorize(Roles = "Admin,Training")]
         public ActionResult ViewMember(int id)
         {
@@ -208,35 +208,11 @@ namespace MonoSAR.Controllers
             _context.Member.Include(x => x.MemberMedical).ThenInclude(y => y.Medical).Load();
             _context.Member.Include(x => x.Capacity).Load();
             _context.Member.Include(x => x.TrainingClassStudent).ThenInclude(y => y.TrainingClass).ThenInclude(z=>z.Training).Load();
+            _context.Member.Include(x => x.OperationMember).ThenInclude(y => y.Operation).Load();
 
             var model = new Models.Membership.MemberSummaryItem(query, _applicationOptions, _config);
             
             return View(model);
-        }
-
-        
-
-        // GET: TrainingOfficer/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: TrainingOfficer/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         // GET: TrainingOfficer/Edit/5
@@ -449,6 +425,7 @@ namespace MonoSAR.Controllers
 
             return View(model);
         }
+
         [Authorize(Roles = "Admin,Training")]
         public ActionResult RecordCPR()
         {
@@ -472,5 +449,228 @@ namespace MonoSAR.Controllers
 
             return View(model);
         }
+
+        // GET: TrainingOfficer/ViewTrainingClasses
+        [Authorize]
+        [HttpGet]
+        public ActionResult ViewTrainingClasses()
+        {
+            var trainingClasses = _context.TrainingClass
+                .OrderByDescending(t => t.TrainingDate)
+                .Select(t => new Models.Training.TrainingClassListItem()
+                {
+                    ID = t.TrainingClassId,
+                    Date = t.TrainingDate,
+                    Title = t.Training.TrainingTitle,
+                    NumStudents = t.TrainingClassStudent.Where(u => u.TrainingClassId == t.TrainingClassId).Count(),
+                    NumInstructors = t.TrainingClassInstructor.Where(u => u.TrainingClassId == t.TrainingClassId).Count()
+                })
+                .ToList();
+
+            return View(trainingClasses);
+        }
+
+        // GET: TrainingOfficer/ViewTrainingClass/5
+        [Authorize]
+        [HttpGet]
+        public ActionResult ViewTrainingClass(int id)
+        {
+            var query = _context.TrainingClass
+                .Where(tc => tc.TrainingClassId == id)
+                .FirstOrDefault();
+
+            if (query == null)
+            { throw new Exception("Invalid training class ID."); }
+
+            //Explicit loading because EF Core isn't lazy
+            _context.TrainingClass.Include(x => x.Training)
+                .Include(x => x.TrainingClassInstructor).ThenInclude(y => y.TrainingClassInstructorMember)
+                .Include(x => x.TrainingClassStudent).ThenInclude(y => y.TrainingClassStudentMember)
+                .Load();
+
+            Models.Training.TrainingClassSummaryItem model = new Models.Training.TrainingClassSummaryItem(query);
+
+            return View(model);
+        }
+
+        // GET: TrainingOfficer/EditTrainingClass/5
+        [Authorize(Roles = "Admin,Training")]
+        [HttpGet]
+        public ActionResult EditTrainingClass(int id)
+        {
+            var query = _context.TrainingClass
+                .Where(tc => tc.TrainingClassId == id)
+                .FirstOrDefault();
+
+            if (query == null)
+            { throw new Exception("Invalid training class ID."); }
+
+            //Explicit loading because EF Core isn't lazy
+            _context.TrainingClass.Include(x => x.Training)
+                .Include(x => x.TrainingClassInstructor).ThenInclude(y => y.TrainingClassInstructorMember)
+                .Include(x => x.TrainingClassStudent).ThenInclude(y => y.TrainingClassStudentMember)
+                .Load();
+
+            Models.Training.TrainingClassSummaryItem model = new Models.Training.TrainingClassSummaryItem(query);
+
+            return View(model);
+        }
+
+        // POST: TrainingOfficer/EditTrainingClass
+        [Authorize(Roles = "Admin,Training")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditTrainingClass(Models.Training.TrainingClassSummaryItem viewModel)
+        {
+            try
+            {
+                var trainingClass = _context.TrainingClass
+                    .Where(tc => tc.TrainingClassId == viewModel.TrainingClassID)
+                    .FirstOrDefault();
+
+                trainingClass.TrainingId = viewModel.TrainingID;
+                trainingClass.TrainingDate = viewModel.TrainingDate;
+
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(ViewTrainingClasses));
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+        }
+
+        // GET: TrainingOfficer/CreateTrainingClass
+        [Authorize(Roles = "Admin,Training")]
+        [HttpGet]
+        public ActionResult CreateTrainingClass()
+        {
+            Models.Training.TrainingClassInsert model = new Models.Training.TrainingClassInsert();
+            model.TrainingDate = DateTime.Now;
+
+            return View(model);
+        }
+
+        // POST: OperationsOfficer/CreateTrainingClass
+        [Authorize(Roles = "Admin,Training")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateTrainingClass(Models.Training.TrainingClassInsert model)
+        {
+
+            Models.DB.TrainingClass dbTrainingClass = new Models.DB.TrainingClass();
+            Int32 trainingClassId;
+
+            dbTrainingClass.TrainingId = model.TrainingID;
+            dbTrainingClass.TrainingDate = model.TrainingDate;
+            dbTrainingClass.TrainingClassStudent = new List<TrainingClassStudent>();
+            dbTrainingClass.TrainingClassInstructor = new List<TrainingClassInstructor>();
+            dbTrainingClass.Created = DateTime.UtcNow;
+
+            try
+            {
+                _context.TrainingClass.Add(dbTrainingClass);
+                _context.SaveChanges();
+                trainingClassId = dbTrainingClass.TrainingClassId;
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+
+            return RedirectToAction("EditTrainingClass", new { id = trainingClassId });
+        }
+
+        // GET: TrainingOfficer/ViewTrainings
+        [Authorize]
+        [HttpGet]
+        public ActionResult ViewTrainings()
+        {
+            var trainings = _context.Training
+                .OrderBy(t => t.TrainingTitle)
+                .Select(t => new Models.Training.TrainingListItem()
+                {
+                    ID = t.TrainingId,
+                    Title = t.TrainingTitle
+                })
+                .ToList();
+
+            return View(trainings);
+        }
+
+        // GET: TrainingOfficer/CreateTraining
+        [Authorize(Roles = "Admin,Training")]
+        [HttpGet]
+        public ActionResult CreateTraining()
+        {
+            return View();
+        }
+
+        // POST: TrainingOfficer/TrainingInsert
+        [Authorize(Roles = "Admin,Training")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateTraining(Models.Training.TrainingInsert training)
+        {
+
+            Models.DB.Training dbTraining = new Models.DB.Training();
+
+            dbTraining.TrainingTitle = training.Title;
+
+            try
+            {
+                _context.Training.Add(dbTraining);
+                _context.SaveChanges();
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+
+            return RedirectToAction("ViewTrainings");
+        }
+
+        // GET: TrainingOfficer/Edit/5
+        [Authorize(Roles = "Admin,Training")]
+        public ActionResult EditTraining(int id)
+        {
+            var query = _context.Training
+                .Where(t => t.TrainingId == id)
+                .FirstOrDefault();
+
+            if (query == null)
+            { throw new Exception("Invalid training ID."); }
+
+            Models.Training.TrainingListItem model = new Models.Training.TrainingListItem(query);
+
+            return View(model);
+        }
+
+
+        // POST: TrainingOfficer/Edit
+        [Authorize(Roles = "Admin,Training")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditTraining(Models.Training.TrainingListItem viewModel)
+        {
+            try
+            {
+                var training = _context.Training
+                    .Where(t => t.TrainingId == viewModel.ID)
+                    .FirstOrDefault();
+
+                training.TrainingTitle = viewModel.Title;
+
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(ViewTrainings));
+            }
+            catch (Exception exc)
+            {
+                throw exc;
+            }
+        }
+
     }
 }
