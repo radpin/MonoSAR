@@ -145,7 +145,7 @@
             @foreach (var ts in Model.TrainingSummaries)
             {
                 <tr>
-                    <td>@ts.TrainingTitle</td>
+                    <td><a href="/TrainingOfficer/ViewTrainingClass/@ts.TrainingClassID">@ts.TrainingTitle</a></td>
                     <td>@ts.TrainingDatePretty</td>
                     <td>@ts.Hours</td>
                 </tr>
