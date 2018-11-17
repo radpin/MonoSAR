@@ -409,6 +409,7 @@
         $.each(jsonarray, function (i, training) {
             trainingSelect.append(new Option(training.trainingTitle, training.trainingId));
         });
+        trainingSelect.val(@Model.TrainingID);
     }
 
     function showSnackbar() {
