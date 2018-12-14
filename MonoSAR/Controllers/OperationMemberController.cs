@@ -91,16 +91,16 @@ namespace MonoSAR.Controllers
             return _context.OperationMember.Any(e => e.OperationId == operationId && e.MemberId == memberId);
         }
 
-        // DELETE: api/Operations/5
-        [HttpDelete("{operationId}/{memberId}")]
-        public async Task<IActionResult> DeleteOperationMember([FromRoute] int operationId, [FromRoute] int memberId)
+        // DELETE: api/OperationMemer/5
+        [HttpDelete("{operationMemberId}")]
+        public async Task<IActionResult> DeleteOperationMember([FromRoute] int operationMemberId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var operationMember = await _context.OperationMember.SingleOrDefaultAsync(m => m.OperationId == operationId && m.MemberId == memberId);
+            var operationMember = await _context.OperationMember.SingleOrDefaultAsync(m => m.OperationMemberId == operationMemberId);
             if (operationMember == null)
             {
                 return NotFound();
