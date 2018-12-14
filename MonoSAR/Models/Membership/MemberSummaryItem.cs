@@ -125,6 +125,7 @@ namespace MonoSAR.Models.Membership
             var beac = (from tm in dataItem.TrainingClassStudent
                         where tm.TrainingClassStudentMemberId == dataItem.MemberId 
                         && tm.TrainingClass.TrainingId == _applicationSettings.RequiredBeaconTest
+                        orderby tm.Created descending
                         select tm).FirstOrDefault();
 
             this.IsBeaconExpired = true;
