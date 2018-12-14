@@ -15,7 +15,7 @@ namespace MonoSAR.Models.Operations
         public DateTime End { get; set; }
         public string Title { get; set; }
         public string Notes { get; set; }
-        public List<Membership.MemberStubItem> MemberStubs { get; set; }
+        public List<Operations.OperationMemberSummaryItem> Members { get; set; }
 
         public OperationSummaryItem()
         {
@@ -31,20 +31,20 @@ namespace MonoSAR.Models.Operations
             this.End = dataEntity.OperationEnd;
             this.Title = dataEntity.Title;
             this.Notes = dataEntity.Notes;
-            buildMemberStubs(dataEntity);
+            buildMembers(dataEntity);
         }
 
 
-        private void buildMemberStubs(Models.DB.Operation dataEntity)
+        private void buildMembers(Models.DB.Operation dataEntity)
         {
-            List<Membership.MemberStubItem> memberStubs = new List<Membership.MemberStubItem>();
+            List<Operations.OperationMemberSummaryItem> members = new List<Operations.OperationMemberSummaryItem>();
 
             foreach (var item in dataEntity.OperationMember)
             {
-                memberStubs.Add(new Membership.MemberStubItem(item.Member));
+                members.Add(new Operations.OperationMemberSummaryItem(item));
             }
 
-            this.MemberStubs = memberStubs;
+            this.Members = members;
         }
     }
 }

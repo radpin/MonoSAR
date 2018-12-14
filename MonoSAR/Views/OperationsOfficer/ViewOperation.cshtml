@@ -36,8 +36,8 @@
     <h4>Notes</h4>
     <p>@Model.Notes</p>
 
-    <h4>Participants (@Model.MemberStubs.Count)</h4>
-    @foreach(MemberStubItem member in Model.MemberStubs)
+    <h4>Participants (@Model.Members.Count)</h4>
+    @foreach(OperationMemberSummaryItem member in Model.Members.OrderBy(m => m.MemberName))
     {
         <a href="/MembershipOfficer/ViewMember/@member.MemberID">@member.MemberName</a>
         <br />

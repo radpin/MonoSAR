@@ -58,7 +58,7 @@
 
     <div class="col-md-6">
 
-        <h4>Participants (@Model.MemberStubs.Count)</h4>
+        <h4>Participants (@Model.Members.Count)</h4>
         <hr />
 
         <form>
@@ -69,7 +69,7 @@
 
         <p></p>
 
-        @if (Model.MemberStubs.Count > 0)
+        @if (Model.Members.Count > 0)
         {
             <table class="table">
                 <thead>
@@ -80,13 +80,13 @@
                 </thead>
                 <tbody>
 
-                    @foreach (MemberStubItem member in Model.MemberStubs)
+                    @foreach (OperationMemberSummaryItem member in Model.Members.OrderBy(m => m.MemberName))
                     {
                         <tr>
                             <td><a href="/MembershipOfficer/ViewMember/@member.MemberID">@member.MemberName</a></td>
                             <td>
                                 <form>
-                                    <input hidden="hidden" type="hidden" name="memberId" class="member-id" value="@member.MemberID" />
+                                    <input hidden="hidden" type="hidden" name="operationMemberId" class="operation-member-id" value="@member.OperationMemberID" />
                                     <input type="button" value="Delete" class="btn btn-default delete-participant" />
                                 </form>
                             </td>
@@ -121,8 +121,8 @@
         $('.delete-participant').click(  function () {
 
             //console.log('delete-participant clicked');
-            //console.log('/api/OperationMember/@Model.ID/' + $(this).prev('.member-id').val());
-            fetch('/api/OperationMember/@Model.ID/' + $(this).prev('.member-id').val(),
+            //console.log('/api/OperationMember/' + $(this).prev('.operation-member-id').val());
+            fetch('/api/OperationMember/' + $(this).prev('.operation-member-id').val(),
                 { method: 'DELETE' })
                 .then(function () {
                     location.reload(true);
