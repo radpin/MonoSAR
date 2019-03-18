@@ -132,9 +132,9 @@ namespace MonoSAR
             var _barry = await UserManager.FindByEmailAsync("bearbnz@yahoo.com");
             var _eric = await UserManager.FindByEmailAsync("radpin@gmail.com");
             var _lisa = await UserManager.FindByEmailAsync("lisagitel@hotmail.com");
-            var _marie = await UserManager.FindByEmailAsync("marie_pavlovsky@hotmail.com");
             var _jim = await UserManager.FindByEmailAsync("jgnjneer@gmail.com");
             var _kr = await UserManager.FindByEmailAsync("khansen@monosheriff.org");
+            var _chris = await UserManager.FindByEmailAsync("chris.j.thompson@cox.net");
 
             if (_jim != null)
             {
@@ -153,8 +153,8 @@ namespace MonoSAR
 
             if (_kr != null)
             {
-                await UserManager.AddToRoleAsync(_barry, "Training");
-                await UserManager.AddToRoleAsync(_barry, "Membership");
+                await UserManager.AddToRoleAsync(_kr, "Training");
+                await UserManager.AddToRoleAsync(_kr, "Membership");
             }
 
             // check if the user exists
@@ -172,9 +172,9 @@ namespace MonoSAR
 
 
             // check if the user exists
-            if (_marie != null)
+            if (_chris != null)
             {
-                await UserManager.AddToRoleAsync(_marie, "Membership");
+                await UserManager.AddToRoleAsync(_chris, "Membership");
             }
 
         }
