@@ -103,11 +103,5 @@ namespace MonoSAR.Services
                 throw exc;
             }
         }
-
-        public String FormatStringToTwiml(String rawString)
-        {
-            return new TwiMLResult(rawString, System.Text.Encoding.UTF8).ToString();
-        }
-
     }
 }

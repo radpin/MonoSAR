@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Azure.Core;
+using Azure.Identity;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -32,12 +34,16 @@ namespace MonoSAR
 
             var config = configurationBuilder.Build();
 
+            TokenCredential tokenCredential = new ClientSecretCredential(
+               config["azureKeyVault:tenantId"],
+               config["azureKeyVault:clientId"],
+               config["azureKeyVault:clientSecret"]);
+
             configurationBuilder.AddAzureKeyVault(
-                $"https://{config["azureKeyVault:vault"]}.vault.azure.net/",
-                config["azureKeyVault:clientId"],
-                config["azureKeyVault:clientSecret"]);
+                new Uri($"https://{config["azureKeyVault:vault"]}.vault.azure.net/"),
+                tokenCredential);
         }
     }
 
-
+    
 }

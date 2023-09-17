@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using Azure.Core;
+using Azure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
@@ -52,10 +54,15 @@ namespace MonoSAR.Models.DB
                     
                     var config = configurationBuilder.Build();
 
+
+                    TokenCredential tokenCredential = new ClientSecretCredential(
+                       config["azureKeyVault:tenantId"],
+                       config["azureKeyVault:clientId"],
+                       config["azureKeyVault:clientSecret"]);
+
                     configurationBuilder.AddAzureKeyVault(
-                        $"https://{config["azureKeyVault:vault"]}.vault.azure.net/",
-                        config["azureKeyVault:clientId"],
-                        config["azureKeyVault:clientSecret"]
+                        new Uri($"https://{config["azureKeyVault:vault"]}.vault.azure.net/"),
+                        tokenCredential
                     );
 
                     config = configurationBuilder.Build();
